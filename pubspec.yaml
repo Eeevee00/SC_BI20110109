@@ -1,0 +1,98 @@
+name: muzik_local
+description: A new Flutter project.
+
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.5 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  flutter_bloc: ^8.1.3
+  hydrated_bloc: ^9.1.2
+  equatable: ^2.0.2
+  path_provider: ^2.0.2
+  flutter_displaymode: ^0.6.0
+  easy_localization: ^3.0.0
+  hive: ^2.0.4
+  url_launcher: ^6.0.6
+  ionicons: ^0.2.2
+  firebase_core: ^1.24.0
+  firebase_analytics: ^8.1.2
+  firebase_auth: ^1.0.0
+  firebase_messaging: ^10.0.2
+  firebase_storage:
+  firebase_core_platform_interface: ^4.5.1
+  cloud_firestore:
+  page_transition: 
+  from_css_color: 
+  json_path: 
+  timeago: 
+  font_awesome_flutter: 
+  auto_size_text: 
+  google_fonts: ^4.0.4
+  go_router: 7.1.1
+  intl: 
+  provider: 
+  rflutter_alert:
+  image:
+  image_picker:
+  image_cropper: ^4.0.0
+  dropdown_button2: 2.0.0
+  getwidget:
+  aligned_tooltip: 0.0.1
+  cached_network_image: 3.2.1
+  flutter_animate: 4.1.1+1
+  flutter_cache_manager: 3.3.0
+  path_provider_android: 2.0.25
+  path_provider_foundation: 2.2.2
+  path_provider_platform_interface: 2.0.6
+  shared_preferences: 2.0.15
+  shared_preferences_android: 2.1.0
+  shared_preferences_ios: 2.1.1
+  shared_preferences_platform_interface: 2.2.0
+  shared_preferences_web: 2.1.0
+  sqflite: 2.2.6
+  url_launcher_android: 6.0.27
+  url_launcher_ios: 6.1.4
+  url_launcher_platform_interface: 2.1.2
+  animated_splash_screen:
+  google_maps_flutter:
+  location:
+  awesome_dialog:
+  geocoder:
+  flutter_rating_bar: ^4.0.0
+  flutter_svg:
+
+dependency_overrides:
+  firebase_core_platform_interface: 4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/translations/
+    - assets/fonts/
+    - assets/images/
+    # - assets/videos/
+    # - assets/audios/
+    # - assets/lottie_animations/
+    # - assets/rive_animations/
+    # - assets/pdfs/
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-SemiBold.ttf

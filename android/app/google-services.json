@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "173906655062",
+    "project_id": "muzik-local",
+    "storage_bucket": "muzik-local.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173906655062:android:4b3d51564d2020bdca88f7",
+        "android_client_info": {
+          "package_name": "com.example.muzik_local"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1RKWLiS9_AUiPE5JnaBbNlaT1_81RYGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
