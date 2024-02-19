@@ -133,7 +133,7 @@ class _RewardListScreenWidgetState extends State<RewardListScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -220,7 +220,18 @@ class _RewardListScreenWidgetState extends State<RewardListScreenWidget> {
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
-                            ),
+                            boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(0.0, 2.0),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(16.0),
+                              border: Border.all(
+                                color: FlutterFlowTheme.of(context).secondaryBackground,
+                                width: 1.0,
+                              ),),
                             child: Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 16.0, 0.0, 12.0),
@@ -289,7 +300,7 @@ class _RewardListScreenWidgetState extends State<RewardListScreenWidget> {
 
   Widget buildReward(Reward reward) => 
     Padding(
-  padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+  padding: EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 10.0, 0.0),
   child: InkWell(
     onTap: () async {
       await Navigator.push(
@@ -347,8 +358,9 @@ class _RewardListScreenWidgetState extends State<RewardListScreenWidget> {
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            //Top Status
                             Container(
-                              width: 100.0,
+                              width: 120.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).primaryBackground,
                                 borderRadius: BorderRadius.only(
@@ -364,7 +376,7 @@ class _RewardListScreenWidgetState extends State<RewardListScreenWidget> {
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
                                 child: Text(
-                                  reward.text_status!.toString(),
+                                  reward.text_status!.toString() + ": " + (reward.status! ? 'Active' : 'Deactivated'),
                                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context).primaryText,
@@ -374,6 +386,7 @@ class _RewardListScreenWidgetState extends State<RewardListScreenWidget> {
                                 ),
                               ),
                             ),
+
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(20.0, 50.0, 20.0, 35.0),
                               child: Container(
@@ -389,7 +402,7 @@ class _RewardListScreenWidgetState extends State<RewardListScreenWidget> {
                                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                                         fontFamily: 'Outfit',
                                         color: FlutterFlowTheme.of(context).customColor1,
-                                        fontSize: 16.0,
+                                        fontSize: 20.0,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -405,6 +418,7 @@ class _RewardListScreenWidgetState extends State<RewardListScreenWidget> {
                                 ),
                               ),
                             ),
+                            
                           ],
                         ),
                       ),

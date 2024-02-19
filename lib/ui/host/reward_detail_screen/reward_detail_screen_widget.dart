@@ -148,7 +148,8 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
             context: context,
             type: AlertType.error,
             title: "Reward Claim",
-            desc: "Failed to claim reward, you dont have enough point to claim.",
+            desc: "Failed to claim reward, you don't have enough points to claim.",
+
             buttons: [
               DialogButton(
                 child: Text(
@@ -159,7 +160,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.pop(context);
-                  Navigator.pop(context);
+                  //Navigator.pop(context);
                 },
                 width: 120,
               )
@@ -172,13 +173,13 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
             'claim_by_uid': widget.uid,
             'claim_by_name': prefs.getString("current_user_name"),
             'point_required': widget.reward.point,
-            'status': true,
+            'status': false,
             'title': widget.reward.name,
             'timestamp': FieldValue.serverTimestamp(),
             'uid': "",
             'user_image': [prefs.getString("current_user_image")],
             'reward_uid': widget.reward.uid,
-            'status_text': "Approve",
+            'status_text': "Have yet used",
           });
 
           String newClaimId = newClaimRef.id;
@@ -189,7 +190,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
             context: context,
             type: AlertType.success,
             title: "Reward Claim",
-            desc: "Successfully claim this reward, admin will contact you to get your reward.",
+            desc: "Successfully claimed this reward.",
             buttons: [
               DialogButton(
                 child: Text(
@@ -200,7 +201,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.pop(context);
-                  Navigator.pop(context);
+                  //Navigator.pop(context);
                 },
                 width: 120,
               )
@@ -236,11 +237,11 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
               IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
           title: Text(
-            'Reward_detail',
+            'Reward Detail',
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16,
+                  fontSize: 20,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -261,11 +262,12 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 16, 20),
                     child: Text(
                       'Reward Detail',
-                      style:
-                          FlutterFlowTheme.of(context).headlineMedium.override(
-                                fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
+                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                          fontFamily: 'Outfit',
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
                     ),
                   ),
                   Padding(
@@ -355,7 +357,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                         child: Padding(
                           padding: EdgeInsets.all(4),
                           child: Text(
-                            widget.reward.point.toString() + " point to claim",
+                            widget.reward.point.toString(),
                             maxLines: 2,
                             style: FlutterFlowTheme.of(context)
                                 .titleSmall
@@ -378,7 +380,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                         child: Padding(
                           padding: EdgeInsets.all(4),
                           child: Text(
-                            'Awailable Quantity to Claim',
+                            'Available Quantity to Claim',
                             style: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(

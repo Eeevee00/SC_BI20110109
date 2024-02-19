@@ -1,4 +1,4 @@
-package com.example.muzik_local
+package com.example.muzik_lokal
 
 import io.flutter.embedding.android.FlutterActivity
 

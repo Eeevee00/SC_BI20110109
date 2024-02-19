@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 class Notifications {
   String? content;
   dynamic created_by;
-  dynamic send_to;
   dynamic timestamp;
   dynamic title;
   dynamic uid;
@@ -12,7 +11,6 @@ class Notifications {
   Notifications({
     @required this.content,
     @required this.created_by,
-    @required this.send_to,
     @required this.timestamp,
     @required this.title,
     @required this.uid,
@@ -22,7 +20,6 @@ class Notifications {
     return Notifications(
       content: doc['content'],
       created_by: doc['created_by'],
-      send_to: doc['send_to'],
       timestamp: doc['timestamp'],
       title: doc['title'],
       uid: doc['uid'],
@@ -32,7 +29,6 @@ class Notifications {
   Map<String, dynamic> toJson() => {
         'content': content,
         'created_by': created_by,
-        'send_to': send_to,
         'timestamp': timestamp,
         'title': title,
         'uid': uid,
@@ -42,7 +38,6 @@ class Notifications {
     return Notifications(
       content: doc['content'],
       created_by: doc['created_by'],
-      send_to: doc['send_to'],
       timestamp: doc['timestamp'],
       title: doc['title'],
       uid: doc['uid'],

@@ -66,7 +66,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -77,13 +77,13 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
         body: SafeArea(
           top: true,
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+            padding: EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 1.0, 0.0, 0.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 1.0, 0.0, 0.0),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -92,12 +92,12 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 0.0, 0.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 0.0, 16.0),
                   child: Text(
                     'Settings',
                     style: FlutterFlowTheme.of(context).labelLarge.override(
                           fontFamily: 'Outfit',
-                          color: FlutterFlowTheme.of(context).customColor1,
+                          color: FlutterFlowTheme.of(context).primaryText,
                         ),
                   ),
                 ),
@@ -140,7 +140,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                             children: [
                               Icon(
                                 Icons.info_outline_rounded,
-                                color: FlutterFlowTheme.of(context).customColor1,
+                                color: FlutterFlowTheme.of(context).primaryText,
                                 size: 24.0,
                               ),
                               Padding(
@@ -149,7 +149,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                                   'About',
                                   style: FlutterFlowTheme.of(context).labelMedium.override(
                                     fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context).customColor1,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                   ),
                                 ),
                               ),
@@ -158,7 +158,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                                   alignment: AlignmentDirectional(0.9, 0.0),
                                   child: Icon(
                                     Icons.arrow_forward_ios,
-                                    color: FlutterFlowTheme.of(context).customColor1,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                     size: 18.0,
                                   ),
                                 ),
@@ -209,7 +209,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                             children: [
                               Icon(
                                 Icons.help_outline_rounded,
-                                color: FlutterFlowTheme.of(context).customColor1,
+                                color: FlutterFlowTheme.of(context).primaryText,
                                 size: 24.0,
                               ),
                               Padding(
@@ -218,7 +218,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                                   'FAQ',
                                   style: FlutterFlowTheme.of(context).labelMedium.override(
                                     fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context).customColor1,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                   ),
                                 ),
                               ),
@@ -227,7 +227,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                                   alignment: AlignmentDirectional(0.9, 0.0),
                                   child: Icon(
                                     Icons.arrow_forward_ios,
-                                    color: FlutterFlowTheme.of(context).customColor1,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                     size: 18.0,
                                   ),
                                 ),
@@ -278,7 +278,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                             children: [
                               Icon(
                                 Icons.help_outline_rounded,
-                                color: FlutterFlowTheme.of(context).customColor1,
+                                color: FlutterFlowTheme.of(context).primaryText,
                                 size: 24.0,
                               ),
                               Padding(
@@ -287,7 +287,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                                   'Help',
                                   style: FlutterFlowTheme.of(context).labelMedium.override(
                                     fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context).customColor1,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                   ),
                                 ),
                               ),
@@ -296,7 +296,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                                   alignment: AlignmentDirectional(0.9, 0.0),
                                   child: Icon(
                                     Icons.arrow_forward_ios,
-                                    color: FlutterFlowTheme.of(context).customColor1,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                     size: 18.0,
                                   ),
                                 ),
@@ -347,7 +347,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                             children: [
                               Icon(
                                 Icons.feedback_outlined,
-                                color: FlutterFlowTheme.of(context).customColor1,
+                                color: FlutterFlowTheme.of(context).primaryText,
                                 size: 24.0,
                               ),
                               Padding(
@@ -356,7 +356,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                                   'Send Feedback',
                                   style: FlutterFlowTheme.of(context).labelMedium.override(
                                     fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context).customColor1,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                   ),
                                 ),
                               ),
@@ -365,7 +365,7 @@ class _SettingScreenWidgetState extends State<SettingScreenWidget> {
                                   alignment: AlignmentDirectional(0.9, 0.0),
                                   child: Icon(
                                     Icons.arrow_forward_ios,
-                                    color: FlutterFlowTheme.of(context).customColor1,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                     size: 18.0,
                                   ),
                                 ),

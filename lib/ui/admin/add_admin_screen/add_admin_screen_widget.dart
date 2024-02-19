@@ -52,14 +52,18 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
     super.dispose();
   }
 
+  // Function to add a new user or update the status of an existing user
   add_user() async {
+
+    // Checking if the entered passwords match
     if(_model.textController4.text != _model.textController5.text){
       
+      // Showing an error alert if passwords do not match
       Alert(
         context: context,
         type: AlertType.error,
-        title: "Register error",
-        desc: "Both password not match",
+        title: "Registration error",
+        desc: "Both password do not match",
         buttons: [
           DialogButton(
             child: Text(
@@ -72,12 +76,14 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
           )
         ],
       ).show();
-    }else{
-      setState(() {
-        _isProcessing = true;
-      });
+    }
+    else {
+      // Setting the processing state to true
+      setState(() { _isProcessing = true;});
 
+      // Validating the registration form
       if (_registerFormKey.currentState!.validate()) {
+        // Attempting to register the user using email and password
         User? user = await FireAuth.registerUsingEmailPassword(
           name: _model.textController1.text,
           email: _model.textController2.text,
@@ -85,18 +91,24 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
           context: context,
         );
 
-        setState(() {
-          _isProcessing = false;
-        });
+        // Setting the processing state to false
+        setState(() {_isProcessing = false;});
 
         if (user != null) {
+          // Setting additional user data in Firestore
           await _setDataUser(
-              user, _model.textController1.text, _model.textController2.text, _model.textController3.text);
+              user, 
+              _model.textController1.text, 
+              _model.textController2.text, 
+              _model.textController3.text
+              );
+
+          // Showing a success alert upon successful registration
           Alert(
             context: context,
             type: AlertType.success,
-            title: "Registration Successfull",
-            desc: "Successfully adding new admin.",
+            title: "Registration Successful",
+            desc: "Successfully added new admin.",
             buttons: [
               DialogButton(
                 child: Text(
@@ -113,6 +125,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
             ],
           ).show();
         } else {
+          // Checking for existing users with the same email
           CollectionReference users =
               FirebaseFirestore.instance.collection('users');
 
@@ -122,17 +135,20 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
 
           documents.docs.forEach((element) {
             if (element['status'] == false) {
+              // Updating the status of an existing user to true
               FirebaseFirestore.instance
                   .collection("users")
                   .doc(element['uid'])
                   .set({
                 'status': true,
               }, SetOptions(merge: true));
+
+              // Showing a success alert for updating the status
               Alert(
                 context: context,
                 type: AlertType.success,
-                title: "Registration Successfull",
-                desc: "Successfully adding new admin.",
+                title: "Registration Successful",
+                desc: "Successfully added new admin.",
                 buttons: [
                   DialogButton(
                     child: Text(
@@ -149,11 +165,12 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                 ],
               ).show();
             } else {
+               // Showing an error alert for an existing user
               Alert(
                 context: context,
                 type: AlertType.error,
-                title: "Register error",
-                desc: "The account already exists for that email.",
+                title: "Registration error",
+                desc: "The account already exist for that email.",
                 buttons: [
                   DialogButton(
                     child: Text(
@@ -171,9 +188,8 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
         }
       }
 
-      setState(() {
-        _isProcessing = false;
-      });
+      // Setting the processing state to false
+      setState(() {_isProcessing = false;});
     }
   }
 
@@ -205,7 +221,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -233,7 +249,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Admin registeration form',
+                                  'Admin registration form',
                                   textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
                                       .titleSmall
@@ -241,7 +257,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                                         fontFamily: 'Outfit',
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
-                                        fontSize: 14.0,
+                                        fontSize: 20.0,
                                         fontWeight: FontWeight.w500,
                                       ),
                                 ),
@@ -260,7 +276,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                           decoration: InputDecoration(
                             labelText: 'Full Name',
                             hintText: 'Enter admin full name',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -317,7 +333,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                           decoration: InputDecoration(
                             labelText: 'Email Address',
                             hintText: 'Enter admin email address',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle(
                               color: FlutterFlowTheme.of(context).primaryText,
                             ),
@@ -360,7 +376,8 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                             }
                             // Use a regex pattern for email validation
                             String emailRegex =
-                                r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                                //r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                                r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$';
                             RegExp regex = RegExp(emailRegex);
                             if (!regex.hasMatch(value)) {
                               return 'Please enter a valid email address';
@@ -376,10 +393,12 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                           controller: _model.textController3,
                           focusNode: _model.textFieldFocusNode3,
                           obscureText: false,
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
                             hintText: 'Enter admin phone number',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -437,7 +456,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                           decoration: InputDecoration(
                             labelText: 'Password',
                             hintText: 'Enter password',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -509,7 +528,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                           decoration: InputDecoration(
                             labelText: 'Confirm Password',
                             hintText: 'Enter password',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -565,7 +584,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                           style: FlutterFlowTheme.of(context).bodyMedium,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter password';
+                              return 'Please enter confirmed password';
                             }
                             return null; // Return null if validation succeeds
                           },
@@ -594,7 +613,7 @@ class _AddAdminScreenWidgetState extends State<AddAdminScreenWidget> {
                                       fontFamily: 'Outfit',
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryBackground,
-                                      fontSize: 16.0,
+                                      fontSize: 20.0,
                                     ),
                             elevation: 3.0,
                             borderSide: BorderSide(

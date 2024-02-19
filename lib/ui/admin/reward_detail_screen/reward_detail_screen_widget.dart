@@ -168,7 +168,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
           context: context,
           type: AlertType.success,
           title: "Update Reward",
-          desc: "Successfully update reward detail",
+          desc: "Successfully updated reward detail",
           buttons: [
             DialogButton(
               child: Text(
@@ -223,15 +223,13 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-          iconTheme:
-              IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
+          iconTheme:IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
-          title: Text(
-            'Reward Detail',
+          title: Text('Reward Detail',
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -257,6 +255,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                         style: FlutterFlowTheme.of(context).headlineMedium.override(
                               fontFamily: 'Outfit',
                               color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize:20,
                             ),
                       ),
                     ),
@@ -301,8 +300,9 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                                               ),
                                             ],
                                           ),
-                                          Align(
-                                            alignment: Alignment.bottomRight,
+                                          Positioned(
+                                                bottom: 16, // Adjust the bottom value as needed
+                                                right: -4, 
                                             child: Card(
                                               shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(30)),
@@ -331,70 +331,9 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 20.0),
-                      child: Material(
-                        color: Colors.transparent,
-                        elevation: 5.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          height: 60.0,
-                          decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).secondaryBackground,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 4.0,
-                                color: Color(0x33000000),
-                                offset: Offset(0.0, 2.0),
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  child: Text(
-                                    'Status: ',
-                                    style: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .override(
-                                          fontFamily: 'Outfit',
-                                          color: FlutterFlowTheme.of(context)
-                                              .customColor1,
-                                        ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 0.0, 0.0, 0.0),
-                                  child: Text(
-                                    status == true? "Activate":"Deactivate",
-                                    style: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .override(
-                                          fontFamily: 'Outfit',
-                                          color: FlutterFlowTheme.of(context)
-                                              .customColor1,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+
+
+
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 20.0),
                       child: TextFormField(
@@ -404,7 +343,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                         decoration: InputDecoration(
                           labelText: 'Reward',
                           hintText: 'Enter reward',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -457,7 +396,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                         decoration: InputDecoration(
                           labelText: 'Point to claim',
                           hintText: 'Enter point needed to claim',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -519,7 +458,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                         decoration: InputDecoration(
                           labelText: 'Available quantity',
                           hintText: 'Quantity of the reward avaialble',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -579,7 +518,7 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                       decoration: InputDecoration(
                         labelText: 'Reward Description',
                         hintText: 'Enter reward description',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),
@@ -624,8 +563,38 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                         return null; // Return null if validation succeeds
                       },
                     ),
+
+                                        //Status
+                   // Status
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 5.0),
+                      child: FFButtonWidget(
+                        onPressed: () async {
+                          if (_registerFormKey.currentState?.validate() ?? false) {
+                            await updateStatus();
+                          }
+                        },
+                        text: 'Current Status: ${status == true ? "Active" : "Deactivated"}',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 60.0,
+                          color: status == true
+                              ? FlutterFlowTheme.of(context).success // Green color for 'Activate'
+                              : FlutterFlowTheme.of(context).error, // Red color for 'Deactivate'
+                          //borderRadius: 5.0,
+                          elevation: 5.0,
+                          textStyle: FlutterFlowTheme.of(context).titleMedium.override(
+                            fontFamily: 'Outfit',
+                            color: FlutterFlowTheme.of(context).secondaryBackground,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    //Save button
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
                       child: FFButtonWidget(
                         onPressed: () async {
                           if (_registerFormKey.currentState?.validate() ?? false) {
@@ -646,42 +615,124 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 14.0,
+                                    fontSize: 15.0,
                                   ),
                           elevation: 2.0,
-                          borderRadius: BorderRadius.circular(5.0),
+                          //borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
-                      child: FFButtonWidget(
-                        onPressed: () async {
-                          if (_registerFormKey.currentState?.validate() ?? false) {
-                            await updateStatus();
-                          }
-                        },
-                        text: 'Deactivate/Activate Reward',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 55.0,
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                          iconPadding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).error,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleMedium.override(
-                                    fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context)
-                                        .customColor1,
-                                    fontSize: 14.0,
-                                  ),
-                          elevation: 2.0,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                      ),
-                    ),
+
+                     //Status
+                    // Padding(
+                    //   padding:EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 5.0),
+                    //     child: InkWell(
+                    //       onTap: () async {
+                    //         if (_registerFormKey.currentState?.validate() ?? false) {
+                    //           await updateStatus();
+                    //         }
+                    //       },
+                    //       child: Material(
+                    //         color: Colors.transparent,
+                    //         elevation: 5.0,
+                    //         shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(5.0),
+                    //         ),
+                    //         child: Container(
+                    //           width: double.infinity,
+                    //           height: 60.0,
+                    //           decoration: BoxDecoration(
+                              
+                    //           color: status == true
+                    //               ? FlutterFlowTheme.of(context).success // Green color for 'Activate'
+                    //               : FlutterFlowTheme.of(context).error, // Red color for 'Deactivate'
+                              
+                    //             boxShadow: [
+                    //               BoxShadow(
+                    //                 blurRadius: 4.0,
+                    //                 color: Color(0x33000000),
+                    //                 offset: Offset(0.0, 2.0),
+                    //               )
+                    //             ],
+                    //             borderRadius: BorderRadius.circular(5.0),
+                    //           ),
+                    //           alignment: Alignment.center, // Center the content horizontally and vertically
+                    //           child: Padding(
+                    //             padding: EdgeInsets.all(12.0),
+                    //             child: Row(
+                    //               mainAxisSize: MainAxisSize.max,
+                    //               mainAxisAlignment: MainAxisAlignment.center, // Center the text horizontally
+                    //               children: [
+                    //                 Padding(
+                    //                   padding: EdgeInsetsDirectional.fromSTEB(
+                    //                       0.0, 0.0, 0.0, 0.0),
+                    //                   child: Text(
+                    //                     'Status:',
+                    //                     style: FlutterFlowTheme.of(context)
+                    //                         .titleMedium
+                    //                         .override(
+                    //                           fontFamily: 'Outfit',
+                    //                           color: FlutterFlowTheme.of(context)
+                    //                               .secondaryBackground,
+                    //                           fontSize: 14.0,
+
+                    //                         ),
+                    //                   ),
+                    //                 ),
+                    //                 Padding(
+                    //                   padding: EdgeInsetsDirectional.fromSTEB(
+                    //                       12.0, 0.0, 0.0, 0.0),
+                    //                   child: Text(
+                    //                     status == true?"Active":"Deactivated",
+                    //                     style: FlutterFlowTheme.of(context)
+                    //                         .titleMedium
+                    //                         .override(
+                    //                           fontFamily: 'Outfit',
+                    //                           color: FlutterFlowTheme.of(context)
+                    //                               .secondaryBackground,
+                    //                                fontSize: 14.0,
+
+                    //                         ),
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    // ),
+                             
+                    // Padding(
+                    //   padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
+                    //   child: FFButtonWidget(
+                    //     onPressed: () async {
+                    //       if (_registerFormKey.currentState?.validate() ?? false) {
+                    //         await updateStatus();
+                    //       }
+                    //     },
+                    //     text: 'Deactivate/Activate Reward',
+                    //     options: FFButtonOptions(
+                    //       width: double.infinity,
+                    //       height: 55.0,
+                    //       padding:
+                    //           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    //       iconPadding:
+                    //           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    //       color: FlutterFlowTheme.of(context).error,
+                    //       textStyle:
+                    //           FlutterFlowTheme.of(context).titleMedium.override(
+                    //                 fontFamily: 'Outfit',
+                    //                 color: FlutterFlowTheme.of(context)
+                    //                     .customColor1,
+                    //                 fontSize: 14.0,
+                    //               ),
+                    //       elevation: 2.0,
+                    //       borderRadius: BorderRadius.circular(5.0),
+                    //     ),
+                    //   ),
+                    // ),
+                    
                   ],
                 ),
               ),

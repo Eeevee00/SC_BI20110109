@@ -51,7 +51,8 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
     status = widget.job.status!;
     _image = widget.job.image;
     title = widget.job.title!;
-    start_date = widget.job.date;
+    start_date = widget.job.start_date;
+    end_date = widget.job.end_date;
     start_time = widget.job.start_time!;
     end_time = widget.job.end_time!;
     address = widget.job.location!['address'];
@@ -100,7 +101,7 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
         setState(() {
           _image = jobData['image'];
           title = jobData['title'];
-          start_date = jobData['date'];
+          start_date = jobData['start_date'];
           end_date = jobData['end_date'];
           start_time = jobData['start_time'];
           end_time = jobData['end_time'];
@@ -246,15 +247,62 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
           iconTheme:
               IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
-          title: Text(
-            'Job Detail',
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  fontFamily: 'Outfit',
+          // title: Text(
+          //   'Job Detail',
+          //   style: FlutterFlowTheme.of(context).bodyMedium.override(
+          //         fontFamily: 'Outfit',
+          //         color: FlutterFlowTheme.of(context).primaryText,
+          //         fontSize: 20.0,
+          //         fontWeight: FontWeight.w500,
+          //       ),
+          // ),
+
+          title: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Job Detail',
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily: 'Outfit',
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+              PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_vert,
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
+                  size: 24.0,
                 ),
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'updateJob',
+                    child: Text('Update Job'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'deleteJob',
+                    child: Text('Delete Job'),
+                  ),
+                ],
+                onSelected: (String choice) async {
+                  if (choice == 'updateJob') {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditJobFormWidget(job: widget.job),
+                      ),
+                    );
+                    getJobDetail();
+                  } else if (choice == 'deleteJob') {
+                    deleteJob();                       
+                  }
+                },
+              ),
+            ],
           ),
+
           actions: [],
           centerTitle: false,
           elevation: 0.0,
@@ -291,18 +339,178 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+
+                        //Title
                         Text(
                           title.toString(),
                           style: FlutterFlowTheme.of(context)
                               .headlineMedium
                               .override(
                                 fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context).primaryText,
+                                color: FlutterFlowTheme.of(context).customColor1,
+                                fontWeight: FontWeight.w800,
+                                fontSize:30,
                               ),
                         ),
+
+                        // Description
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 10.0),
+                              0.0, 8.0, 0.0, 20.0),
+                          child: Text(
+                            widget.job.description!,
+                            style: FlutterFlowTheme.of(context)
+                                .bodySmall
+                                .override(
+                                  fontFamily: 'Outfit',
+                                  color:
+                                      FlutterFlowTheme.of(context).customColor1,
+                                      fontSize: 15,
+                                ),
+                          ),
+                        ),
+                      
+                        // Host Detail - image, name, phone, email
+                        Container(
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primaryBackground,
+                              borderRadius: BorderRadius.circular(12.0), // Adjust the border radius as needed
+                            ),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 8.0, 0.0, 10.0),
+                              //Left :Image
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 20.0, 0.0),
+                                  //Image
+                                  child: 
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            4.0, 0.0, 0.0, 0.0),
+                                        child: Container(
+                                          width: 50.0,
+                                          height: 50.0,
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                                        border: Border.all(
+                                          color: Colors.yellow, // Set your desired border color
+                                          width: 2.0, // Set your desired border width
+                                          ),
+                                          ),
+                                          child: Image.network(
+                                            widget.job.organizer_image!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),      //Padding 
+                                
+                                  //Name
+                                    Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 8.0, 90.0, 0.0),
+                                              child: Text(
+                                                name!,
+                                                style: FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily: 'Outfit',
+                                                      color:
+                                                          FlutterFlowTheme.of(context)
+                                                              .customColor1,
+                                                    ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+
+                                  //Phone and email
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 8.0, 0.0),
+                                            child: Icon(
+                                              Icons.phone,
+                                              color: FlutterFlowTheme.of(context)
+                                                  .primaryText,
+                                              size: 24.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            phone!,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium.override(
+                                                  fontFamily: 'Outfit',
+                                                  color:
+                                                      FlutterFlowTheme.of(context)
+                                                          .customColor1,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 8.0, 0.0),
+                                            child: Icon(
+                                              Icons.email,
+                                              color: FlutterFlowTheme.of(context)
+                                                  .primaryText,
+                                              size: 24.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            email!,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium.override(
+                                                    fontFamily: 'Outfit',
+                                                    color:
+                                                        FlutterFlowTheme.of(context)
+                                                            .customColor1,
+                                                  ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+
+                              ],
+                            ),
+                          ),
+                        ),
+
+                      //Date & Time
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 10.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
@@ -315,7 +523,7 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                                     Icon(
                                       Icons.calendar_month,
                                       color: FlutterFlowTheme.of(context)
-                                          .customColor1,
+                                          .primaryText,
                                       size: 36.0,
                                     ),
                                   ],
@@ -350,7 +558,7 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                                     children: [
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 8.0, 0.0, 0.0),
+                                            0.0, 2.0, 0.0, 0.0),
                                         child: Text(
                                           start_time + " - " + end_time,
                                           style: FlutterFlowTheme.of(context)
@@ -370,6 +578,8 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                             ],
                           ),
                         ),
+
+                        //Location
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 10),
                           child: Row(
@@ -383,7 +593,7 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                                   children: [
                                     Icon(
                                       Icons.location_pin,
-                                      color: FlutterFlowTheme.of(context).customColor1,
+                                      color: FlutterFlowTheme.of(context).primaryText,
                                       size: 36,
                                     ),
                                   ],
@@ -408,188 +618,8 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 8.0, 0.0, 10.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 20.0, 0.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          4.0, 0.0, 0.0, 0.0),
-                                      child: Container(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Image.network(
-                                          widget.job.organizer_image!,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 8.0, 0.0, 0.0),
-                                        child: Text(
-                                          name!,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Outfit',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .customColor1,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 8.0, 0.0, 0.0),
-                                            child: Text(
-                                              'Organizer',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'Outfit',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .customColor1,
-                                                      ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 8.0, 0.0, 10.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 20.0, 0.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  4.0, 0.0, 8.0, 0.0),
-                                          child: Icon(
-                                            Icons.phone,
-                                            color: FlutterFlowTheme.of(context)
-                                                .customColor1,
-                                            size: 24.0,
-                                          ),
-                                        ),
-                                        Text(
-                                          phone!,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 8.0, 0.0),
-                                        child: Icon(
-                                          Icons.email,
-                                          color: FlutterFlowTheme.of(context)
-                                              .customColor1,
-                                          size: 24.0,
-                                        ),
-                                      ),
-                                      Text(
-                                        email!,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 8.0, 0.0, 0.0),
-                          child: Text(
-                            'About Job',
-                            style: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'Outfit',
-                                  color:
-                                      FlutterFlowTheme.of(context).customColor1,
-                                ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 8.0, 0.0, 0.0),
-                          child: Text(
-                            widget.job.description!,
-                            style: FlutterFlowTheme.of(context)
-                                .bodySmall
-                                .override(
-                                  fontFamily: 'Outfit',
-                                  color:
-                                      FlutterFlowTheme.of(context).customColor1,
-                                ),
-                          ),
-                        ),
+
+                        //Button : View Applicant List
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 16.0, 0.0, 16.0),
@@ -624,41 +654,9 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 16.0),
-                          child: FFButtonWidget(
-                            onPressed: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditJobFormWidget(job: widget.job),
-                                ),
-                              );
-                              getJobDetail();
-                            },
-                            text: 'Update Job Detail',
-                            options: FFButtonOptions(
-                              width: double.infinity,
-                              height: 55.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    fontSize: 4.0,
-                                  ),
-                              elevation: 2.0,
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                        ),
+
+
+                        //Button :View Feeedback
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 16.0),
@@ -693,6 +691,8 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                             ),
                           ),
                         ),
+
+                        //Button :Open/Close
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 16.0),
@@ -700,7 +700,7 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                             onPressed: () async {
                               changeStatusJob(status);
                             },
-                            text: 'Close Job Applicant',
+                              text: 'Current Status: ${status == true ? "Active" : "Deactivated"}',
                             options: FFButtonOptions(
                               width: double.infinity,
                               height: 55.0,
@@ -708,7 +708,9 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                                   0.0, 0.0, 0.0, 0.0),
                               iconPadding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).error,
+                              color: status == true
+                              ? FlutterFlowTheme.of(context).success // Green color for 'Activate'
+                              : FlutterFlowTheme.of(context).error, // Red color for 'Deactivate'
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleMedium
                                   .override(
@@ -722,35 +724,7 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 16.0),
-                          child: FFButtonWidget(
-                            onPressed: () async {
-                              deleteJob();
-                            },
-                            text: 'Delete Job',
-                            options: FFButtonOptions(
-                              width: double.infinity,
-                              height: 55.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).error,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context)
-                                        .customColor1,
-                                    fontSize: 4.0,
-                                  ),
-                              elevation: 2.0,
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                        ),
+
                       ],
                     ),
                   ),

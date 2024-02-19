@@ -76,7 +76,7 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
     // Reference to the job document
     var jobReference = FirebaseFirestore.instance.collection('job').doc(job_uid);
 
-    var participantsReference = jobReference.collection('participant');
+    var participantsReference = jobReference.collection('applicants');
 
     // Fetch the job document
     var jobSnapshot = await jobReference.get();
@@ -294,7 +294,7 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -643,7 +643,7 @@ class _JobDetailHostWidgetState extends State<JobDetailHostWidget> {
                                   context: context,
                                   type: AlertType.success,
                                   title: "Job Applied",
-                                  desc: "You already send application to apply for this job, someone will reach you once your application have been review.",
+                                  desc: "You already sent an application to apply for this job, someone will reach to you once your application have been review.",
                                   buttons: [
                                     DialogButton(
                                       child: Text(

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.muzik_local">
+    package="com.example.muzik_lokal">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -21,7 +21,7 @@
         </intent>
     </queries>
    <application
-        android:label="Muzik Local"
+        android:label="MuzikLokal"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

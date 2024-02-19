@@ -1,28 +1,27 @@
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'claim_list_screen_model.dart';
-export 'claim_list_screen_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:async';
-// import '../add_admin_screen/add_admin_screen_widget.dart';
-import '../../../data/models/claim_model.dart';
-import '../../../search_widget.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../screens/skeleton_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../search_widget.dart';
+import '../../screens/skeleton_screen.dart';
+import '../../../data/models/claim_model.dart';
 import '../admin_detail_screen/claim_detail.dart';
-
+import 'claim_list_screen_model.dart';
+export 'claim_list_screen_model.dart';
+// import '../add_admin_screen/add_admin_screen_widget.dart';
 // import '../claim_detail/claim_detail_screen_widget.dart';
 
 class ClaimListScreenWidget extends StatefulWidget {
@@ -44,21 +43,37 @@ class _ClaimListScreenWidgetState extends State<ClaimListScreenWidget> {
   List<Claim> claims = [];
   List<Claim> claimList = [];
 
+  // Function to retrieve a list of claims from Firestore
   getClaimList() async {
-    db.collection('/claim').get().then((data) {
-    }).then((_) {
-      docUser.get().then((data) async {
-        if (data.docs.length < 1) {
-          return;
-        }
-        claimList.clear();
-        for (var doc in data.docs) {
-          Claim? temp = Claim.fromDocument(doc);
-          claimList.add(temp);
-        }
-        if (mounted) setState(() {});
+    try {
+      // Fetching data from the 'claim' collection in Firestore
+      db.collection('/claim').get().then((data) {
+        // Further asynchronous operations
+      }).then((_) {
+        // Fetching data from the 'docUser' collection in Firestore
+        docUser.get().then((data) async {
+          // Checking if there are documents in the collection
+          if (data.docs.length < 1) {
+            return;
+          }
+
+          // Clearing the existing claimList to refresh with new data
+          claimList.clear();
+
+          // Iterating through the documents and creating Claim objects
+          for (var doc in data.docs) {
+            Claim? temp = Claim.fromDocument(doc);
+            claimList.add(temp);
+          }
+
+          // Updating the UI if the widget is still mounted
+          if (mounted) setState(() {});
+        });
       });
-    });
+    } catch (error) {
+      // Handling errors and printing an error message
+      print('Error getting claim list: $error');
+    }
   }
     
   init(){
@@ -130,7 +145,7 @@ class _ClaimListScreenWidgetState extends State<ClaimListScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -194,38 +209,31 @@ class _ClaimListScreenWidgetState extends State<ClaimListScreenWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        16.0, 0.0, 0.0, 0.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
                                     child: Text(
                                       'Claim List',
-                                      style: FlutterFlowTheme.of(context)
-                                          .headlineSmall,
+                                      style: FlutterFlowTheme.of(context).headlineSmall.override(
+                                      fontFamily: 'Outfit',
+                                      color: FlutterFlowTheme.of(context).primaryText,
+                                      fontSize: 20.0,
+                                    ),
                                     ),
                                   ),
                                   buildSearch(),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12.0, 12.0, 12.0, 0.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 12.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Expanded(
                                           flex: 2,
                                           child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    8.0, 0.0, 0.0, 0.0),
+                                            padding:EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
                                             child: Text(
                                               'Name',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
+                                              style:FlutterFlowTheme.of(context).bodySmall.override(
                                                         fontFamily: 'Outfit',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .customColor1,
+                                                        color: FlutterFlowTheme.of(context).primaryText,
                                                       ),
                                             ),
                                           ),
@@ -234,13 +242,9 @@ class _ClaimListScreenWidgetState extends State<ClaimListScreenWidget> {
                                           child: Text(
                                             'Detail',
                                             textAlign: TextAlign.end,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
+                                            style: FlutterFlowTheme.of(context).bodySmall.override(
                                                   fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
+                                                  color: FlutterFlowTheme.of(context).primaryText,
                                                 ),
                                           ),
                                         ),
@@ -360,7 +364,7 @@ class _ClaimListScreenWidgetState extends State<ClaimListScreenWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             AutoSizeText(
-                              "Claim by: " + claim.claim_by_name!,
+                              claim.claim_by_name!,
                               style: FlutterFlowTheme.of(context).titleMedium.override(
                                 fontFamily: 'Outfit',
                                 color: FlutterFlowTheme.of(context).customColor1,
@@ -378,20 +382,20 @@ class _ClaimListScreenWidgetState extends State<ClaimListScreenWidget> {
                                   ),
                                 ),
                               ),
-                              // Padding(
-                              //   padding: EdgeInsetsDirectional.fromSTEB(0.0, 2.0, 0.0, 0.0),
-                              //   child: Text(
-                              //     "Point required: " + claim.point_required!,
-                              //     style: FlutterFlowTheme.of(context).bodySmall.override(
-                              //       fontFamily: 'Outfit',
-                              //       color: FlutterFlowTheme.of(context).customColor1,
-                              //     ),
-                              //   ),
-                              // ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  "Claim status: " + claim.status_text!,
+                                  claim.point_required! + " points",
+                                  style: FlutterFlowTheme.of(context).bodySmall.override(
+                                    fontFamily: 'Outfit',
+                                    color: FlutterFlowTheme.of(context).customColor1,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 2.0, 0.0, 0.0),
+                                child: Text(
+                                  claim.status_text!,
                                   style: FlutterFlowTheme.of(context).bodySmall.override(
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context).customColor1,

@@ -45,39 +45,59 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
     super.dispose();
   }
 
+  // Asynchronous function to get user details from Firestore
   Future<Map<String, dynamic>> getUserDetails(String uid) async {
-        try {
-            FirebaseFirestore firestore = FirebaseFirestore.instance;
-            DocumentSnapshot userDoc =
-                await firestore.collection('users').doc(uid).get();
+    try {
+      // Creating an instance of FirebaseFirestore
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-            if (userDoc.exists) {
-            Map<String, dynamic> userDetails = {
-                'name': userDoc['name'],
-                'email': userDoc['email'],
-                'phone': userDoc['phone'],
-                'user_type': userDoc['user_type'],
-            };
-            return userDetails;
-            } else {
-            return {};
-            }
-        } catch (error) {
-            print('Error getting user details: $error');
-            return {};
-        }
+      // Retrieving user document from the 'users' collection using the provided user ID
+      DocumentSnapshot userDoc = await firestore.collection('users').doc(uid).get();
+
+      // Checking if the user document exists
+      if (userDoc.exists) {
+        // Creating a Map containing user details
+        Map<String, dynamic> userDetails = {
+          'name': userDoc['name'],
+          'email': userDoc['email'],
+          'phone': userDoc['phone'],
+          'user_type': userDoc['user_type'],
+        };
+
+        // Returning the user details Map
+        return userDetails;
+      } else {
+        // Returning an empty Map if the user document does not exist
+        return {};
+      }
+    } catch (error) {
+      // Handling errors and printing an error message
+      print('Error getting user details: $error');
+
+      // Returning an empty Map in case of an error
+      return {};
     }
+  }
 
+  // Asynchronous function to load user details and update the state
   Future<void> loadUserDetails() async {
-    Map<String, dynamic>? details = await getUserDetails(widget.user.uid!);
-        setState(() {
-            userDetails = details;
-            name = userDetails!['name']!;
-            email = userDetails!['email']!;
-            phone = userDetails!['phone']!;
-            user_type = userDetails!['user_type']!;
-        });
+    try {
+      // Using the getUserDetails function to retrieve user details for the current user
+      Map<String, dynamic>? details = await getUserDetails(widget.user.uid!);
+
+      // Updating the state with the retrieved user details
+      setState(() {
+        userDetails = details;
+        name = userDetails!['name']!;
+        email = userDetails!['email']!;
+        phone = userDetails!['phone']!;
+        user_type = userDetails!['user_type']!;
+      });
+    } catch (error) {
+      // Handling errors and printing an error message
+      print('Error loading user details: $error');
     }
+  }
 
   image(pictures){
     var list = pictures;
@@ -113,7 +133,7 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),

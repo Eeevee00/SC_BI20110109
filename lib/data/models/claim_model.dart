@@ -5,7 +5,7 @@ class Claim {
     String? claim_by_name;
     String? claim_by_uid;
     String? point_required;
-    dynamic status;
+    bool? status;
     dynamic timestamp;
     String? title;
     String? uid;
@@ -54,18 +54,35 @@ class Claim {
         'status_text': status_text,
     };
 
-    factory Claim.fromDocument(DocumentSnapshot doc) {
+    // factory Claim.fromDocument(DocumentSnapshot doc) {
+    //     return Claim(
+    //         claim_by_name: doc['claim_by_name'],
+    //         claim_by_uid: doc['claim_by_uid'],
+    //         point_required: doc['point_required'],
+    //         status: doc['status'],
+    //         timestamp: doc['timestamp'],
+    //         title: doc['title'],
+    //         uid: doc['uid'],
+    //         user_image: doc['user_image'],
+    //         reward_uid: doc['reward_uid'],
+    //         status_text: doc['status_text'],
+    //     );
+    // }
+
+        factory Claim.fromDocument(DocumentSnapshot doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
         return Claim(
-            claim_by_name: doc['claim_by_name'],
-            claim_by_uid: doc['claim_by_uid'],
-            point_required: doc['point_required'],
-            status: doc['status'],
-            timestamp: doc['timestamp'],
-            title: doc['title'],
-            uid: doc['uid'],
-            user_image: doc['user_image'],
-            reward_uid: doc['reward_uid'],
-            status_text: doc['status_text'],
+            claim_by_name: data['claim_by_name'],
+            claim_by_uid: data['claim_by_uid'],
+            point_required: data['point_required'],
+            status: data['status'],
+            timestamp: data['timestamp'],
+            title: data['title'],
+            uid: data['uid'],
+            user_image: data['user_image'],
+            reward_uid: data['reward_uid'],
+            status_text: data['status_text'],
         );
     }
 }

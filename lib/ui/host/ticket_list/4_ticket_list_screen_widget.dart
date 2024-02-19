@@ -42,33 +42,63 @@ class _TicketListScreenWidgetState extends State<TicketListScreenWidget> {
   List<Ticket> tickets = [];
   List<Ticket> ticketList = [];
 
-  getTicketList() async {
-    var event_uid = widget.event_uid;
-    print(event_uid);
+  // getTicketList() async {
+  //   var event_uid = widget.event_uid;
+  //   print(event_uid);
+
+  //   ticketList.clear();
+  //   tickets.clear();
+
+  //   // db.collection('/event/$event_uid/ticket').get().then((data) {
+  //   // }).then((_) {
+  //     db.collection('/event/$event_uid/ticket').get().then((data) async {
+  //       if (data.docs.length < 1) {
+  //         init();
+  //         tickets.clear();
+  //         ticketList.clear();
+  //         return;
+  //       }
+  //       ticketList.clear();
+  //       for (var doc in data.docs) {
+  //         Ticket? temp = Ticket.fromDocument(doc);
+  //         print(temp);
+  //         ticketList.add(temp);
+  //       }
+  //       if (mounted) setState(() {});
+  //     });
+  //   // });
+  // }
+
+getTicketList() async {
+  var event_uid = widget.event_uid;
+  print(event_uid);
+
+  ticketList.clear();
+  tickets.clear();
+
+  try {
+    var data = await db.collection('/event/$event_uid/ticket').get();
+
+    if (data.docs.length < 1) {
+      init();
+      tickets.clear();
+      ticketList.clear();
+      return;
+    }
 
     ticketList.clear();
-    tickets.clear();
+    for (var doc in data.docs) {
+      Ticket? temp = Ticket.fromDocument(doc);
+      print(temp);
+      ticketList.add(temp);
+    }
 
-    db.collection('/event/$event_uid/ticket').get().then((data) {
-    }).then((_) {
-      db.collection('/event/$event_uid/ticket').get().then((data) async {
-        if (data.docs.length < 1) {
-          init();
-          tickets.clear();
-          ticketList.clear();
-          return;
-        }
-        ticketList.clear();
-        for (var doc in data.docs) {
-          Ticket? temp = Ticket.fromDocument(doc);
-          print(temp);
-          ticketList.add(temp);
-        }
-        if (mounted) setState(() {});
-      });
-    });
+    if (mounted) setState(() {});
+  } catch (e) {
+    print('Error retrieving ticket data: $e');
   }
-    
+}
+
   init(){
     final list = ticketList;
     setState(() => this.tickets = list);
@@ -137,7 +167,7 @@ class _TicketListScreenWidgetState extends State<TicketListScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -232,7 +262,7 @@ class _TicketListScreenWidgetState extends State<TicketListScreenWidget> {
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
-                                                                .customColor1,
+                                                                .primaryText,
                                                       ),
                                             ),
                                           ),
@@ -247,7 +277,7 @@ class _TicketListScreenWidgetState extends State<TicketListScreenWidget> {
                                                   fontFamily: 'Outfit',
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .customColor1,
+                                                      .primaryText,
                                                 ),
                                           ),
                                         ),

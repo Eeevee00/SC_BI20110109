@@ -92,8 +92,8 @@ class _TestState extends State<Test> {
     return Alert(
   context: context,
   type: AlertType.warning,
-  title: "Is this your location",
-  desc: "This location is what will appear in App",
+  title: "Is this your location?",
+  desc: "This location will be selected",
   buttons: [
     DialogButton(
       child: Text(
@@ -168,7 +168,7 @@ class _TestState extends State<Test> {
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Outfit',
                       color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 16.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -184,95 +184,147 @@ class _TestState extends State<Test> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Card(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
-                elevation: 10,
-                child: ExpansionTile(
-                  key: UniqueKey(),
-                  initiallyExpanded: initEx3,
-                  leading: Text(
-                    "Your current location save is",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: FlutterFlowTheme.of(context).primaryText,
-                    ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Card(
+              color: FlutterFlowTheme.of(context).secondaryBackground,
+              elevation: 10,
+              child: ExpansionTile(
+                key: UniqueKey(),
+                initiallyExpanded: initEx3,
+                leading: Text(
+                  "Your current location save is",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: FlutterFlowTheme.of(context).primaryText,
                   ),
-                  title: Text(
-                    "",
-                    style: TextStyle(
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  children: <Widget>[
-                    Text(
-                      widget.userLocation,
-                      style: TextStyle(fontWeight: FontWeight.bold, color: FlutterFlowTheme.of(context).primaryText,),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                  ],
                 ),
+                title: Text(
+                  "",
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                children: <Widget>[
+                  SizedBox(
+                    height: 60, // Adjust the height as needed
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: FlutterFlowTheme.of(context).primaryBackground,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Center(
+                          child: Padding(
+                          padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                            child: Text(
+                              widget.userLocation,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                              maxLines: 2, // Limit to two lines
+                              overflow: TextOverflow.ellipsis, // Handle overflow
+                              softWrap: true, // Enable wrapping
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Card(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
-                elevation: 10,
-                child: ExpansionTile(
-                  key: UniqueKey(),
-                  initiallyExpanded: initEx2,
-                  leading: Text(
-                    "Update location using GPS",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: FlutterFlowTheme.of(context).primaryText,
-                    ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Card(
+              color: FlutterFlowTheme.of(context).secondaryBackground,
+              elevation: 10,
+              child: ExpansionTile(
+                key: UniqueKey(),
+                initiallyExpanded: initEx2,
+                leading: Text(
+                  "Update location using GPS",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: FlutterFlowTheme.of(context).primaryText,
                   ),
-                  title: Text(
-                    "",
-                    style: TextStyle(
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  children: <Widget>[
-                    // content di sini
-                    ListTile(
-                      title: Text(
-                        "Use current location",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: FlutterFlowTheme.of(context).primaryText),
-                      ),
-                      subtitle: Text(_newAddress != null
-                        ? _newAddress['PlaceName'] ?? 'Fetching..'
-                        : 'Unable to load...', style: TextStyle(fontWeight: FontWeight.bold, color: FlutterFlowTheme.of(context).primaryText),),
-                      leading: Icon(
-                        Icons.location_searching_rounded,
-                        color: FlutterFlowTheme.of(context).primaryText,
-                      ),
-                      onTap: () async {
-                        if (_newAddress == null) {
-                          await getLocationCoordinates().then((updateAddress) {
-                            print(updateAddress);
-                            setState(() {
-                              _newAddress = updateAddress;
-                            });
-                          });
-                        } else {
-                          Navigator.pop(context, _newAddress);
-                        }
-                      },
-                    ),
-                  ],
                 ),
+                title: Text(
+                  "",
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                children: <Widget>[
+                  SizedBox(
+                    height: 60, // Adjust the height as needed
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: FlutterFlowTheme.of(context).primaryBackground,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
+                          // title: Text(
+                          //   "Use current location:",
+                          //   style: TextStyle(
+                          //     fontWeight: FontWeight.bold,
+                          //     color: FlutterFlowTheme.of(context).primaryText,
+                          //   ),
+                          // ),
+                          title: Text(
+                            _newAddress != null
+                                ? _newAddress['PlaceName'] ?? 'Fetching..'
+                                : 'Unable to load...',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize:14.0,
+                            ),
+                          ),
+                          leading: Icon(
+                            Icons.location_searching_rounded,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                          ),
+                          onTap: () async {
+                            if (_newAddress == null) {
+                              await getLocationCoordinates().then((updateAddress) {
+                                print(updateAddress);
+                                setState(() {
+                                  _newAddress = updateAddress;
+                                });
+                              });
+                            } else {
+                              Navigator.pop(context, _newAddress);
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+          ),
+
+
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Card(
@@ -284,7 +336,7 @@ class _TestState extends State<Test> {
                     leading: Text(
                       "Search Your location address",
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         color: FlutterFlowTheme.of(context).primaryText,
                       ),
                     ),
@@ -314,45 +366,55 @@ class _TestState extends State<Test> {
                                   labelText: 'Enter your address',
                                   labelStyle: TextStyle( // Add this block for label text style
                                     color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.0,
+
                                   ),
                                   filled: true,
                                   enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
+                                    borderSide: BorderSide(
+                                      color:FlutterFlowTheme.of(context).primaryBackground,
+                                      width: 2.0,
+                                    ),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context).primaryText,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
                                 ),
                               ),
-                              GFButton(
-                                onPressed: checkString,
-                                text: "Search Address",
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                fullWidthButton: true,
+                            GFButton(
+                              onPressed: checkString,
+                              text: "Search Address",
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              fullWidthButton: true,
+                              textStyle: TextStyle(
+                                fontFamily: 'Outfit',
+                                color: FlutterFlowTheme.of(context).secondaryBackground,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+
                               ),
+                            ),
+
                             ],
                           ),
                         ),
@@ -471,8 +533,18 @@ Future<Map> getLocationCoordinates() async {
       final coordinates = Coordinates(latitude, longitude);
       List<Address> result =
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      String currentAddress =
-          "${result.first.locality ?? ''} ${result.first.subLocality ?? ''} ${result.first.subAdminArea ?? ''} ${result.first.countryName ?? ''}, ${result.first.postalCode ?? ''}";
+      //String currentAddress =
+        // "${result.first.addressLine ?? ''}";
+        // "${result.first.subLocality ?? ''} ,${result.first.locality ?? ''}  ${result.first.subAdminArea ?? ''} ${result.first.postalCode ?? ''} ,${result.first.countryName ?? ''} ";
+        // "${result.first.subThoroughfare ?? ''},${result.first.subLocality ?? ''},${result.first.locality ?? ''},${result.first.adminArea ?? ''}";
+        // "${result.first.subLocality ?? ''},${result.first.locality ?? ''},${result.first.adminArea ?? ''}";
+      String currentAddress = "${result.first.subLocality ?? ''}"
+          "${result.first.subLocality != null ? ',' : ''}"
+          "${result.first.locality ?? ''}"
+          "${result.first.locality != null ? ',' : ''}"
+          "${result.first.adminArea ?? ''}";
+
+
 
       print(currentAddress);
       obj['PlaceName'] = currentAddress;

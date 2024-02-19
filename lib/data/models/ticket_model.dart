@@ -45,7 +45,9 @@ class Ticket {
     factory Ticket.fromDocument(DocumentSnapshot doc) {
         return Ticket(
             description: doc['description'],
-            quantity: doc['quantity'],
+            //quantity: doc['quantity'],
+            quantity: int.tryParse(doc['quantity'].toString()) ?? 0,
+
             ticket_type: doc['ticket_type'],
             timestamp: doc['timestamp'],
             title: doc['title'],

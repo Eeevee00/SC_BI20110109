@@ -69,10 +69,12 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
     try {
         FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-        DocumentReference eventsRef = await firestore.collection('/event/$event_uid/ticket').add({
+        DocumentReference eventsRef = await firestore
+          .collection('/event/$event_uid/ticket').add({
             'title': _model.textController1.text,
             'description': _model.textController5.text,
-            'quantity': _model.textController4.text,
+            //'quantity': _model.textController4.text,
+            'quantity': int.parse(_model.textController4.text),
             'ticket_type': _model.textController2.text,
             'value': _model.textController3.text,
             'uid': '', 
@@ -86,7 +88,7 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
             context: context,
             type: AlertType.success,
             title: "Add New Ticket",
-            desc: "Successfully add new ticket",
+            desc: "Successfully added new ticket",
             buttons: [
             DialogButton(
                 child: Text(
@@ -140,7 +142,7 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -167,6 +169,8 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
                           FlutterFlowTheme.of(context).headlineMedium.override(
                                 fontFamily: 'Outfit',
                                 color: FlutterFlowTheme.of(context).primaryText,
+                                fontSize: 20.0,
+
                               ),
                     ),
                   ),
@@ -179,7 +183,7 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
                       decoration: InputDecoration(
                         labelText: 'Title',
                         hintText: 'Enter ticket title',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -234,7 +238,7 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
                       decoration: InputDecoration(
                         labelText: 'Ticket Type',
                         hintText: 'Enter ticket type',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -293,7 +297,7 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
                       decoration: InputDecoration(
                         labelText: 'Price per ticket',
                         hintText: 'Enter price per ticket',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -352,7 +356,7 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
                       decoration: InputDecoration(
                         labelText: 'Available quantity',
                         hintText: 'Quantity of the ticket avaialble',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -405,7 +409,7 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
                     decoration: InputDecoration(
                       labelText: 'Ticket Description',
                       hintText: 'Enter ticket description',
-                      hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                      hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                       labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -470,7 +474,7 @@ class _NewTicketWidgetState extends State<NewTicketWidget> {
                                   fontFamily: 'Outfit',
                                   color: FlutterFlowTheme.of(context)
                                       .secondaryBackground,
-                                  fontSize: 14,
+                                  fontSize: 19,
                                 ),
                         elevation: 2,
                         borderRadius: BorderRadius.circular(5),

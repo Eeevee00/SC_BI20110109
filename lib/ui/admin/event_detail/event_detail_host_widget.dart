@@ -13,7 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../host/applicant_list/applicant_list_widget.dart';
 
-import '../../host/review/review.dart';
+import '../../host/review_event/review.dart';
 import '../../host/ticket_list/2_ticket_list_screen_widget.dart';
 
 import '../../host/edit_event/edit_event_form_widget.dart';
@@ -85,19 +85,24 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
     super.dispose();
   }
 
+  // Function to retrieve details of an event from Firestore
   getEventDetail() async {
+    // Extracting the UID of the event from the widget
     var event_uid = widget.event.uid;
 
     try {
+      // Creating an instance of FirebaseFirestore
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-      // Assuming 'tickets' is the collection and 'ticket_uid' is the document ID
+      // Retrieving the document snapshot for the specified event UID
       DocumentSnapshot eventDoc = await firestore.doc('/event/$event_uid').get();
 
+      // Checking if the document exists
       if (eventDoc.exists) {
-        // Access the data from the document
+        // Accessing data from the document
         Map<String, dynamic> eventData = eventDoc.data() as Map<String, dynamic>;
 
+        // Updating the state with event details
         setState(() {
           _image = eventData['image'];
           title = eventData['title'];
@@ -112,39 +117,47 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
           description = eventData['description'];
         });
       } else {
-        print('Ticket document does not exist');
+        // Printing a message if the document does not exist
+        print('Event document does not exist');
       }
     } catch (error) {
-      print('Error fetching ticket details: $error');
+      // Handling errors and printing an error message
+      print('Error fetching event details: $error');
     }
   }
 
+  // Function to prompt the user with a confirmation dialog for event deletion
   void deleteEvent() {
+    // Showing an alert dialog with a warning message
     Alert(
       context: context,
       type: AlertType.warning,
       title: "Delete Event",
       desc: "Are you sure you want to delete this event?",
       buttons: [
+        // Button to cancel the deletion
         DialogButton(
           child: Text(
             "Cancel",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Close the dialog
           },
         ),
+        // Button to confirm and delete the event
         DialogButton(
           child: Text(
             "Delete",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () async {
-            Navigator.pop(context);
+            Navigator.pop(context); // Close the confirmation dialog
 
+            // Deleting the event from Firestore using its UID
             await FirebaseFirestore.instance.collection('event').doc(widget.event.uid).delete();
 
+            // Showing a success alert after successful deletion
             Alert(
               context: context,
               type: AlertType.success,
@@ -157,8 +170,8 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                    Navigator.pop(context); // Close the success alert
+                    Navigator.pop(context); // Close the screen or navigate back
                   },
                 ),
               ],
@@ -166,22 +179,27 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
           },
         ),
       ],
-    ).show();
+    ).show(); // Display the confirmation dialog
   }
 
 
+  // Function to change the status of an event
   void changeStatusEvent(bool currentStatus) async {
+    // Calculate the new status by toggling the current status
     bool newStatus = !currentStatus;
 
     try {
+      // Update the 'status' field in the Firestore document for the event
       await FirebaseFirestore.instance.collection('event').doc(widget.event.uid).update({
         'status': newStatus,
       });
 
-      String statusMessage = newStatus ? "active" : "inactive";
+      // Set the new status in the local state
       setState(() {
-          status = newStatus;
+        status = newStatus;
       });
+
+      String statusMessage = newStatus ? "active" : "inactive";
 
       // Show a success message
       Alert(
@@ -202,7 +220,7 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
         ],
       ).show();
     } catch (error) {
-      // Show an error message if update fails
+      // Show an error message if the update fails
       Alert(
         context: context,
         type: AlertType.error,
@@ -222,7 +240,6 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
       ).show();
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -247,19 +264,67 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
           iconTheme:
               IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
-          title: Text(
-            'Event Detail',
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  fontFamily: 'Outfit',
+          // title: Text(
+          //   'Event Detail',
+          //   style: FlutterFlowTheme.of(context).bodyMedium.override(
+          //         fontFamily: 'Outfit',
+          //         color: FlutterFlowTheme.of(context).primaryText,
+          //         fontSize: 20.0,
+          //         fontWeight: FontWeight.w500,
+          //       ),
+          // ),
+
+           title: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Event Detail',
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily: 'Outfit',
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+              PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_vert,
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
+                  size: 24.0,
                 ),
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'updateEvent',
+                    child: Text('Update Event'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'deleteEvent',
+                    child: Text('Delete Event'),
+                  ),
+                ],
+                onSelected: (String choice) async {
+                  if (choice == 'updateEvent') {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditEventFormWidget(event: widget.event),
+                      ),
+                    );
+                    getEventDetail();
+                  } else if (choice == 'deleteEvent') {
+                    deleteEvent();                       
+                  }
+                },
+              ),
+            ],
           ),
+
           actions: [],
           centerTitle: false,
           elevation: 0.0,
         ),
+
         body: SafeArea(
           top: true,
           child: SingleChildScrollView(
@@ -292,18 +357,178 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+
+                        //Title
                         Text(
                           title.toString(),
                           style: FlutterFlowTheme.of(context)
                               .headlineMedium
                               .override(
                                 fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
+                                color: FlutterFlowTheme.of(context).customColor1,
+                                fontWeight: FontWeight.w800,
+                                fontSize:30,                              ),
                         ),
+
+                        //Description
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 10.0),
+                              0.0, 8.0, 0.0, 20.0),
+                          child: Text(
+                            widget.event.description!,
+                            style: FlutterFlowTheme.of(context)
+                                .bodySmall
+                                .override(
+                                  fontFamily: 'Outfit',
+                                  color:
+                                      FlutterFlowTheme.of(context).customColor1,
+                                 fontSize: 15,
+
+                                ),
+                          ),
+                        ),
+
+                        // Host Detail - image, name, phone, email
+                        Container(
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primaryBackground,
+                              borderRadius: BorderRadius.circular(12.0), // Adjust the border radius as needed
+                            ),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 8.0, 0.0, 10.0),
+                              //Left :Image
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 20.0, 0.0),
+                                  //Image
+                                  child: 
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            4.0, 0.0, 0.0, 0.0),
+                                        child: Container(
+                                          width: 50.0,
+                                          height: 50.0,
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                                        border: Border.all(
+                          color: Colors.yellow, // Set your desired border color
+                          width: 2.0, // Set your desired border width
+                          ),
+                                          ),
+                                          child: Image.network(
+                                            widget.event.organizer_image!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),      //Padding 
+
+                                  //Name
+                                    Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 8.0, 90.0, 0.0),
+                                              child: Text(
+                                                name!,
+                                                style: FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily: 'Outfit',
+                                                      color:
+                                                          FlutterFlowTheme.of(context)
+                                                              .customColor1,
+                                                    ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+
+                                  //Phone and email
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 8.0, 0.0),
+                                            child: Icon(
+                                              Icons.phone,
+                                              color: FlutterFlowTheme.of(context)
+                                                  .primaryText,
+                                              size: 24.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            phone!,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium.override(
+                                                  fontFamily: 'Outfit',
+                                                  color:
+                                                      FlutterFlowTheme.of(context)
+                                                          .customColor1,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 8.0, 0.0),
+                                            child: Icon(
+                                              Icons.email,
+                                              color: FlutterFlowTheme.of(context)
+                                                  .primaryText,
+                                              size: 24.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            email!,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium.override(
+                                                    fontFamily: 'Outfit',
+                                                    color:
+                                                        FlutterFlowTheme.of(context)
+                                                            .customColor1,
+                                                  ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        //Date & Time
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 10.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
@@ -316,7 +541,7 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                     Icon(
                                       Icons.calendar_month,
                                       color: FlutterFlowTheme.of(context)
-                                          .customColor1,
+                                          .primaryText,
                                       size: 36.0,
                                     ),
                                   ],
@@ -326,32 +551,12 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
+                                                                    Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 8.0, 0.0, 0.0),
-                                        child: Text(
-                                          formatTimestamp(start_date) + "(start) - " + formatTimestamp(end_date) + " (end)",
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Outfit',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .customColor1,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 8.0, 0.0, 0.0),
+                                            0.0, 2.0, 0.0, 0.0),
                                         child: Text(
                                           start_time + " - " + end_time,
                                           style: FlutterFlowTheme.of(context)
@@ -366,11 +571,34 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                       ),
                                     ],
                                   ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 2.0, 0.0, 0.0),
+                                        child: Text(
+                                          formatTimestamp(start_date) + " - " + formatTimestamp(end_date),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Outfit',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .customColor1,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
                                 ],
                               ),
                             ],
                           ),
                         ),
+
+                        //Location                     
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 10),
                           child: Row(
@@ -384,7 +612,7 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                   children: [
                                     Icon(
                                       Icons.location_pin,
-                                      color: FlutterFlowTheme.of(context).customColor1,
+                                      color: FlutterFlowTheme.of(context).primaryText,
                                       size: 36,
                                     ),
                                   ],
@@ -408,189 +636,9 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                               ),
                             ],
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 8.0, 0.0, 10.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 20.0, 0.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          4.0, 0.0, 0.0, 0.0),
-                                      child: Container(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Image.network(
-                                          widget.event.organizer_image!,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 8.0, 0.0, 0.0),
-                                        child: Text(
-                                          name!,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Outfit',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .customColor1,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 8.0, 0.0, 0.0),
-                                            child: Text(
-                                              'Organizer',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'Outfit',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .customColor1,
-                                                      ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 8.0, 0.0, 10.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 20.0, 0.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  4.0, 0.0, 8.0, 0.0),
-                                          child: Icon(
-                                            Icons.phone,
-                                            color: FlutterFlowTheme.of(context)
-                                                .customColor1,
-                                            size: 24.0,
-                                          ),
-                                        ),
-                                        Text(
-                                          phone!,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 8.0, 0.0),
-                                        child: Icon(
-                                          Icons.email,
-                                          color: FlutterFlowTheme.of(context)
-                                              .customColor1,
-                                          size: 24.0,
-                                        ),
-                                      ),
-                                      Text(
-                                        email!,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 8.0, 0.0, 0.0),
-                          child: Text(
-                            'About Event',
-                            style: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  fontFamily: 'Outfit',
-                                  color:
-                                      FlutterFlowTheme.of(context).customColor1,
-                                ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 8.0, 0.0, 0.0),
-                          child: Text(
-                            widget.event.description!,
-                            style: FlutterFlowTheme.of(context)
-                                .bodySmall
-                                .override(
-                                  fontFamily: 'Outfit',
-                                  color:
-                                      FlutterFlowTheme.of(context).customColor1,
-                                ),
-                          ),
-                        ),
+                        ),                  
+                        
+                        //Button : View Ticket
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 16.0, 0.0, 0.0),
@@ -618,13 +666,15 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 4.0,
+                                    fontSize: 18.0,
                                   ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                           ),
                         ),
+
+                         //Button : View Participant List
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 16.0, 0.0, 16.0),
@@ -652,48 +702,15 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 4.0,
+                                    fontSize: 18.0,
                                   ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 16.0),
-                          child: FFButtonWidget(
-                            onPressed: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditEventFormWidget(event: widget.event),
-                                ),
-                              );
-                              getEventDetail();
-                            },
-                            text: 'Update Event Detail',
-                            options: FFButtonOptions(
-                              width: double.infinity,
-                              height: 55.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    fontSize: 4.0,
-                                  ),
-                              elevation: 2.0,
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                        ),
+
+                        //Button :View Feeedback
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 16.0),
@@ -721,13 +738,15 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 4.0,
+                                    fontSize: 18.0,
                                   ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                           ),
                         ),
+
+                        //Button :Open/Close
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 16.0),
@@ -735,7 +754,7 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                             onPressed: () async {
                               changeStatusEvent(status);
                             },
-                            text: 'Open/Close Event Applicant',
+                            text: 'Current Status: ${status == true ? "Active" : "Deactivated"}',
                             options: FFButtonOptions(
                               width: double.infinity,
                               height: 55.0,
@@ -743,49 +762,23 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                   0.0, 0.0, 0.0, 0.0),
                               iconPadding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).error,
+                              color: status == true
+                              ? FlutterFlowTheme.of(context).success // Green color for 'Activate'
+                              : FlutterFlowTheme.of(context).error, // Red color for 'Deactivate'
                               textStyle: FlutterFlowTheme.of(context)
                                   .titleMedium
                                   .override(
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .customColor1,
-                                    fontSize: 4.0,
+                                    fontSize: 18.0,
                                   ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 16.0),
-                          child: FFButtonWidget(
-                            onPressed: () async {
-                              deleteEvent();
-                            },
-                            text: 'Delete Event',
-                            options: FFButtonOptions(
-                              width: double.infinity,
-                              height: 55.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).error,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context)
-                                        .customColor1,
-                                    fontSize: 4.0,
-                                  ),
-                              elevation: 2.0,
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                        ),
+
                       ],
                     ),
                   ),

@@ -202,7 +202,7 @@ Future<int?> getUserPoint(var userUid) async {
           'uid': "", // Leave it empty for now
           'send_to': "user",
           'created_by': "",
-          'read': false,
+          //'read': false,
         });
 
     // Get the auto-generated uid from the notificationRef
@@ -228,7 +228,7 @@ Future<int?> getUserPoint(var userUid) async {
           'uid': "", // Leave it empty for now
           'send_to': "user",
           'created_by': "",
-          'read': false,
+          //'read': false,
         });
 
     // Get the auto-generated uid from the notificationRef
@@ -282,7 +282,7 @@ Future<int?> getUserPoint(var userUid) async {
         context: context,
         type: AlertType.success,
         title: "Ticket Purchase",
-        desc: "Successfully purchase the ticket, 1000 point will be added to you as a reward",
+        desc: "Successfully purchased the ticket, 1000 point will be added as a reward",
         buttons: [
           DialogButton(
             child: Text(
@@ -333,7 +333,7 @@ Future<int?> getUserPoint(var userUid) async {
           style: FlutterFlowTheme.of(context).bodyMedium.override(
                 fontFamily: 'Outfit',
                 color: FlutterFlowTheme.of(context).primaryText,
-                fontSize: 16.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.w500,
               ),
         ),

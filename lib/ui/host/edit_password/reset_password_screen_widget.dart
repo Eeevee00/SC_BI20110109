@@ -54,7 +54,7 @@ class _ResetPasswordScreenWidgetState
         type: AlertType.success,
         title: "Reset Password confirmation",
         desc:
-            "Please check your email to continue with reseting your account password",
+            "Please check your email to continue with resetting your account password",
         buttons: [
           DialogButton(
             child: Text(
@@ -72,7 +72,7 @@ class _ResetPasswordScreenWidgetState
         context: context,
         type: AlertType.warning,
         title: "Password reset fail",
-        desc: "fail to send email because it didnt exist.",
+        desc: "Failed to send email because it didnt exist.",
         buttons: [
           DialogButton(
             child: Text(
@@ -122,7 +122,7 @@ class _ResetPasswordScreenWidgetState
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -132,27 +132,39 @@ class _ResetPasswordScreenWidgetState
         ),
         body: SafeArea(
           top: true,
-          child: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(16.0, 50.0, 0.0, 16.0),
-                  child: Text(
-                    'Change Password',
-                    textAlign: TextAlign.center,
-                    style: FlutterFlowTheme.of(context).headlineMedium.override(
-                          fontFamily: 'Outfit',
-                          color: FlutterFlowTheme.of(context).primaryText,
-                        ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 16.0),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+            //child: SingleChildScrollView(
+              // child: Form(
+              //   key: _registerFormKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Change Password',
+                                textAlign: TextAlign.start,
+                                style: FlutterFlowTheme.of(context).titleSmall.override(
+                                  fontFamily: 'Outfit',
+                                  color: FlutterFlowTheme.of(context).primaryText,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                 Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
                   child: Text(
                     'Please enter your email address below. We will send you a link to reset your password.',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -162,7 +174,7 @@ class _ResetPasswordScreenWidgetState
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 10.0),
                   child: TextFormField(
                     controller: _model.textController,
                     focusNode: _model.textFieldFocusNode,
@@ -170,7 +182,7 @@ class _ResetPasswordScreenWidgetState
                     decoration: InputDecoration(
                       labelText: 'Email Address',
                       hintText: 'Enter your email',
-                      hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                      hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                       labelStyle: TextStyle( // Add this block for label text style
                         color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                       ),
@@ -213,7 +225,7 @@ class _ResetPasswordScreenWidgetState
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
                   child: FFButtonWidget(
                     onPressed: () async {
                       if(_model.textController.text.isEmpty){
@@ -234,7 +246,8 @@ class _ResetPasswordScreenWidgetState
                             )
                           ],
                         ).show();
-                      }else{
+                      }
+                      else{
                         Alert(
                           context: context,
                           type: AlertType.warning,
@@ -267,25 +280,27 @@ class _ResetPasswordScreenWidgetState
                     options: FFButtonOptions(
                       width: double.infinity,
                       height: 55.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: FlutterFlowTheme.of(context).primaryText,
                       textStyle:
                           FlutterFlowTheme.of(context).titleMedium.override(
                                 fontFamily: 'Outfit',
                                 color: FlutterFlowTheme.of(context)
                                     .secondaryBackground,
-                                fontSize: 4.0,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w600,
                               ),
                       elevation: 2.0,
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                 ),
-              ],
-            ),
+                  ],
+                ),
+              //),
+            
+            //),
           ),
         ),
       ),

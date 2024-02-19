@@ -38,7 +38,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
   final _registerFormKey = GlobalKey<FormState>();
   var title;
   var contact_number;
-  var category;
+  //var category;
   var event_date_start;
   var event_date_end;
   var event_time_start;
@@ -138,7 +138,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
               'location': {
                 'address': _model.textController8.text,
                 'latitude': widget.event.location!['latitude'],
-                'longitude': widget.event.location!['latitude'],
+                'longitude': widget.event.location!['longitude'],
               },
               'description': _model.textController9.text,
           });
@@ -165,7 +165,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
             context: context,
             type: AlertType.success,
             title: "Update Event",
-            desc: "Successfully update event",
+            desc: "Successfully updated event",
             buttons: [
             DialogButton(
                 child: Text(
@@ -191,15 +191,47 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
     }
   }
 
-  @override
-  void dispose() {
-    _model.dispose();
-
-    super.dispose();
-  }
+ 
 
   void setSelectedDate(DateTime date) {
     selectedDate = date;
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null){
+      setSelectedDate(picked);
+      print(picked);
+
+      _model.textController3.text = DateFormat('dd/MM/yyyy').format(picked!.toLocal());
+    }
+  }
+
+  void _selectEndDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null) {
+      if (selectedDate != null && picked.isBefore(selectedDate!)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('End date cannot be before start date'),
+          ),
+        );
+      } else {
+        _model.textController4.text = DateFormat('dd/MM/yyyy').format(picked.toLocal());
+      }
+    }
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
@@ -228,44 +260,13 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
     }
   }
 
-  void _selectEndDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
+ @override
+  void dispose() {
+    _model.dispose();
 
-    if (picked != null) {
-      if (selectedDate != null && picked.isBefore(selectedDate!)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('End date cannot be before start date'),
-          ),
-        );
-      } else {
-        _model.textController4.text = DateFormat('dd/MM/yyyy').format(picked.toLocal());
-      }
-    }
+    super.dispose();
   }
-
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-
-    if (picked != null){
-      setSelectedDate(picked);
-      print(picked);
-
-      _model.textController3.text = DateFormat('dd/MM/yyyy').format(picked!.toLocal());
-    }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     if (isiOS) {
@@ -298,7 +299,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Outfit',
                       color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 16.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -328,6 +329,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                             FlutterFlowTheme.of(context).headlineMedium.override(
                                   fontFamily: 'Outfit',
                                   color: FlutterFlowTheme.of(context).primaryText,
+                                   fontSize: 20.0,
                                 ),
                       ),
                     ),
@@ -355,7 +357,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                                               Image.network(
                                                 'https://user-images.githubusercontent.com/43302778/106805462-7a908400-6645-11eb-958f-cd72b74a17b3.jpg',
                                                 width: double.infinity,
-                                                height: 160.0,
+                                                height: 200.0,
                                                 fit: BoxFit.cover,
                                               ),
                                             ],
@@ -412,7 +414,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                         decoration: InputDecoration(
                           labelText: 'Event Title',
                           hintText: 'Enter title',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -469,7 +471,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                         decoration: InputDecoration(
                           labelText: 'Contact Number to Apply',
                           hintText: 'Enter phone number',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle(
                             color: FlutterFlowTheme.of(context).primaryText,
                           ),
@@ -525,7 +527,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                             decoration: InputDecoration(
                               labelText: 'Event Date (Start)',
                               hintText: 'Enter start date',
-                              hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                              hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                               labelStyle: TextStyle(
                                 color: FlutterFlowTheme.of(context).primaryText,
                               ),
@@ -584,7 +586,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                             decoration: InputDecoration(
                               labelText: 'Event Date (End)',
                               hintText: 'Enter end date',
-                              hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                              hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                               labelStyle: TextStyle(
                                 color: FlutterFlowTheme.of(context).primaryText,
                               ),
@@ -641,9 +643,9 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                             focusNode: _model.textFieldFocusNode5,
                             obscureText: false,
                             decoration: InputDecoration(
-                              labelText: 'Event Start Time',
+                              labelText: 'Event Time (Start)',
                               hintText: 'Enter event start time',
-                              hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                              hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                               labelStyle: TextStyle(
                                 color: FlutterFlowTheme.of(context).primaryText,
                               ),
@@ -699,9 +701,9 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                         readOnly: true,
                         onTap: () => _selectEndTime(context),
                         decoration: InputDecoration(
-                          labelText: 'Event End Time',
+                          labelText: 'Event Time (End)',
                           hintText: 'Enter event end time',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( 
                             color: FlutterFlowTheme.of(context).primaryText,
                           ),
@@ -757,7 +759,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                     //     decoration: InputDecoration(
                     //       labelText: 'Event Deadline',
                     //       hintText: 'Enter event deadline',
-                    //       hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                    //       hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                     //       labelStyle: TextStyle( // Add this block for label text style
                     //         color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                     //       ),
@@ -831,7 +833,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                         decoration: InputDecoration(
                           labelText: 'Event Venue',
                           hintText: 'Enter the venue',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -886,7 +888,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                       decoration: InputDecoration(
                         labelText: 'Event Description',
                         hintText: 'Enter description',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -940,7 +942,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                             await saveEvent();
                           }
                         },
-                        text: 'Submit',
+                        text: 'Update',
                         options: FFButtonOptions(
                           width: double.infinity,
                           height: 55.0,
@@ -954,7 +956,7 @@ class _EditEventFormWidgetState extends State<EditEventFormWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 14.0,
+                                    fontSize: 18.0,
                                   ),
                           elevation: 2.0,
                           borderRadius: BorderRadius.circular(5.0),

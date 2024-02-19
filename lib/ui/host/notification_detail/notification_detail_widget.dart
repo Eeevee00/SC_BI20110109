@@ -63,7 +63,7 @@ class _NotificationDataDetailScreenWidgetState extends State<NotificationDataDet
           context: context,
           type: AlertType.success,
           title: "Delete Notification",
-          desc: "Successfully delete notification",
+          desc: "Successfully deleted notification",
           buttons: [
             DialogButton(
               child: Text(
@@ -118,7 +118,7 @@ class _NotificationDataDetailScreenWidgetState extends State<NotificationDataDet
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -158,7 +158,7 @@ class _NotificationDataDetailScreenWidgetState extends State<NotificationDataDet
                         decoration: InputDecoration(
                           labelText: 'Title',
                           hintText: 'Enter title',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -210,7 +210,7 @@ class _NotificationDataDetailScreenWidgetState extends State<NotificationDataDet
                       decoration: InputDecoration(
                         labelText: 'Notification Description',
                         hintText: 'Enter notification description',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),

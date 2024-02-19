@@ -112,7 +112,7 @@ class _MyTicketWidgetState extends State<MyTicketWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -178,7 +178,7 @@ class _MyTicketWidgetState extends State<MyTicketWidget> {
                                   fontFamily: 'Outfit',
                                   color:
                                       FlutterFlowTheme.of(context).customColor1,
-                                  fontSize: 16.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.normal,
                                 ),
                           ),
@@ -223,7 +223,7 @@ class _MyTicketWidgetState extends State<MyTicketWidget> {
                                   fontFamily: 'Outfit',
                                   color:
                                       FlutterFlowTheme.of(context).customColor1,
-                                  fontSize: 16.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.normal,
                                 ),
                           ),
@@ -268,7 +268,7 @@ class _MyTicketWidgetState extends State<MyTicketWidget> {
                                   fontFamily: 'Outfit',
                                   color:
                                       FlutterFlowTheme.of(context).customColor1,
-                                  fontSize: 16.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.normal,
                                 ),
                           ),
@@ -313,7 +313,7 @@ class _MyTicketWidgetState extends State<MyTicketWidget> {
                                   fontFamily: 'Outfit',
                                   color:
                                       FlutterFlowTheme.of(context).customColor1,
-                                  fontSize: 16.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.normal,
                                 ),
                           ),

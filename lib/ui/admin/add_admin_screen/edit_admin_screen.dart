@@ -49,32 +49,45 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
     loadUserDetails();
   }
 
+  // Asynchronous function to retrieve user details from Firestore
   Future<Map<String, dynamic>> getUserDetails(String uid) async {
         try {
+            // Accessing the Firestore instance
             FirebaseFirestore firestore = FirebaseFirestore.instance;
+            
+            // Retrieving a document snapshot from the 'users' collection based on the user ID
             DocumentSnapshot notificationDoc =
                 await firestore.collection('users').doc(uid).get();
 
+            // Checking if the document exists in the 'users' collection
             if (notificationDoc.exists) {
+            // Creating a map to store user details from the document
             Map<String, dynamic> notificationDetails = {
                 'name': notificationDoc['name'],
                 'email': notificationDoc['email'],
                 'phone': notificationDoc['phone'],
             };
-            return notificationDetails;
-            } else {
-            return {};
+            return notificationDetails; // Returning the user details map
+            } 
+            else {
+            return {};                  // Returning an empty map if the document does not exist
             }
         } catch (error) {
+            // Handling errors and printing an error message
             print('Error getting notification details: $error');
+            // Returning an empty map in case of an error
             return {};
         }
     }
-
+  // Asynchronous function to load user details and update the UI
   Future<void> loadUserDetails() async {
+    // Calling the getUserDetails function to retrieve user details based on UID
     Map<String, dynamic>? details = await getUserDetails(widget.uid);
+        // Updating the UI within a setState block to trigger a rebuild
         setState(() {
+            // Assigning the retrieved user details to the userDetails variable
             userDetails = details;
+            // Updating the text controllers with user details
             _model.textController1.text = userDetails!['name']!;
             _model.textController2.text = userDetails!['email']!;
             _model.textController3.text = userDetails!['phone']!;
@@ -87,25 +100,32 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
     super.dispose();
   }
 
+  // Asynchronous function to update user details in Firestore
   Future<void> update_user() async {
     try {
+      // Accessing Firestore instance
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+      // Retrieving the user ID from the widget
       String uid = widget.uid; 
 
+      // Retrieving the document snapshot for the specified user ID
       DocumentSnapshot userDoc = await firestore.collection('users').doc(uid).get();
 
+      // Checking if the user document exists
       if (userDoc.exists) {
+        // Updating the user details in Firestore
         await firestore.collection('users').doc(uid).update({
           'name': _model.textController1.text,
           'phone': _model.textController3.text,
         });
 
+        // Showing a success alert upon successful update
         Alert(
           context: context,
           type: AlertType.success,
           title: "Update User",
-          desc: "Successfully update user detail",
+          desc: "Successfully updated user details",
           buttons: [
             DialogButton(
               child: Text(
@@ -113,6 +133,7 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
               onPressed: () {
+                // Closing the alert and popping two times to navigate back
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
@@ -121,11 +142,14 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
           ],
         ).show();
       } else {
+        // Logging a message if the user with the specified UID is not found
         print('User with UID $uid not found');
       }
     } catch (error) {
+      // Handling errors and printing an error message
       print('Error updating user details: $error');
     } finally {
+      // Updating the state to indicate the end of processing
       setState(() {
         _isProcessing = false;
       });
@@ -160,7 +184,7 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -188,7 +212,7 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text(
-                                  'User Detail',
+                                  'Admin Detail',
                                   textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
                                       .titleSmall
@@ -196,7 +220,7 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
                                         fontFamily: 'Outfit',
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
-                                        fontSize: 14.0,
+                                        fontSize: 20.0,
                                         fontWeight: FontWeight.w500,
                                       ),
                                 ),
@@ -215,7 +239,7 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
                           decoration: InputDecoration(
                             labelText: 'Full Name',
                             hintText: 'Enter admin full name',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -273,7 +297,7 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
                           decoration: InputDecoration(
                             labelText: 'Email Address',
                             hintText: 'Enter admin email address',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle(
                               color: FlutterFlowTheme.of(context).primaryText,
                             ),
@@ -316,7 +340,8 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
                             }
                             // Use a regex pattern for email validation
                             String emailRegex =
-                                r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                                //r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                                r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$';
                             RegExp regex = RegExp(emailRegex);
                             if (!regex.hasMatch(value)) {
                               return 'Please enter a valid email address';
@@ -332,10 +357,12 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
                           controller: _model.textController3,
                           focusNode: _model.textFieldFocusNode3,
                           obscureText: false,
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],                         
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
                             hintText: 'Enter admin phone number',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -392,7 +419,7 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
                               await update_user();
                             }
                           },
-                          text: 'Update User',
+                          text: 'Update',
                           options: FFButtonOptions(
                             width: double.infinity,
                             height: 50.0,
@@ -406,7 +433,7 @@ class _EditAdminScreenWidgetState extends State<EditAdminScreenWidget> {
                                       fontFamily: 'Outfit',
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryBackground,
-                                      fontSize: 16.0,
+                                      fontSize: 20.0,
                                     ),
                             elevation: 3.0,
                             borderSide: BorderSide(

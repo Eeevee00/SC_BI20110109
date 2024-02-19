@@ -31,6 +31,7 @@ class FlutterFlowDropDown<T> extends StatefulWidget {
     this.isOverButton = false,
     this.isSearchable = false,
     this.isMultiSelect = false,
+    //this.prefixIcon,//add prefix icon
   }) : super(key: key);
 
   final FormFieldController<T> controller;
@@ -58,6 +59,7 @@ class FlutterFlowDropDown<T> extends StatefulWidget {
   final bool isOverButton;
   final bool isSearchable;
   final bool isMultiSelect;
+  //final Widget? prefixIcon; //add prefix icon
 
   @override
   State<FlutterFlowDropDown<T>> createState() => _FlutterFlowDropDownState<T>();
@@ -244,6 +246,8 @@ class _FlutterFlowDropDownState<T> extends State<FlutterFlowDropDown<T>> {
       buttonStyleData: ButtonStyleData(
         elevation: widget.elevation.toInt(),
         overlayColor: overlayColor,
+        //prefixIcon: widget.prefixIcon, // Added prefixIcon property
+
       ),
       menuItemStyleData: MenuItemStyleData(overlayColor: overlayColor),
       dropdownStyleData: DropdownStyleData(

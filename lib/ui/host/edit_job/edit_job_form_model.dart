@@ -49,7 +49,10 @@ class EditJobFormModel extends FlutterFlowModel<EditJobFormWidget> {
   FocusNode? textFieldFocusNode8;
   TextEditingController? textController8;
   String? Function(BuildContext, String?)? textController8Validator;
-
+  // State field(s) for TextField widget.
+  FocusNode? textFieldFocusNode9;
+  TextEditingController? textController9;
+  String? Function(BuildContext, String?)? textController9Validator;
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {}
@@ -79,6 +82,9 @@ class EditJobFormModel extends FlutterFlowModel<EditJobFormWidget> {
 
     textFieldFocusNode8?.dispose();
     textController8?.dispose();
+
+   textFieldFocusNode9?.dispose();
+    textController9?.dispose();
   }
 
   /// Action blocks are added here.

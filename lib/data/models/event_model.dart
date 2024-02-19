@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class Event {
-    String? category;
-    dynamic deadline;
+    //String? category;
+    //dynamic deadline;
     String? description;
     dynamic end_date;
     dynamic end_time;
@@ -21,8 +21,8 @@ class Event {
     String? phone;
     
     Event({
-        @required this.category,
-        @required this.deadline,
+        //@required this.category,
+       // @required this.deadline,
         @required this.description,
         @required this.end_date,
         @required this.end_time,
@@ -42,8 +42,8 @@ class Event {
 
     factory Event.fromJson(Map<String, dynamic> doc) {
         return Event(
-            category: doc['category'],
-            deadline: doc['deadline'],
+            //category: doc['category'],
+            //deadline: doc['deadline'],
             description: doc['description'],
             end_date: doc['end_date'],
             end_time: doc['end_time'],
@@ -67,8 +67,8 @@ class Event {
     }
 
     Map<String, dynamic> toJson() => {
-        'category': category,
-        'deadline': deadline,
+        //'category': category,
+        //'deadline': deadline,
         'description': description,
         'end_date': end_date,
         'end_time': end_time,
@@ -88,8 +88,8 @@ class Event {
 
     factory Event.fromDocument(DocumentSnapshot doc) {
         return Event(
-            category: doc['category'],
-            deadline: doc['deadline'],
+            //category: doc['category'],
+            //deadline: doc['deadline'],
             description: doc['description'],
             end_date: doc['end_date'],
             end_time: doc['end_time'],

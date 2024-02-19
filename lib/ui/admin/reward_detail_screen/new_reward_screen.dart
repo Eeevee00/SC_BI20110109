@@ -15,6 +15,7 @@ import 'dart:async';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'edit_image.dart';
 
 class AddRewardScreenWidget extends StatefulWidget {
   const AddRewardScreenWidget({Key? key}) : super(key: key);
@@ -79,7 +80,7 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
             context: context,
             type: AlertType.success,
             title: "Add New Reward",
-            desc: "Successfully add new reward",
+            desc: "Successfully added new reward",
             buttons: [
             DialogButton(
                 child: Text(
@@ -139,7 +140,7 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -165,6 +166,8 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
                         style: FlutterFlowTheme.of(context).headlineMedium.override(
                               fontFamily: 'Outfit',
                               color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize: 20.0,
+
                             ),
                       ),
                     ),
@@ -208,6 +211,79 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
                             ),
                         ),
                     ),
+                    // Row(
+                    //   mainAxisSize: MainAxisSize.max,
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     Center(
+                    //       child: Stack(
+                    //         children: [
+                    //           Padding(
+                    //               padding: const EdgeInsets.all(8.0),
+                    //               child: CircleAvatar(
+                    //                 radius: 120,
+                    //                 backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+                    //                 child: Material(
+                    //                   color: FlutterFlowTheme.of(context).secondaryBackground,
+                    //                   child: Stack(
+                    //                     children: <Widget>[
+                    //                       _image == "Empty" ? 
+                    //                       Column(
+                    //                         mainAxisSize: MainAxisSize.max,
+                    //                         children: [
+                    //                           Image.network(
+                    //                             'https://user-images.githubusercontent.com/43302778/106805462-7a908400-6645-11eb-958f-cd72b74a17b3.jpg',
+                    //                             width: double.infinity,
+                    //                             height: 160.0,
+                    //                             fit: BoxFit.cover,
+                    //                           ),
+                    //                         ],
+                    //                       )
+                    //                       :
+                    //                       Column(
+                    //                         mainAxisSize: MainAxisSize.max,
+                    //                         children: [
+                    //                           Image.network(
+                    //                             _image,
+                    //                             width: double.infinity,
+                    //                             height: 200.0,
+                    //                             fit: BoxFit.cover,
+                    //                           ),
+                    //                         ],
+                    //                       ),
+                    //                       Positioned(
+                    //                             bottom: 16, // Adjust the bottom value as needed
+                    //                             right: -4, 
+                    //                         child: Card(
+                    //                           shape: RoundedRectangleBorder(
+                    //                               borderRadius: BorderRadius.circular(30)),
+                    //                           color: Theme.of(context).primaryColor,
+                    //                           child: IconButton(
+                    //                               alignment: Alignment.center,
+                    //                               icon: Icon(
+                    //                                 Icons.photo_camera,
+                    //                                 size: 25,
+                    //                                 color: Colors.white,
+                    //                               ),
+                    //                               onPressed: () async {
+                    //                                 var a = await _editProfileState.source(
+                    //                                     context, currentReward, true);
+                    //                                 _initializeFirebase();
+                    //                               }),
+                    //                         ),
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 20.0),
                       child: TextFormField(
@@ -217,7 +293,7 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
                         decoration: InputDecoration(
                           labelText: 'Reward',
                           hintText: 'Enter reward',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -271,7 +347,7 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
                         decoration: InputDecoration(
                           labelText: 'Point to claim',
                           hintText: 'Enter point needed to claim',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -309,7 +385,7 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
                         style: FlutterFlowTheme.of(context).bodyMedium,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter point to claim';
+                            return 'Please enter points to claim';
                           }
                           // Convert the value to a numeric type (assuming it's a number)
                           int? numericValue = int.tryParse(value);
@@ -334,7 +410,7 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
                         decoration: InputDecoration(
                           labelText: 'Available quantity',
                           hintText: 'Quantity of the reward avaialble',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -394,7 +470,7 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
                       decoration: InputDecoration(
                         labelText: 'Reward Description',
                         hintText: 'Enter reward description',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),
@@ -451,23 +527,21 @@ class _AddRewardScreenWidgetState extends State<AddRewardScreenWidget> {
                         options: FFButtonOptions(
                           width: double.infinity,
                           height: 55.0,
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                          iconPadding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                          padding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                          iconPadding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                           color: FlutterFlowTheme.of(context).primaryText,
                           textStyle:
                               FlutterFlowTheme.of(context).titleMedium.override(
                                     fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    fontSize: 14.0,
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    fontSize: 19.0,
                                   ),
                           elevation: 2.0,
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),
+                  
                   ],
                 ),
               ),

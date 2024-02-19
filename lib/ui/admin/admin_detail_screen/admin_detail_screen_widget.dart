@@ -1,16 +1,17 @@
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'admin_detail_screen_model.dart';
-export 'admin_detail_screen_model.dart';
-import '../../../data/models/user_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'admin_detail_screen_model.dart';
+export 'admin_detail_screen_model.dart';
+import '../../../data/models/user_model.dart';
 import '../add_admin_screen/edit_admin_screen.dart';
 
 class AdminDetailScreenWidget extends StatefulWidget {
@@ -43,38 +44,59 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
     super.dispose();
   }
 
+  // Asynchronous function to get user details from Firestore
   Future<Map<String, dynamic>> getUserDetails(String uid) async {
     try {
+      // Creating an instance of FirebaseFirestore
       FirebaseFirestore firestore = FirebaseFirestore.instance;
-      DocumentSnapshot userDoc =
-        await firestore.collection('users').doc(uid).get();
 
+      // Retrieving user document from the 'users' collection using the provided user ID
+      DocumentSnapshot userDoc = await firestore.collection('users').doc(uid).get();
+
+      // Checking if the user document exists
       if (userDoc.exists) {
+        // Creating a Map containing user details
         Map<String, dynamic> userDetails = {
           'name': userDoc['name'],
           'email': userDoc['email'],
           'phone': userDoc['phone'],
         };
+
+        // Returning the user details Map
         return userDetails;
       } else {
+        // Returning an empty Map if the user document does not exist
         return {};
       }
     } catch (error) {
-      print('Error getting notification details: $error');
+      // Handling errors and printing an error message
+      print('Error getting user details: $error');
+
+      // Returning an empty Map in case of an error
       return {};
     }
   }
 
+  // Asynchronous function to load user details and update the state
   Future<void> loadUserDetails() async {
-    Map<String, dynamic>? details = await getUserDetails(widget.user.uid!);
-        setState(() {
-            userDetails = details;
-            name = userDetails!['name']!;
-            email = userDetails!['email']!;
-            phone = userDetails!['phone']!;
-        });
-    }
+    try {
+      // Using the getUserDetails function to retrieve user details for the current user
+      Map<String, dynamic>? details = await getUserDetails(widget.user.uid!);
 
+      // Updating the state with the retrieved user details
+      setState(() {
+        userDetails = details;
+        name = userDetails!['name']!;
+        email = userDetails!['email']!;
+        phone = userDetails!['phone']!;
+      });
+    } catch (error) {
+      // Handling errors and printing an error message
+      print('Error loading user details: $error');
+    }
+  }
+
+  // Asynchronous function to prompt for user deletion confirmation
   deleteFunction(uid)async{
     await Alert(
       context: context,
@@ -88,18 +110,20 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
             style: TextStyle(
               color: Colors.white, fontSize: 20),
             ),
-            onPressed: () async {
+            onPressed: () async {           
+            // Updating the 'status' field to false to deactivate the user
               await FirebaseFirestore.instance
                 .collection("users")
                 .doc(uid)
                 .set({
                     'status': false,
                 },SetOptions(merge: true));
+            // Showing a success alert after successfully deleting the user
                 Alert(
                   context: context,
                   type: AlertType.success,
                   title: "Delete user",
-                  desc: "Successfully delete user",
+                  desc: "Successfully deleted user",
                   buttons: [
                     DialogButton(
                       child: Text(
@@ -107,6 +131,7 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       onPressed: () {
+                        // Closing the alert and navigating back multiple times
                         Navigator.pop(context);
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -173,7 +198,7 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -231,33 +256,20 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
                                         Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.all(4.0),
-                                            child: Text(
-                                              'Name',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleSmall
-                                                      .override(
+                                            child: Text('Name',
+                                              style:FlutterFlowTheme.of(context).titleSmall.override(
                                                         fontFamily: 'Outfit',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .customColor1,
+                                                        color:FlutterFlowTheme.of(context).customColor1,
                                                         fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
+                                                        fontWeight:FontWeight.normal,
                                                       ),
                                             ),
                                           ),
                                         ),
-                                        Text(
-                                          name,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
+                                        Text(name,
+                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                 fontFamily: 'Outfit',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .customColor1,
+                                                color:FlutterFlowTheme.of(context).customColor1,
                                               ),
                                         ),
                                       ],
@@ -268,33 +280,20 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
                                         Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.all(4.0),
-                                            child: Text(
-                                              'Email',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleSmall
-                                                      .override(
+                                            child: Text('Email',
+                                              style:FlutterFlowTheme.of(context).titleSmall.override(
                                                         fontFamily: 'Outfit',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .customColor1,
+                                                        color:FlutterFlowTheme.of(context).customColor1,
                                                         fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
+                                                        fontWeight:FontWeight.normal,
                                                       ),
                                             ),
                                           ),
                                         ),
-                                        Text(
-                                          email,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
+                                        Text(email,
+                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                 fontFamily: 'Outfit',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .customColor1,
+                                                color:FlutterFlowTheme.of(context).customColor1,
                                               ),
                                         ),
                                       ],
@@ -307,31 +306,20 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
                                             padding: EdgeInsets.all(4.0),
                                             child: Text(
                                               'Phone',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleSmall
-                                                      .override(
+                                              style:FlutterFlowTheme.of(context).titleSmall.override(
                                                         fontFamily: 'Outfit',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .customColor1,
+                                                        color:FlutterFlowTheme.of(context).customColor1,
                                                         fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
+                                                        fontWeight:FontWeight.normal,
                                                       ),
                                             ),
                                           ),
                                         ),
                                         Text(
                                           phone,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
+                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                 fontFamily: 'Outfit',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .customColor1,
+                                                color:FlutterFlowTheme.of(context).customColor1,
                                               ),
                                         ),
                                       ],
@@ -341,14 +329,10 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
                                       children: [
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 40.0, 0.0, 20.0),
+                                            padding:EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 20.0),
                                             child: FFButtonWidget(
                                               onPressed: () async {
-                                                await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
+                                                await Navigator.push(context,MaterialPageRoute(
                                                     builder: (context) => EditAdminScreenWidget(uid: widget.user.uid!),
                                                   ),
                                                 );
@@ -358,25 +342,13 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
                                               options: FFButtonOptions(
                                                 width: double.infinity,
                                                 height: 50.0,
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 0.0, 0.0),
-                                                iconPadding:
-                                                    EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                            0.0, 0.0, 0.0, 0.0),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                textStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleSmall
-                                                        .override(
+                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                color:FlutterFlowTheme.of(context).primaryText,
+                                                textStyle:FlutterFlowTheme.of(context).titleSmall.override(
                                                           fontFamily: 'Outfit',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                          fontSize: 16.0,
+                                                          color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                          fontSize: 19.0,
                                                         ),
                                                 elevation: 3.0,
                                                 borderSide: BorderSide(
@@ -394,9 +366,7 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
                                       children: [
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 40.0),
+                                            padding:EdgeInsetsDirectional.fromSTEB( 0.0, 0.0, 0.0, 40.0),
                                             child: FFButtonWidget(
                                               onPressed: () async {
                                                 print(widget.user.uid);
@@ -406,25 +376,13 @@ class _AdminDetailScreenWidgetState extends State<AdminDetailScreenWidget> {
                                               options: FFButtonOptions(
                                                 width: double.infinity,
                                                 height: 50.0,
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 0.0, 0.0),
-                                                iconPadding:
-                                                    EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                            0.0, 0.0, 0.0, 0.0),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .error,
-                                                textStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleSmall
-                                                        .override(
+                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                iconPadding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                color:FlutterFlowTheme.of(context).error,
+                                                textStyle:FlutterFlowTheme.of(context).titleSmall.override(
                                                           fontFamily: 'Outfit',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .customColor1,
-                                                          fontSize: 16.0,
+                                                          color: FlutterFlowTheme.of(context).customColor1,
+                                                          fontSize: 19.0,
                                                         ),
                                                 elevation: 3.0,
                                                 borderSide: BorderSide(

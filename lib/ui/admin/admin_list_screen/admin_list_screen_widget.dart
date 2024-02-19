@@ -1,27 +1,26 @@
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'admin_list_screen_model.dart';
-export 'admin_list_screen_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:async';
-import '../add_admin_screen/add_admin_screen_widget.dart';
-import '../../../data/models/user_model.dart';
-import '../../../search_widget.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../screens/skeleton_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
+import '../../../search_widget.dart';
+import '../../screens/skeleton_screen.dart';
+import '../../../data/models/user_model.dart';
+import '../add_admin_screen/add_admin_screen_widget.dart';
 import '../admin_detail_screen/admin_detail_screen_widget.dart';
+import 'admin_list_screen_model.dart';
+export 'admin_list_screen_model.dart';
 
 class AdminListScreenWidget extends StatefulWidget {
   const AdminListScreenWidget({Key? key}) : super(key: key);
@@ -47,30 +46,40 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
     return prefs.getString("current_user_uid");
   }
 
+  // Asynchronous function to retrieve a list of users from Firestore
   getUserList() async {
     try {
+      // Retrieving data from the 'users' collection in Firestore
       var data = await db.collection('/users').get();
 
+      // Checking if there are no users available
       if (data.docs.isEmpty) {
         print('No users available');
         return;
       }
 
+      // Clearing the existing userList to start with a fresh list
       userList.clear();
 
+      // Iterating through the documents in the retrieved data
       for (var doc in data.docs) {
+        // Creating a Users object from the document
         Users? temp = Users.fromDocument(doc);
+        // Retrieving the current user's UID
         String? currentUserUid = await getCurrentUserUid();
+        // Checking if the user is not the current user and adding to the userList
         if (temp.uid != currentUserUid) {
           userList.add(temp);
         }
       }
 
+      // Updating the widget state if the widget is mounted
       if (mounted) {
         setState(() {});
       }
     } catch (error) {
-      print('Error getting users: $error');
+      print('Error getting users: $error'); //Handling errors and printing an error message
+
     }
   }
     
@@ -134,15 +143,14 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-          iconTheme:
-              IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
+          iconTheme:IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
           title: Text(
             'Admin List',
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -158,6 +166,7 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //Add admin button
                 Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Row(
@@ -166,10 +175,8 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
                       Expanded(
                         child: FFButtonWidget(
                           onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddAdminScreenWidget(),
+                            await Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => AddAdminScreenWidget(),
                               ),
                             );
                             getUserList();
@@ -178,17 +185,12 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
                           options: FFButtonOptions(
                             width: 130.0,
                             height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
+                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                             color: FlutterFlowTheme.of(context).primaryText,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
+                            textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                                   fontFamily: 'Outfit',
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
+                                  color: FlutterFlowTheme.of(context).secondaryBackground,
                                 ),
                             elevation: 2.0,
                             borderSide: BorderSide(
@@ -202,6 +204,7 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
                     ],
                   ),
                 ),
+
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                   child: Wrap(
@@ -215,8 +218,7 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
                     clipBehavior: Clip.none,
                     children: [
                       Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 4.0, 24.0),
+                        padding:EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 4.0, 24.0),
                         child: Material(
                           color: Colors.transparent,
                           elevation: 5.0,
@@ -227,8 +229,7 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
                             //width: MediaQuery.sizeOf(context).width * 1.0,
                             width: MediaQuery.of(context).size.width * 1.0,
                             decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
+                              color: FlutterFlowTheme.of(context).secondaryBackground,
                               boxShadow: [
                                 BoxShadow(
                                   blurRadius: 4.0,
@@ -238,31 +239,29 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
                               ],
                               borderRadius: BorderRadius.circular(16.0),
                               border: Border.all(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
+                                color: FlutterFlowTheme.of(context).secondaryBackground,
                                 width: 1.0,
                               ),
                             ),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 12.0),
+                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 12.0),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 0.0, 8.0, 0.0),
-                                    child: Text(
-                                      'Admin List',
-                                      style: FlutterFlowTheme.of(context)
-                                          .headlineSmall,
+                                    padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
+                                    child: Text('Admin List',
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                      fontFamily: 'Outfit',
+                                      color: FlutterFlowTheme.of(context).primaryText,
+                                      fontSize: 20.0,
+                                    ),
                                     ),
                                   ),
                                   buildSearch(),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12.0, 6.0, 12.0, 0.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(12.0, 6.0, 12.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -270,13 +269,9 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
                                           flex: 2,
                                           child: Text(
                                             'Name',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
+                                            style: FlutterFlowTheme.of(context).bodySmall.override(
                                                   fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
+                                                  color: FlutterFlowTheme.of(context).primaryText,
                                                 ),
                                           ),
                                         ),
@@ -284,13 +279,9 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
                                           child: Text(
                                             'Detail',
                                             textAlign: TextAlign.end,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
+                                            style: FlutterFlowTheme.of(context).bodySmall.override(
                                                   fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
+                                                  color: FlutterFlowTheme.of(context).primaryText,
                                                 ),
                                           ),
                                         ),
@@ -323,6 +314,7 @@ class _AdminListScreenWidgetState extends State<AdminListScreenWidget> {
                     ],
                   ),
                 ),
+
               ],
             ),
           ),

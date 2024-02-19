@@ -1,27 +1,27 @@
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'user_list_screen_model.dart';
-export 'user_list_screen_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:async';
-import '../add_admin_screen/add_admin_screen_widget.dart';
-import '../../../data/models/user_model.dart';
-import '../../../search_widget.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../screens/skeleton_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../search_widget.dart';
+import '../../screens/skeleton_screen.dart';
+import '../../../data/models/user_model.dart';
+import '../add_admin_screen/add_admin_screen_widget.dart';
 import '../admin_detail_screen/user_detail_screen_widget.dart';
+import 'user_list_screen_model.dart';
+export 'user_list_screen_model.dart';
 
 class UserListScreenWidget extends StatefulWidget {
   const UserListScreenWidget({Key? key}) : super(key: key);
@@ -128,7 +128,7 @@ class _UserListScreenWidgetState extends State<UserListScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -194,10 +194,13 @@ class _UserListScreenWidgetState extends State<UserListScreenWidget> {
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         16.0, 0.0, 0.0, 0.0),
-                                    child: Text(
-                                      'User List',
-                                      style: FlutterFlowTheme.of(context)
-                                          .headlineSmall,
+                                    child: Text('User List',
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                            fontFamily: 'Outfit',
+                                            color: FlutterFlowTheme.of(context).primaryText,
+                                            fontSize: 22.0,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                     ),
                                   ),
                                   buildSearch(),
@@ -210,49 +213,28 @@ class _UserListScreenWidgetState extends State<UserListScreenWidget> {
                                         Expanded(
                                           flex: 2,
                                           child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    8.0, 0.0, 0.0, 0.0),
-                                            child: Text(
-                                              'Name',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
+                                            padding:EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
+                                            child: Text('Name',
+                                              style:FlutterFlowTheme.of(context).bodySmall.override(
                                                         fontFamily: 'Outfit',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .customColor1,
+                                                        color:FlutterFlowTheme.of(context).primaryText,
                                                       ),
                                             ),
                                           ),
                                         ),
                                         if (responsiveVisibility(
                                           context: context,
-                                          phone: false,
+                                          //phone: false,
                                           tablet: false,
                                         ))
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              'Email',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall,
-                                            ),
-                                          ),
+                                          
                                         Expanded(
                                           child: Text(
                                             'Detail',
                                             textAlign: TextAlign.end,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
+                                            style: FlutterFlowTheme.of(context).bodySmall.override(
                                                   fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
+                                                  color: FlutterFlowTheme.of( context).primaryText,
                                                 ),
                                           ),
                                         ),

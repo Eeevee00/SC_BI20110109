@@ -75,7 +75,7 @@ class _JobApplicationWidgetState extends State<JobApplicationWidget> {
         DocumentReference participantRef = await firestore
           .collection('job')
           .doc(job_uid)
-          .collection('participant')
+          .collection('applicants')
           .add({
             'record_uid': "",
             'timestamp': FieldValue.serverTimestamp(),
@@ -97,7 +97,7 @@ class _JobApplicationWidgetState extends State<JobApplicationWidget> {
         context: context,
         type: AlertType.success,
         title: "Job Application",
-        desc: "Successfully apply for this job",
+        desc: "Successfully applied for this job",
         buttons: [
           DialogButton(
             child: Text(
@@ -161,7 +161,7 @@ class _JobApplicationWidgetState extends State<JobApplicationWidget> {
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Outfit',
                       color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 16.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -201,7 +201,7 @@ class _JobApplicationWidgetState extends State<JobApplicationWidget> {
                           decoration: InputDecoration(
                             labelText: 'Name',
                             hintText: 'Enter your name',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -254,7 +254,7 @@ class _JobApplicationWidgetState extends State<JobApplicationWidget> {
                           decoration: InputDecoration(
                             labelText: 'Email',
                             hintText: 'Enter your email',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -304,10 +304,12 @@ class _JobApplicationWidgetState extends State<JobApplicationWidget> {
                           controller: _model.textController3,
                           focusNode: _model.textFieldFocusNode3,
                           obscureText: false,
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           decoration: InputDecoration(
                             labelText: 'Contact Number',
                             hintText: 'Enter your contact number',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -358,7 +360,7 @@ class _JobApplicationWidgetState extends State<JobApplicationWidget> {
                         decoration: InputDecoration(
                           labelText: 'Description',
                           hintText: 'Description about why you suit this job',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),

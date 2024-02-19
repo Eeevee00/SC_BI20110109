@@ -1,25 +1,28 @@
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'verification_form_model.dart';
-export 'verification_form_model.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import '../../../data/models/user_model.dart';
-import '../../../data/models/shared_pref.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+import '../../../data/models/user_model.dart';
+import '../../../data/models/shared_pref.dart';
+import 'verification_form_model.dart';
+export 'verification_form_model.dart';
 
 class VerificationFormWidget extends StatefulWidget {
   final String uid;
@@ -39,27 +42,148 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
   final picker = ImagePicker();
 
   Future<void> _pickImage_1() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    //final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    //final pickedFile =await _showImageSourceDialog(ImageSource.camera);
+  final pickedFile = await _showImageSourceDialog(ImageSource.camera, isFrontImage: true);
 
-    setState(() {
-      if (pickedFile != null) {
-        _selectedImage_1 = File(pickedFile.path);
-      } else {
-        print('No image captured.');
-      }
-    });
+    // setState(() {
+    //   if (pickedFile != null) {
+    //     _selectedImage_1 = File(pickedFile.path);
+    //   } else {
+    //     print('No image captured.');
+    //   }
+    // });
   }
 
   Future<void> _pickImage_2() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    //final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    //final pickedFile =await _showImageSourceDialog(ImageSource.camera);
+  final pickedFile = await _showImageSourceDialog(ImageSource.camera, isFrontImage: false);
 
-    setState(() {
-      if (pickedFile != null) {
-        _selectedImage_2 = File(pickedFile.path);
+    // setState(() {
+    //   if (pickedFile != null) {
+    //     _selectedImage_2 = File(pickedFile.path);
+    //   } else {
+    //     print('No image captured.');
+    //   }
+    // });
+  }
+
+  //Future<void> _showImageSourceDialog(ImageSource source) async {
+    Future<void> _showImageSourceDialog(ImageSource source, {required bool isFrontImage}) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text("Select Image Source"),
+          content: Text("Select source"),
+          actions: [
+            // Camera option
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: GestureDetector(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.photo_camera,
+                      color: Theme.of(context).primaryColor,
+                      size: 28,
+                    ),
+                    Text(
+                      " Camera",
+                      style: TextStyle(
+                        fontSize: 15,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                    _getImage(source, isFrontImage).then((success) {
+                        Navigator.pop(context); // Dismiss the dialog when image selection is complete
+                      });
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            // Gallery option
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: GestureDetector(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.photo_library,
+                      color: Theme.of(context).primaryColor,
+                      size: 28,
+                    ),
+                    Text(
+                      " Gallery",
+                      style: TextStyle(
+                        fontSize: 15,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) {
+                    _getImage(ImageSource.gallery, isFrontImage).then((success) {
+                        Navigator.pop(context); // Dismiss the dialog when image selection is complete
+                      });
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      );
+                    },
+                  );
+                },
+
+              ),
+            ),
+          ],
+        );
+      },
+    );
+      _getImage(source, isFrontImage);
+
+  }
+
+  //Future<void> _getImage(ImageSource source) async {
+    Future<void> _getImage(ImageSource source, bool isFrontImage) async {
+
+    final pickedFile = await picker.pickImage(source: source);
+
+  setState(() {
+    if (pickedFile != null) {
+      if (isFrontImage) {
+        _selectedImage_1 = File(pickedFile.path);
       } else {
-        print('No image captured.');
+        _selectedImage_2 = File(pickedFile.path);
       }
-    });
+    } else {
+      print('No image captured.');
+    }
+  });
   }
 
   Future<void> _uploadImage() async {
@@ -69,11 +193,11 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
 
     Reference storageReference_1 = FirebaseStorage.instance
         .ref()
-        .child('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+        .child('verifications/${DateTime.now().millisecondsSinceEpoch}.jpg');
     
     Reference storageReference_2 = FirebaseStorage.instance
         .ref()
-        .child('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+        .child('verifications/${DateTime.now().millisecondsSinceEpoch}.jpg');
 
     UploadTask uploadTask_1 = storageReference_1.putFile(_selectedImage_1!);
     UploadTask uploadTask_2 = storageReference_2.putFile(_selectedImage_2!);
@@ -110,7 +234,7 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
                 context: context,
                 type: AlertType.success,
                 title: "Verification",
-                desc: "Successfully submit detail for verification",
+                desc: "Successfully submitted detail for verification",
                 buttons: [
                   DialogButton(
                     child: Text(
@@ -171,11 +295,11 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
               IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
           title: Text(
-            'Verification',
+            'Verification Submission',
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -185,33 +309,32 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
         ),
         body: SafeArea(
           top: true,
-          child: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
             child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-              child: SingleChildScrollView(
+                padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
+                child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 0.0, 20.0),
                       child: Text(
-                        'User verification',
+                        'Verification Submission',
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context)
                             .headlineMedium
                             .override(
                               fontFamily: 'Outfit',
                               color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize: 20.0,
+
                             ),
                       ),
                     ),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 16.0),
+                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 30.0),
                       child: Text(
                         'Please submit your front and back identification card as a prove for verification.',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -220,22 +343,27 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
                             ),
                       ),
                     ),
-                    SizedBox(height: 40),
                     Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           _selectedImage_1 != null
-                              ? RotatedBox(
-                                quarterTurns: 1,
-                                child: Image.file(_selectedImage_1!),
-                              )
+                              ? Image.file(_selectedImage_1!) // Display the image without rotation
                               : 
-                              Text('No image selected',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Outfit',
-                              color: FlutterFlowTheme.of(context).customColor1,
-                            ),),
+                              Container(
+                                padding: EdgeInsetsDirectional.fromSTEB(108.0, 20.0, 108.0, 20.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
+                                    color: FlutterFlowTheme.of(context).primaryBackground,
+                                ),
+                                child: Text(
+                                  'No image selected',
+                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Outfit',
+                                    color: FlutterFlowTheme.of(context).primaryText,
+                                  ),
+                                ),
+                              ),
                           SizedBox(height: 20),
                           FFButtonWidget(
                             onPressed: () async {
@@ -245,17 +373,14 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
                             options: FFButtonOptions(
                               width: double.infinity,
                               height: 55.0,
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                              iconPadding:
-                                  EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                               color: FlutterFlowTheme.of(context).primaryText,
                               textStyle:
                                   FlutterFlowTheme.of(context).titleMedium.override(
                                         fontFamily: 'Outfit',
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        fontSize: 4.0,
+                                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                                        fontSize:16.0,
                                       ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
@@ -264,22 +389,28 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 50),
+                    SizedBox(height: 30),
                     Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           _selectedImage_2 != null
-                              ? RotatedBox(
-                                  quarterTurns: 1,
-                                  child: Image.file(_selectedImage_2!),
-                                )
+                              ? Image.file(_selectedImage_2!)
                               : 
-                              Text('No image selected',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Outfit',
-                              color: FlutterFlowTheme.of(context).customColor1,
-                            ),),
+                              Container(
+                                padding: EdgeInsetsDirectional.fromSTEB(108.0, 20.0, 108.0, 20.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
+                                    color: FlutterFlowTheme.of(context).primaryBackground,
+                                ),
+                                child: Text(
+                                  'No image selected',
+                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Outfit',
+                                    color: FlutterFlowTheme.of(context).primaryText,
+                                  ),
+                                ),
+                              ),
                           SizedBox(height: 20),
                           FFButtonWidget(
                             onPressed: () async {
@@ -299,7 +430,7 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
                                         fontFamily: 'Outfit',
                                         color: FlutterFlowTheme.of(context)
                                             .secondaryBackground,
-                                        fontSize: 4.0,
+                                        fontSize:16.0,
                                       ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
@@ -319,7 +450,7 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
                           labelText: 'Detail',
                           hintText:
                               'Tell us more about you to prove credibility.',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -353,14 +484,13 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           filled: true,
-                          fillColor:
-                              FlutterFlowTheme.of(context).primaryBackground,
+                          fillColor: FlutterFlowTheme.of(context).primaryBackground,
+                          
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium,
                         maxLines: 10,
                         minLines: 5,
-                        validator:
-                            _model.textControllerValidator.asValidator(context),
+                        validator: _model.textControllerValidator.asValidator(context),
                       ),
                     ),
                     FFButtonWidget(
@@ -379,9 +509,8 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
                         textStyle:
                             FlutterFlowTheme.of(context).titleMedium.override(
                                   fontFamily: 'Outfit',
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  fontSize: 4.0,
+                                  color: FlutterFlowTheme.of(context).secondaryBackground,
+                                  fontSize:16.0,
                                 ),
                         elevation: 2.0,
                         borderRadius: BorderRadius.circular(5.0),
@@ -391,7 +520,7 @@ class _VerificationFormWidgetState extends State<VerificationFormWidget> {
                   ],
                 ),
               ),
-            ),
+            
           ),
         ),
       ),

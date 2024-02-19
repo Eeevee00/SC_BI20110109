@@ -43,6 +43,13 @@ class _SplashScreenState extends State<SplashScreen> {
         String userType = documentData['user_type'];
 
         switch (userType) {
+          case 'superadmin':
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => AdminDashboardScreenWidget(user: user),
+              ),
+            );
+            break;          
           case 'admin':
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -50,13 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             );
             break;
-          case 'superadmin':
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => AdminDashboardScreenWidget(user: user),
-              ),
-            );
-            break;
+
           case 'host':
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -103,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         image: DecorationImage(
                             fit: BoxFit.contain,
                             image: Image.asset(
-                                'assets/images/asd.png',
+                        'assets/images/MuzikLokal_logo.png',
                             ).image,
                         ),
                         borderRadius: BorderRadius.only(
@@ -124,7 +125,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     fontFamily: 'Outfit',
                     color: FlutterFlowTheme.of(context)
                         .customColor1,
-                    fontSize: 18.0,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.w600,
+                   
                 ),
             ),
           ],

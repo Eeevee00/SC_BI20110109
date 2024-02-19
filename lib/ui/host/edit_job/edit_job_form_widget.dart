@@ -38,7 +38,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
 
   var title;
   var contact_number;
-  var category;
+  //var category;
   var event_date_start;
   var event_date_end;
   var event_time_start;
@@ -88,14 +88,18 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
     _model.textController8 ??= TextEditingController();
     _model.textFieldFocusNode8 ??= FocusNode();
 
+    _model.textController9 ??= TextEditingController();
+    _model.textFieldFocusNode9 ??= FocusNode();
+
     _model.textController1.text = widget.job.title!;
     _model.textController2.text = widget.job.salary!;
     _model.textController3.text = widget.job.phone!;
-    _model.textController4.text = DateFormat('dd/MM/yyyy').format(widget.job.date!.toDate());
-    _model.textController5.text = widget.job.start_time!;
-    _model.textController6.text = widget.job.end_time!;
-    _model.textController7.text = widget.job.location!['address'];
-    _model.textController8.text = widget.job.description!;
+    _model.textController4.text = DateFormat('dd/MM/yyyy').format(widget.job.start_date!.toDate());
+    _model.textController5.text = DateFormat('dd/MM/yyyy').format(widget.job.end_date!.toDate());
+    _model.textController6.text = widget.job.start_time!;
+    _model.textController7.text = widget.job.end_time!;
+    _model.textController8.text = widget.job.location!['address'];
+    _model.textController9.text = widget.job.description!;
     
     _initializeFirebase();
   }
@@ -122,25 +126,26 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
   Future<void> updateJob() async {
     var job_uid = widget.job.uid;
     
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
         FirebaseFirestore firestore = FirebaseFirestore.instance;
 
         DateFormat dateFormat = DateFormat('dd/MM/yyyy');
 
         DateTime startDate = dateFormat.parse(_model.textController4.text);
+        DateTime endDate = dateFormat.parse(_model.textController5.text);
 
         if(latitude == null && longitude == null){
           await firestore.doc('job/$job_uid').update({
-              'date': Timestamp.fromDate(startDate),
+              'start_date': Timestamp.fromDate(startDate),
+              'end_date': Timestamp.fromDate(endDate),
               'start_time': _model.textController6.text,
-              'end_time': _model.textController5.text,
-              'description': _model.textController8.text,
+              'end_time': _model.textController7.text,
+              'description': _model.textController9.text,
               'location': {
-                'address': _model.textController7.text,
+                'address': _model.textController8.text,
                 'latitude': widget.job.location!['latitude'],
-                'longitude': widget.job.location!['latitude'],
+                'longitude': widget.job.location!['longitude'],
               },
               'title': _model.textController1.text,
               'salary': _model.textController2.text,
@@ -150,12 +155,14 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
         }
         else{
           await firestore.doc('job/$job_uid').update({
-              'date': Timestamp.fromDate(startDate),
+              'start_date': Timestamp.fromDate(startDate),
+              'end_date': Timestamp.fromDate(endDate),
+
               'start_time': _model.textController6.text,
-              'end_time': _model.textController5.text,
-              'description': _model.textController8.text,
+              'end_time': _model.textController7.text,
+              'description': _model.textController9.text,
               'location': {
-                'address': _model.textController7.text,
+                'address': _model.textController8.text,
                 'latitude': latitude,
                 'longitude': longitude,
               },
@@ -170,7 +177,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
             context: context,
             type: AlertType.success,
             title: "Update Job",
-            desc: "Successfully update job",
+            desc: "Successfully updated job",
             buttons: [
             DialogButton(
                 child: Text(
@@ -200,7 +207,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
     selectedDate = date;
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -214,6 +221,26 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
 
       _model.textController4.text = DateFormat('dd/MM/yyyy').format(picked!.toLocal());
     }
+  }
+
+  Future<void> _selectEndDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2101),
+    );
+
+    if (picked != null){
+            if (selectedDate != null && picked.isBefore(selectedDate!)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('End date cannot be before start date'),
+          ),
+        );
+      } else {
+        _model.textController5.text = DateFormat('dd/MM/yyyy').format(picked.toLocal());
+      } }
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
@@ -274,7 +301,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Outfit',
                       color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 16.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -331,7 +358,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                                               Image.network(
                                                 'https://user-images.githubusercontent.com/43302778/106805462-7a908400-6645-11eb-958f-cd72b74a17b3.jpg',
                                                 width: double.infinity,
-                                                height: 160.0,
+                                                height: 200.0,
                                                 fit: BoxFit.cover,
                                               ),
                                             ],
@@ -388,7 +415,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                       decoration: InputDecoration(
                         labelText: 'Job Title',
                         hintText: 'Enter title',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),
@@ -446,7 +473,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                       decoration: InputDecoration(
                         labelText: 'Job Salary Per Hour',
                         hintText: 'Enter salary per hour',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),
@@ -504,7 +531,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                       decoration: InputDecoration(
                         labelText: 'Contact Number to Apply',
                         hintText: 'Enter phone number',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),
@@ -558,11 +585,11 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                       focusNode: _model.textFieldFocusNode4,
                       obscureText: false,
                       readOnly: true,
-                      onTap: () => _selectDate(context),
+                      onTap: () => _selectStartDate(context),
                       decoration: InputDecoration(
-                        labelText: 'Job Available Date',
+                        labelText: 'Job Working Date (Start)',
                         hintText: 'Enter job date',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),
@@ -602,7 +629,65 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                       style: FlutterFlowTheme.of(context).bodyMedium,
                       validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter the date this job available';
+                              return 'Please enter the date this job starts';
+                            }
+                            return null;
+                          },
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                    child: TextFormField(
+                      controller: _model.textController5,
+                      focusNode: _model.textFieldFocusNode5,
+                      obscureText: false,
+                      readOnly: true,
+                      onTap: () => _selectEndDate(context),
+                      decoration: InputDecoration(
+                        labelText: 'Job Working Date (End)',
+                        hintText: 'Enter job date',
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
+                        labelStyle: TextStyle( // Add this block for label text style
+                          color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        filled: true,
+                        fillColor:
+                            FlutterFlowTheme.of(context).primaryBackground,
+                      ),
+                      style: FlutterFlowTheme.of(context).bodyMedium,
+                      validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the date this job ends';
                             }
                             return null;
                           },
@@ -620,7 +705,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                       decoration: InputDecoration(
                         labelText: 'Job Working Hour (Start)',
                         hintText: 'Enter start working hour',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),
@@ -670,15 +755,15 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                     padding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                     child: TextFormField(
-                      controller: _model.textController5,
-                      focusNode: _model.textFieldFocusNode5,
+                      controller: _model.textController7,
+                      focusNode: _model.textFieldFocusNode7,
                       obscureText: false,
                       readOnly: true,
                         onTap: () => _selectEndTime(context),
                       decoration: InputDecoration(
                         labelText: 'Job Working Hour (End)',
                         hintText: 'Enter end working hour',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),
@@ -728,9 +813,9 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                       child: TextFormField(
-                        controller: _model.textController7,
+                        controller: _model.textController8,
                         readOnly: true,
-                        focusNode: _model.textFieldFocusNode7,
+                        focusNode: _model.textFieldFocusNode8,
                         obscureText: false,
                         onTap: () async {
                           address = await Navigator.push(
@@ -750,13 +835,13 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                               longitude = address['longitude'];
                               //userLocation = address['PlaceName'];
                             });
-                            _model.textController7.text = address['PlaceName'];
+                            _model.textController8.text = address['PlaceName'];
                           }
                         },
                         decoration: InputDecoration(
                           labelText: 'Event Venue',
                           hintText: 'Enter the venue',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -805,13 +890,13 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                       ),
                     ),
                   TextFormField(
-                    controller: _model.textController8,
-                    focusNode: _model.textFieldFocusNode8,
+                    controller: _model.textController9,
+                    focusNode: _model.textFieldFocusNode9,
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Job Description',
                       hintText: 'Enter description',
-                      hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                      hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                       labelStyle: TextStyle( // Add this block for label text style
                           color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                         ),
@@ -879,7 +964,7 @@ class _EditJobFormWidgetState extends State<EditJobFormWidget> {
                                   fontFamily: 'Outfit',
                                   color: FlutterFlowTheme.of(context)
                                       .secondaryBackground,
-                                  fontSize: 14.0,
+                                  fontSize: 18.0,
                                 ),
                         elevation: 2.0,
                         borderRadius: BorderRadius.circular(5.0),

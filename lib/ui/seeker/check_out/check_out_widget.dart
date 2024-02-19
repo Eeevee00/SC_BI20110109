@@ -335,7 +335,7 @@ class _CheckOutWidgetState extends State<CheckOutWidget> {
                         decoration: InputDecoration(
                           labelText: 'Number of Ticket',
                           hintText: 'Enter number of ticket you want to buy',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -396,7 +396,7 @@ class _CheckOutWidgetState extends State<CheckOutWidget> {
                                   context: context,
                                   type: AlertType.error,
                                   title: "Ticket Purchase",
-                                  desc: "Failed to buy ticket, number of ticket buy is more that available ticket.",
+                                  desc: "Failed to purchase a ticket. The number of tickets bought exceeds the available quantity.",
                                   buttons: [
                                     DialogButton(
                                       child: Text(
@@ -423,8 +423,8 @@ class _CheckOutWidgetState extends State<CheckOutWidget> {
                                   context: context,
                                   type: AlertType.error,
                                   title: "Ticket Purchase",
-                                  desc: "Failed to buy ticket, please enter number of ticket you need.",
-                                  buttons: [
+                                  desc: "Failed to purchase a ticket. Please enter the number of tickets you need.",
+                                    buttons: [
                                     DialogButton(
                                       child: Text(
                                         "Close",

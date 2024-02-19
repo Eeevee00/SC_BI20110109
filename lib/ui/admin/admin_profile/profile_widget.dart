@@ -2,11 +2,12 @@ import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'profile_model.dart';
 export 'profile_model.dart';
-
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -53,20 +54,32 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _model.iCFieldController ??= TextEditingController();
   }
 
-  Future updateData() async {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid)
-        .set({
-            'name': _model.nameFieldController.text, 
-            'email': _model.emailFieldController.text, 
-            'phone': _model.phoneFieldController.text, 
-        },SetOptions(merge: true));
-    currentUser.name = _model.nameFieldController.text;
-    currentUser.email = _model.emailFieldController.text;
-    currentUser.phone = _model.phoneFieldController.text;
-    _getCurrentUser();
+  // Asynchronous function to update user data in Firestore
+  Future<void> updateData() async {
+    try {
+      // Updating the user document in the 'users' collection in Firestore
+      await FirebaseFirestore.instance.collection("users").doc(uid).set(
+        {
+          'name': _model.nameFieldController.text,
+          'email': _model.emailFieldController.text,
+          'phone': _model.phoneFieldController.text,
+        },
+        SetOptions(merge: true),
+      );
+
+      // Updating the currentUser object with the new data
+      currentUser.name = _model.nameFieldController.text;
+      currentUser.email = _model.emailFieldController.text;
+      currentUser.phone = _model.phoneFieldController.text;
+
+      // Calling the function to update the current user's data
+      _getCurrentUser();
+    } catch (error) {
+      // Handling errors and printing an error message
+      print('Error updating user data: $error');
+    }
   }
+
 
   _getCurrentUser() async {
     sharedPref.save("user", currentUser);
@@ -80,33 +93,49 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     super.dispose();
   }
 
+  // Function to initialize Firebase and retrieve user information
   _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
+    try {
+      // Initializing Firebase and obtaining the FirebaseApp instance
+      FirebaseApp firebaseApp = await Firebase.initializeApp();
 
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      setState(() {
-        email = user.email;
-        uid = user.uid;
-      });
-    }
-    
-    return docUser.doc(uid).snapshots().listen((data) async {
-      currentUser = Users.fromDocument(data);
-      var list = data['image'];
-      var stringList = list.join("");
-      setState(() {
+      // Retrieving the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      // If a user is authenticated, update the state with user information
+      if (user != null) {
+        setState(() {
+          email = user.email;
+          uid = user.uid;
+        });
+      }
+
+      // Setting up a listener for changes in the user document in Firestore
+      return docUser.doc(uid).snapshots().listen((data) async {
+        // Extracting user details from the Firestore document
         currentUser = Users.fromDocument(data);
-        email = currentUser.email;
-        id = currentUser.uid;
-        image = stringList;
-        name = currentUser.name;
-        phone = currentUser.phone;
-        _model.nameFieldController.text = currentUser.name!;
-        _model.emailFieldController.text = currentUser.email!;
-        _model.phoneFieldController.text = currentUser.phone!;
+        var list = data['image'];
+        var stringList = list.join("");
+
+        // Updating the state with the retrieved user information
+        setState(() {
+          currentUser = Users.fromDocument(data);
+          email = currentUser.email;
+          id = currentUser.uid;
+          image = stringList;
+          name = currentUser.name;
+          phone = currentUser.phone;
+
+          // Updating the text controllers in the _model with user details
+          _model.nameFieldController.text = currentUser.name!;
+          _model.emailFieldController.text = currentUser.email!;
+          _model.phoneFieldController.text = currentUser.phone!;
+        });
       });
-    });
+    } catch (error) {
+      // Handling errors and printing an error message
+      print('Error initializing Firebase: $error');
+    }
   }
 
   @override
@@ -124,7 +153,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           style: FlutterFlowTheme.of(context).bodyMedium.override(
                 fontFamily: 'Outfit',
                 color: FlutterFlowTheme.of(context).primaryText,
-                fontSize: 16.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.w500,
                 useGoogleFonts: GoogleFonts.asMap()
                     .containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
@@ -301,7 +330,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                           decoration: InputDecoration(
                                             labelText: 'Name',
                                             hintText: 'Enter fullname',
-                                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                                             labelStyle: TextStyle( // Add this block for label text style
                                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                                             ),
@@ -387,7 +416,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                           decoration: InputDecoration(
                                             labelText: 'Email',
                                             hintText: 'Enter email',
-                                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                                             labelStyle: TextStyle( // Add this block for label text style
                                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                                             ),
@@ -469,10 +498,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                           controller:
                                               _model.phoneFieldController,
                                           obscureText: false,
+                                          keyboardType: TextInputType.phone,
+                                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],                
                                           decoration: InputDecoration(
                                             labelText: 'Phone',
                                             hintText: 'Enter phone number',
-                                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                                             labelStyle: TextStyle( // Add this block for label text style
                                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                                             ),
@@ -544,7 +575,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                             context: context,
                                             type: AlertType.success,
                                             title: "",
-                                            desc: "Update profile successfully",
+                                            desc: "Profile updated successfully",
                                             buttons: [
                                               DialogButton(
                                                 child: Text(
@@ -571,7 +602,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                                     fontFamily: 'Outfit',
                                                     color: FlutterFlowTheme.of(context)
                                                         .secondaryBackground,
-                                                    fontSize: 16.0,
+                                                    fontSize: 19.0,
                                                     ),
                                             elevation: 3.0,
                                             borderSide: BorderSide(

@@ -69,10 +69,13 @@ class _ClaimListUserWidgetState extends State<ClaimListUserWidget> {
   }
 
   getClaimList() async {
+        String currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
     try {
       var data = await db.collection('/claim')
-      .where('claim_by_uid', isEqualTo: widget.uid)
+      .where('claim_by_uid', isEqualTo: currentUserUid)
       .get();
+    print('Data retrieved: ${data.docs.length} documents');
 
       if (data.docs.isEmpty) {
         print('No claim available');
@@ -82,6 +85,8 @@ class _ClaimListUserWidgetState extends State<ClaimListUserWidget> {
       claims.clear();
 
       for (var doc in data.docs) {
+            print('Document Data: ${doc.data()}');
+
         Claim? temp = Claim.fromDocument(doc);
         claims.add(temp);
       }
@@ -138,7 +143,7 @@ class _ClaimListUserWidgetState extends State<ClaimListUserWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -154,50 +159,50 @@ class _ClaimListUserWidgetState extends State<ClaimListUserWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: FFButtonWidget(
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RewardListScreenWidget(uid:widget.uid),
-                              ),
-                            );
-                            getClaimList();
-                          },
-                          text: 'See All Reward List',
-                          options: FFButtonOptions(
-                            width: 130.0,
-                            height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Outfit',
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                ),
-                            elevation: 2.0,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.all(20.0),
+                //   child: Row(
+                //     mainAxisSize: MainAxisSize.max,
+                //     children: [
+                //       Expanded(
+                //         child: FFButtonWidget(
+                //           onPressed: () async {
+                //             await Navigator.push(
+                //               context,
+                //               MaterialPageRoute(
+                //                 builder: (context) => RewardListScreenWidget(uid:widget.uid),
+                //               ),
+                //             );
+                //             getClaimList();
+                //           },
+                //           text: 'See All Reward List',
+                //           options: FFButtonOptions(
+                //             width: 130.0,
+                //             height: 40.0,
+                //             padding: EdgeInsetsDirectional.fromSTEB(
+                //                 0.0, 0.0, 0.0, 0.0),
+                //             iconPadding: EdgeInsetsDirectional.fromSTEB(
+                //                 0.0, 0.0, 0.0, 0.0),
+                //             color: FlutterFlowTheme.of(context).primaryText,
+                //             textStyle: FlutterFlowTheme.of(context)
+                //                 .titleSmall
+                //                 .override(
+                //                   fontFamily: 'Outfit',
+                //                   color: FlutterFlowTheme.of(context)
+                //                       .secondaryBackground,
+                //                 ),
+                //             elevation: 2.0,
+                //             borderSide: BorderSide(
+                //               color: Colors.transparent,
+                //               width: 1.0,
+                //             ),
+                //             borderRadius: BorderRadius.circular(8.0),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                   child: Wrap(
@@ -248,16 +253,16 @@ class _ClaimListUserWidgetState extends State<ClaimListUserWidget> {
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 0.0, 8.0, 0.0),
-                                    child: Text(
-                                      'My Claim',
-                                      style: FlutterFlowTheme.of(context)
-                                          .headlineSmall,
+                                  child: Text(
+                                    'My Claim',
+                                    style: FlutterFlowTheme.of(context).headlineSmall.copyWith(
+                                      fontSize: 20,
                                     ),
+                                  ),
                                   ),
                                   buildSearch(),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12.0, 12.0, 12.0, 0.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 12.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -265,35 +270,28 @@ class _ClaimListUserWidgetState extends State<ClaimListUserWidget> {
                                           flex: 2,
                                           child: Text(
                                             'Claim',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
+                                            style: FlutterFlowTheme.of(context).bodySmall.override(
                                                   fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
+                                                  color: FlutterFlowTheme.of(context).primaryText,
                                                 ),
                                           ),
                                         ),
                                         if (responsiveVisibility(
                                           context: context,
-                                          phone: false,
+                                          //phone: false,
                                           tablet: false,
                                         ))
-                                        Expanded(
-                                          child: Text(
-                                            'Detail',
-                                            textAlign: TextAlign.end,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
-                                                  fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
-                                                ),
+                                        
+                                      Expanded(
+                                        child: Text(
+                                          'Detail',
+                                          textAlign: TextAlign.end,
+                                          style: FlutterFlowTheme.of(context).bodySmall.override(
+                                            fontFamily: 'Outfit',
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                           ),
                                         ),
+                                      ),
                                       ],
                                     ),
                                   ),
@@ -367,8 +365,7 @@ class _ClaimListUserWidgetState extends State<ClaimListUserWidget> {
     child: Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius:
-                                                                BorderRadius.circular(12.0),
+        borderRadius:BorderRadius.circular(12.0),
         color: FlutterFlowTheme.of(context).secondaryBackground,
         boxShadow: [
           BoxShadow(
@@ -433,7 +430,7 @@ class _ClaimListUserWidgetState extends State<ClaimListUserWidget> {
                                 0.0,
                               ),
                               child: Text(
-                                claim.status == true ? "Complete" : "Pending",
+                                claim.status == true ? "Used" : "Unused",
                                 style: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .override(

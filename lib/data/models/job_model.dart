@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class Jobs {
-    dynamic date;
-    String? description;
+    dynamic start_date;
+    dynamic end_date;
+    String? start_time;
     String? end_time;
+    String? description;
     List? image = [];
     Map<String, dynamic>? location;
     String? organizer_email;
@@ -12,7 +14,6 @@ class Jobs {
     String? organizer_phone;
     String? organizer_uid;
     String? phone;
-    String? start_time;
     String? title;
     String? uid;
     bool? status;
@@ -22,9 +23,11 @@ class Jobs {
     dynamic timestamp;
 
     Jobs({
-        @required this.date,
-        @required this.description,
+        @required this.start_date,
+        @required this.end_date,
+        @required this.start_time,
         @required this.end_time,
+        @required this.description,        
         @required this.image,
         @required this.location,
         @required this.organizer_email,
@@ -32,7 +35,6 @@ class Jobs {
         @required this.organizer_phone,
         @required this.organizer_uid,
         @required this.phone,
-        @required this.start_time,
         @required this.title,
         @required this.uid,
         @required this.status,
@@ -44,16 +46,17 @@ class Jobs {
 
     factory Jobs.fromJson(Map<String, dynamic> doc) {
         return Jobs(
-            date: doc['date'],
-            description: doc['description'],
+            start_date: doc['start_date'],            
+            end_date: doc['end_date'],
+            start_time: doc['start_time'],
             end_time: doc['end_time'],
+            description: doc['description'],
             location: doc['location'],
             organizer_email: doc['organizer_email'],
             organizer_name: doc['organizer_name'],
             organizer_phone: doc['organizer_phone'],
             organizer_uid: doc['organizer_uid'],
             phone: doc['phone'],
-            start_time: doc['start_time'],
             title: doc['title'],
             uid: doc['uid'],
             status: doc['status'],
@@ -70,16 +73,17 @@ class Jobs {
     }
 
     Map<String, dynamic> toJson() => {
-        'date': date,
-        'description': description,
+        'start_date': start_date,
+        'end_date': end_date,
+        'start_time': start_time,
         'end_time': end_time,
+        'description': description,
         'location': location,
         'organizer_email': organizer_email,
         'organizer_name': organizer_name,
         'organizer_phone': organizer_phone,
         'organizer_uid': organizer_uid,
         'phone': phone,
-        'start_time': start_time,
         'title': title,
         'uid': uid,
         'image': image,
@@ -92,16 +96,18 @@ class Jobs {
 
     factory Jobs.fromDocument(DocumentSnapshot doc) {
         return Jobs(
-            date: doc['date'],
-            description: doc['description'],
+
+            start_date: doc['start_date'],            
+            end_date: doc['end_date'],
+            start_time: doc['start_time'],
             end_time: doc['end_time'],
+            description: doc['description'],
             location: doc['location'],
             organizer_email: doc['organizer_email'],
             organizer_name: doc['organizer_name'],
             organizer_phone: doc['organizer_phone'],
             organizer_uid: doc['organizer_uid'],
             phone: doc['phone'],
-            start_time: doc['start_time'],
             title: doc['title'],
             uid: doc['uid'],
             status: doc['status'],

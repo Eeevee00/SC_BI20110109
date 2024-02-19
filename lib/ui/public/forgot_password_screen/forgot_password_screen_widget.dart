@@ -53,8 +53,7 @@ class _ForgotPasswordScreenWidgetState
         context: context,
         type: AlertType.success,
         title: "Reset Password confirmation",
-        desc:
-            "Please check  your email to continue with reseting your account password",
+        desc:"Please check your email to proceed with resetting your account password.",
         buttons: [
           DialogButton(
             child: Text(
@@ -72,7 +71,7 @@ class _ForgotPasswordScreenWidgetState
         context: context,
         type: AlertType.warning,
         title: "Password reset fail",
-        desc: "fail to send email because it didnt exist.",
+        desc: "Failed to send email because it doesn't exist.",
         buttons: [
           DialogButton(
             child: Text(
@@ -122,7 +121,7 @@ class _ForgotPasswordScreenWidgetState
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -170,7 +169,7 @@ class _ForgotPasswordScreenWidgetState
                     decoration: InputDecoration(
                       labelText: 'Email Address',
                       hintText: 'Enter your email',
-                      hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                      hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                       labelStyle: TextStyle( // Add this block for label text style
                         color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                       ),
@@ -277,7 +276,8 @@ class _ForgotPasswordScreenWidgetState
                                 fontFamily: 'Outfit',
                                 color: FlutterFlowTheme.of(context)
                                     .secondaryBackground,
-                                fontSize: 4.0,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w600,
                               ),
                       elevation: 2.0,
                       borderRadius: BorderRadius.circular(5.0),

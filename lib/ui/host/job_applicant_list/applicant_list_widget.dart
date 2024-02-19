@@ -19,7 +19,8 @@ import '../../screens/skeleton_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../admin/admin_detail_screen/host_user_detail_screen_widget.dart';
+//import '../../admin/admin_detail_screen/host_user_detail_screen_widget.dart';
+import '../../admin/admin_detail_screen/job_applicant_detail_screen_widget.dart';
 
 class ApplicantListScreenWidget extends StatefulWidget {
     final String event_uid;
@@ -47,7 +48,7 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
 
         var eventDoc = await db.collection('job').doc(eventUid).get();
         if (eventDoc.exists) {
-            var participantsCollection = eventDoc.reference.collection('participant');
+            var participantsCollection = eventDoc.reference.collection('applicants');
 
             var participantsSnapshot = await participantsCollection.get();
 
@@ -133,11 +134,11 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
               IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
           title: Text(
-            'Participant List',
+            'Applicant List',
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -204,7 +205,7 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         16.0, 0.0, 0.0, 0.0),
                                     child: Text(
-                                      'Participant List',
+                                      'Applicant List',
                                       style: FlutterFlowTheme.of(context)
                                           .headlineSmall,
                                     ),
@@ -239,18 +240,10 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
                                         ),
                                         if (responsiveVisibility(
                                           context: context,
-                                          phone: false,
+                                          //phone: false,
                                           tablet: false,
                                         ))
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              'Email',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall,
-                                            ),
-                                          ),
+                                        
                                         Expanded(
                                           child: Text(
                                             'Detail',
@@ -330,7 +323,8 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => UserDetailScreenWidget(user: user),
+          //builder: (context) => UserDetailScreenWidget(user: user),
+           builder: (context) => UserDetailScreenWidget(user: user, event_uid: widget.event_uid),
         ),
       );
       getUserList();

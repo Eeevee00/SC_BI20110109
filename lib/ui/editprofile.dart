@@ -1,15 +1,18 @@
+//Can delete?
+
 import 'dart:io';
 import 'dart:async';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:image/image.dart' as i;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
+import 'package:image/image.dart' as i;
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '../data/models/user_model.dart';
 
 class EditProfile extends StatefulWidget {

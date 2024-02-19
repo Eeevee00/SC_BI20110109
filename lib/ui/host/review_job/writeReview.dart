@@ -11,6 +11,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/rendering.dart';
 import 'package:getwidget/getwidget.dart';
 import 'reviewList.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 // import 'package:alphacar/ui/widgets/textField_widget3.dart';
@@ -46,7 +47,35 @@ class _WriteReviewState extends State<WriteReview> {
     String? userId = "";
     late Users currentUser;
     late SharedPreferences sharedPreferences;
+   var hostUID;
 
+    Future<void> hostID()async{
+      try {
+        // Assuming you have a reference to your Firestore instance
+        var firestore = FirebaseFirestore.instance;
+
+        // Replace 'job' with the actual name of your job collection
+        var jobRef = firestore.collection('job').doc(widget.eventID);
+
+        // Get the document snapshot for the specified jobUID
+        var jobDoc = await jobRef.get();
+
+        // Check if the document exists and contains the 'organizer_uid' field
+        if (jobDoc.exists) {
+          var organizerUID = jobDoc['organizer_uid'] as String?;
+          setState(() {
+            hostUID = organizerUID;
+          });
+
+        } else {
+          // Document doesn't exist
+
+        }
+      } catch (e) {
+        print('Error getting organizer UID: $e');
+        return null; // Handle the error according to your needs
+      }
+    }
 
     void initialGetSaved() async{
         sharedPreferences = await SharedPreferences.getInstance();
@@ -61,12 +90,133 @@ class _WriteReviewState extends State<WriteReview> {
         });
     }
 
+    Future<int?> getUserPoint(var userUid) async {
+      try {
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userUid)
+            .get();
+
+        if (userSnapshot.exists) {
+          Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+          // Assuming the points field is an integer in your Firestore document
+          int? userPoints = userData['points'];
+          print('User Points: $userPoints');
+          return userPoints;
+        } else {
+          print('User not found in Firestore');
+          return null;
+        }
+      } catch (error) {
+        print('Error getting user points: $error');
+        return null;
+      }
+    }
+
+    Future<void> updateUserPoint() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var user_uid = prefs.getString("current_user_uid");
+
+      try {
+        // Get the current user points
+        int? currentPoints = await getUserPoint(user_uid);
+        int? currentHostPoints = await getUserPoint(hostUID);
+
+        if (currentPoints != null) {
+          // Update user points by 1000
+          int updatedPoints = currentPoints + 100;
+
+          // Update points in Firestore
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user_uid)
+              .update({'points': updatedPoints});
+
+          print('User Points Updated: $updatedPoints');
+          sendNotification();
+        } else {
+          print('Cannot update user points. User not found in Firestore.');
+        }
+
+        if (currentHostPoints != null) {
+          // Update user points by 1000
+          int updatedHostPoints = (currentHostPoints + (10 * ratings)).toInt();
+
+          // Update points in Firestore
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(hostUID)
+              .update({'points': updatedHostPoints});
+
+          print('User Points Updated: $updatedHostPoints');
+          sendNotification2();
+        } else {
+          print('Cannot update user points. User not found in Firestore.');
+        }
+      } catch (error) {
+        print('Error updating user points: $error');
+      }
+    }
+
+    sendNotification2() async {
+      var point = 50;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DocumentReference notificationRef = await firestore
+        .collection('users')
+        .doc(hostUID)
+        .collection('notification')
+        .add({
+          'title': "Job Reviews",
+          'content': "Congratulation, One of your job have been purchase. $point point reward have been credit to your account",
+          'timestamp': FieldValue.serverTimestamp(),
+          'uid': "", // Leave it empty for now
+          'send_to': "user",
+          'created_by': "",
+          //'read': false,
+        });
+
+    // Get the auto-generated uid from the notificationRef
+    String notificationUid = notificationRef.id;
+
+    // Update the notification document with the correct uid
+    await notificationRef.update({'uid': notificationUid});
+  }
+
+  sendNotification() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var user_uid = prefs.getString("current_user_uid");
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DocumentReference notificationRef = await firestore
+        .collection('users')
+        .doc(user_uid)
+        .collection('notification')
+        .add({
+          'title': "Job Reviews",
+          'content': "Thanks for writing review, 100 points have been credited to your account as a reward",
+          'timestamp': FieldValue.serverTimestamp(),
+          'uid': "", // Leave it empty for now
+          'send_to': "user",
+          'created_by': "",
+          //'read': false,
+        });
+
+    // Get the auto-generated uid from the notificationRef
+    String notificationUid = notificationRef.id;
+
+    // Update the notification document with the correct uid
+    await notificationRef.update({'uid': notificationUid});
+  }
     
 
     @override
     void initState() {
         super.initState();
         initialGetSaved();
+        hostID();
+
     }
 
     @override
@@ -139,7 +289,7 @@ class _WriteReviewState extends State<WriteReview> {
                           decoration: InputDecoration(
                             labelText: 'Comment Title',
                             hintText: 'Enter the comment title',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -198,7 +348,7 @@ class _WriteReviewState extends State<WriteReview> {
                       decoration: InputDecoration(
                         labelText: 'Review Description',
                         hintText: 'Enter description',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -248,41 +398,47 @@ class _WriteReviewState extends State<WriteReview> {
                         height: 20,
                     ),
 
-                    Padding(
+                     Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 16.0),
                           child: FFButtonWidget(
                             onPressed: () async {
                                 if (ratings == null) {
-                                    AwesomeDialog(
-                                        context: context,
-                                        dialogType: DialogType.WARNING,
-                                        headerAnimationLoop: false,
-                                        animType: AnimType.TOPSLIDE,
-                                        showCloseIcon: true,
-                                        closeIcon: const Icon(Icons.close_fullscreen_outlined),
-                                        title: 'Fail to submit review.',
-                                        desc:
-                                        'Please add a rating.',
-                                        btnOkOnPress: () {},
-                                        btnOkText: "Tutup",
-                                        btnOkColor: Colors.red,
+                                    Alert(
+                                      context: context,
+                                      type: AlertType.warning,
+                                      title: "Fail to submit review.",
+                                      desc: "Please add a rating.",
+                                      buttons: [
+                                        DialogButton(
+                                          child: Text(
+                                            "Close",
+                                            style: TextStyle(color: Colors.white, fontSize: 20),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
                                     ).show();
                                 } else if (titleController.text == '') {
-                                    AwesomeDialog(
-                                        context: context,
-                                        dialogType: DialogType.WARNING,
-                                        headerAnimationLoop: false,
-                                        animType: AnimType.TOPSLIDE,
-                                        showCloseIcon: true,
-                                        closeIcon: const Icon(Icons.close_fullscreen_outlined),
-                                        title: 'Fail to submit review.',
-                                        desc:
-                                        'Please add a Title to the review.',
-                                        btnOkOnPress: () {},
-                                        btnOkText: "Tutup",
-                                        btnOkColor: Colors.red,
-                                    ).show();
+                                  Alert(
+                                    context: context,
+                                    type: AlertType.warning,
+                                    title: "Fail to submit review.",
+                                    desc: "Please add a review.",
+                                    buttons: [
+                                      DialogButton(
+                                        child: Text(
+                                          "Close",
+                                          style: TextStyle(color: Colors.white, fontSize: 20),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ).show();
                                 } else {
                                 FirebaseFirestore.instance
                                     .collection("job")
@@ -298,6 +454,24 @@ class _WriteReviewState extends State<WriteReview> {
                                         "name": firstName,
                                         "lastName": lastName,
                                     });
+                                    await updateUserPoint();
+                                    await Alert(
+                                      context: context,
+                                      type: AlertType.success,
+                                      title: "Success to submit review.",
+                                      desc: "100 points have been credited to your account for leaving a review",
+                                      buttons: [
+                                        DialogButton(
+                                          child: Text(
+                                            "Close",
+                                            style: TextStyle(color: Colors.white, fontSize: 20),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                    ).show();
                                     Navigator.pop(context);
                                 }
                             },

@@ -69,7 +69,7 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                       image: DecorationImage(
                         fit: BoxFit.contain,
                         image: Image.asset(
-                          'assets/images/asd.png',
+                        'assets/images/MuzikLokal_logo.png',
                         ).image,
                       ),
                       borderRadius: BorderRadius.only(
@@ -113,12 +113,12 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                                   Text(
                                     'Get Started',
                                     style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
+                                        .displaySmall
                                         .override(
                                           fontFamily: 'Outfit',
                                           color: FlutterFlowTheme.of(context)
                                               .customColor1,
-                                          fontSize: 18.0,
+                                          //fontSize: 18.0,
                                         ),
                                   ),
                                 ],
@@ -132,7 +132,7 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .customColor1,
-                                    fontSize: 14.0,
+                                    fontSize: 20.0,
                                   ),
                             ),
                             Padding(
@@ -210,7 +210,7 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .primaryText,
-                                                  fontSize: 16.0,
+                                                  fontSize: 20.0,
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                           )

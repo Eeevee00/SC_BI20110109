@@ -21,7 +21,7 @@ class Verification extends StatefulWidget {
 
 class _VerificationState extends State<Verification> {
     final scaffoldKey = GlobalKey<ScaffoldState>();
-    var user_verifiy = false;
+    var user_verify_status = false;
     var request_to_verify = false;
 
     @override
@@ -32,28 +32,33 @@ class _VerificationState extends State<Verification> {
 
     Future<void> getUserVerificationStatus(String userUid) async {
         try {
-            CollectionReference<Map<String, dynamic>> usersCollection =
-                FirebaseFirestore.instance.collection('users');
-
-            DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-                await usersCollection.doc(userUid).get();
+            // Define a reference to the 'users' collection
+            CollectionReference<Map<String, dynamic>> usersCollection = FirebaseFirestore.instance.collection('users');
+            // Retrieve a specific document from the collection using its userUid
+            DocumentSnapshot<Map<String, dynamic>> userSnapshot = await usersCollection.doc(userUid).get();
 
             if (userSnapshot.exists) {
+            // If the document exists, retrieve the verification status and request verification status
+            // else  if that value is null, it defaults to false. It's a concise way of handling null values in Dart.
             bool verificationStatus = userSnapshot.get('verification') ?? false;
             bool requestVerification = userSnapshot.get('request_to_verify') ?? false;
+            // Update the state variables using setState
+
             setState(() {
-                user_verifiy = verificationStatus;
+                user_verify_status = verificationStatus;
                 request_to_verify = requestVerification;
             });
             } else {
+                    // If the document does not exist, set user_verify_status to false
                 setState(() {
-                    user_verifiy = false;
+                    user_verify_status = false;
                 });
             }
         } catch (e) {
+                // Handle any errors that might occur during the retrieval of verification status
             print('Error getting user verification status: $e');
             setState(() {
-                user_verifiy = false;
+                user_verify_status = false;
             });
         }
     }
@@ -65,15 +70,14 @@ class _VerificationState extends State<Verification> {
             backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
             appBar: AppBar(
             backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-            iconTheme:
-                IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
+            iconTheme:IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
             automaticallyImplyLeading: true,
             title: Text(
                 'User Verification',
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: 'Outfit',
                     color: FlutterFlowTheme.of(context).primaryText,
-                    fontSize: 16.0,
+                    fontSize: 20.0,
                     fontWeight: FontWeight.w500,
                     ),
             ),
@@ -81,113 +85,118 @@ class _VerificationState extends State<Verification> {
             centerTitle: false,
             elevation: 0.0,
             ),
+       
         body: SafeArea(
             top: true,
-            child: Align(
-                alignment: AlignmentDirectional(0.0, 0.0),
+            child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
                 child: Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                     Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(16.0, 50.0, 0.0, 16.0),
-                        child: Text(
-                            'User Verification',
-                            textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context).headlineMedium.override(
-                                fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                ),
+                      padding: EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 0.0, 20.0),
+                    child: Text(
+                        'User Verification',
+                        textAlign: TextAlign.center,
+                        style: FlutterFlowTheme.of(context).headlineMedium.override(
+                        fontFamily: 'Outfit',
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 20.0,
+
                         ),
                     ),
-                    user_verifiy == true ? 
+                    ),
+
+                    // Verification Status Messages
+                    if (user_verify_status == true)
                     Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 16.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(10.0, 12.0, 16.0, 16.0),
                         child: Text(
-                            'Your account have been verified by admin. Thank you and enjoy using the apps.',
-                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context).customColor1,
-                                ),
+                        'Your account has been verified by admin. Thank you and enjoy using the apps.',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Outfit',
+                            color: FlutterFlowTheme.of(context).customColor1,
+                        ),
                         ),
                     )
-                    :
+                    else if (user_verify_status == false && request_to_verify == false)
                     Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 16.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(10.0, 12.0, 16.0, 16.0),
                         child: Text(
-                            'Your account is not verified. Get your account verified to enjoy more feature and get bonus point.',
-                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context).customColor1,
-                                ),
+                        'Your account is not verified. Get your account verified to enjoy more features and get bonus points.',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Outfit',
+                            color: FlutterFlowTheme.of(context).customColor1,
+                        ),
+                        ),
+                    )
+                    else if (user_verify_status == false && request_to_verify == true)
+                    Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(10.0, 12.0, 16.0, 16.0),
+                        child: Text(
+                        'You have already submitted for verification. Please wait for admin approval.',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Outfit',
+                            color: FlutterFlowTheme.of(context).customColor1,
+                        ),
                         ),
                     ),
-                    user_verifiy == true? 
-                    Row()
-                    :
-                    request_to_verify == false? 
+
+                    // Button Section
+                    if (user_verify_status == true)
+                    Row() // Renders an empty Row (no button).
+                    
+                    else if (user_verify_status == false && request_to_verify == false)
                     Padding(
-                        padding: EdgeInsets.all(20.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
                         child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
                             Expanded(
-                                child: FFButtonWidget(
+                            child: FFButtonWidget(
                                 onPressed: () async {
-                                    await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                        builder: (context) => VerificationFormWidget(uid: widget.uid),
-                                        ),
-                                    );
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                    builder: (context) =>
+                                        VerificationFormWidget(uid: widget.uid),
+                                    ),
+                                );
                                 },
                                 text: 'Get Verified now',
                                 options: FFButtonOptions(
-                                    width: 130.0,
-                                    height: 40.0,
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 0.0),
-                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 0.0),
-                                    color: FlutterFlowTheme.of(context).primaryText,
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .override(
-                                        fontFamily: 'Outfit',
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        ),
-                                    elevation: 2.0,
-                                    borderSide: BorderSide(
+                                // width: 130.0,
+                                width: double.infinity,
+                                height: 45.0,
+                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Outfit',
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    fontSize: 20.0,
+
+                                ),
+                                elevation: 2.0,
+                                borderSide: BorderSide(
                                     color: Colors.transparent,
                                     width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
                                 ),
+                                borderRadius: BorderRadius.circular(8.0),
                                 ),
                             ),
-                            ],
+                            ),
+                        ],
                         ),
                     )
-                    :
-                    Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 16.0),
-                        child: Text(
-                            'You already submit for verification, please wait for admin to approve',
-                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context).customColor1,
-                                ),
-                        ),
-                    )
+                    else if (user_verify_status == false && request_to_verify == true)
+                    Row() // Renders an empty Row (no button).
                 ],
+                    ),
                 ),
             ),
-            ),
+
         );
     }
 }

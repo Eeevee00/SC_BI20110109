@@ -33,7 +33,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
   final _registerFormKey = GlobalKey<FormState>();
   var title;
   var contact_number;
-  var category;
+  //var category;
   var event_date_start;
   var event_date_end;
   var event_time_start;
@@ -93,7 +93,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
         DocumentReference eventsRef = await firestore.collection('event').add({
             'title': _model.textController1.text,
             'phone': _model.textController2.text,
-            'category': _model.dropDownValueController!.value!,
+            //'category': _model.dropDownValueController!.value!,
             'start_date': Timestamp.fromDate(startDate),
             'end_date': Timestamp.fromDate(endDate),
             'start_time': _model.textController5.text,
@@ -105,8 +105,9 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
             },
             'description': _model.textController9.text,
             'image': ['https://images.unsplash.com/photo-1517457373958-b7bdd4587205?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHw2fHxldmVudHxlbnwwfHx8fDE3MDI2OTMwMzR8MA&ixlib=rb-4.0.3&q=80&w=1080'], 
+            //'image': ['https://cdn.vectorstock.com/i/preview-1x/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg'], 
             'uid': '', 
-            'deadline': FieldValue.serverTimestamp(),
+            //'deadline': FieldValue.serverTimestamp(),
             'status': false,
             'organizer_uid': prefs.getString("current_user_uid"),
             'organizer_name': prefs.getString("current_user_name"),
@@ -121,7 +122,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
             context: context,
             type: AlertType.success,
             title: "Add New Event",
-            desc: "Successfully add new event",
+            desc: "Successfully added new event",
             buttons: [
             DialogButton(
                 child: Text(
@@ -253,7 +254,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Outfit',
                       color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 16.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -280,9 +281,11 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                       child: Text(
                         'Create New Event',
                         style:
-                            FlutterFlowTheme.of(context).headlineMedium.override(
+                            FlutterFlowTheme.of(context).titleSmall.override(
                                   fontFamily: 'Outfit',
                                   color: FlutterFlowTheme.of(context).primaryText,
+                                 fontSize: 20.0,
+
                                 ),
                       ),
                     ),
@@ -336,7 +339,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                         decoration: InputDecoration(
                           labelText: 'Event Title',
                           hintText: 'Enter title',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -393,7 +396,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                         decoration: InputDecoration(
                           labelText: 'Contact Number to Apply',
                           hintText: 'Enter phone number',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle(
                             color: FlutterFlowTheme.of(context).primaryText,
                           ),
@@ -437,51 +440,52 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                           },
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                      child: FlutterFlowDropDown<String>(
-                        controller: _model.dropDownValueController ??=
-                            FormFieldController<String>(null),
-                        options: [
-                          'Category 1',
-                          'Category 2',
-                          'Category 3',
-                          'Category 4',
-                          'Category 5',
-                          'Category 6',
-                          'Category 7',
-                          'Category 8',
-                          'Category 9',
-                          'Category 10'
-                          ],
-                        onChanged: (val) =>
-                            setState(() => _model.dropDownValue = val),
+                    //Dropdown category
+                    // Padding(
+                    //   padding:
+                    //       EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                    //   child: FlutterFlowDropDown<String>(
+                    //     controller: _model.dropDownValueController ??=
+                    //         FormFieldController<String>(null),
+                    //     options: [
+                    //       'Category 1',
+                    //       'Category 2',
+                    //       'Category 3',
+                    //       'Category 4',
+                    //       'Category 5',
+                    //       'Category 6',
+                    //       'Category 7',
+                    //       'Category 8',
+                    //       'Category 9',
+                    //       'Category 10'
+                    //       ],
+                    //     onChanged: (val) =>
+                    //         setState(() => _model.dropDownValue = val),
                             
-                        width: double.infinity,
-                        height: 50.0,
-                        textStyle: FlutterFlowTheme.of(context).bodyMedium,
-                        hintText: 'Please select event category',
-                        icon: Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          size: 24.0,
-                        ),
-                        fillColor:
-                            FlutterFlowTheme.of(context).primaryBackground,
-                        elevation: 2.0,
-                        borderColor:
-                            FlutterFlowTheme.of(context).primaryBackground,
-                        borderWidth: 2.0,
-                        borderRadius: 8.0,
-                        margin: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 4.0, 16.0, 4.0),
-                        hidesUnderline: true,
-                        isSearchable: false,
-                        isMultiSelect: false,
+                    //     width: double.infinity,
+                    //     height: 50.0,
+                    //     textStyle: FlutterFlowTheme.of(context).bodyMedium,
+                    //     hintText: 'Please select event category',
+                    //     icon: Icon(
+                    //       Icons.keyboard_arrow_down_rounded,
+                    //       color: FlutterFlowTheme.of(context).primaryText,
+                    //       size: 24.0,
+                    //     ),
+                    //     fillColor:
+                    //         FlutterFlowTheme.of(context).primaryBackground,
+                    //     elevation: 2.0,
+                    //     borderColor:
+                    //         FlutterFlowTheme.of(context).primaryBackground,
+                    //     borderWidth: 2.0,
+                    //     borderRadius: 8.0,
+                    //     margin: EdgeInsetsDirectional.fromSTEB(
+                    //         16.0, 4.0, 16.0, 4.0),
+                    //     hidesUnderline: true,
+                    //     isSearchable: false,
+                    //     isMultiSelect: false,
                         
-                      ),
-                    ),
+                    //   ),
+                    // ),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                       child: GestureDetector(
@@ -494,7 +498,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                             decoration: InputDecoration(
                               labelText: 'Event Date (Start)',
                               hintText: 'Enter start date',
-                              hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                              hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                               labelStyle: TextStyle(
                                 color: FlutterFlowTheme.of(context).primaryText,
                               ),
@@ -553,7 +557,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                             decoration: InputDecoration(
                               labelText: 'Event Date (End)',
                               hintText: 'Enter end date',
-                              hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                              hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                               labelStyle: TextStyle(
                                 color: FlutterFlowTheme.of(context).primaryText,
                               ),
@@ -610,9 +614,9 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                             focusNode: _model.textFieldFocusNode5,
                             obscureText: false,
                             decoration: InputDecoration(
-                              labelText: 'Event Start Time',
+                              labelText: 'Event Time (Start)',
                               hintText: 'Enter event start time',
-                              hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                              hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                               labelStyle: TextStyle(
                                 color: FlutterFlowTheme.of(context).primaryText,
                               ),
@@ -668,9 +672,9 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                         readOnly: true,
                         onTap: () => _selectEndTime(context),
                         decoration: InputDecoration(
-                          labelText: 'Event End Time',
+                          labelText: 'Event Time (End)',
                           hintText: 'Enter event end time',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( 
                             color: FlutterFlowTheme.of(context).primaryText,
                           ),
@@ -726,7 +730,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                     //     decoration: InputDecoration(
                     //       labelText: 'Event Deadline',
                     //       hintText: 'Enter event deadline',
-                    //       hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                    //       hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                     //       labelStyle: TextStyle( // Add this block for label text style
                     //         color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                     //       ),
@@ -800,7 +804,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                         decoration: InputDecoration(
                           labelText: 'Event Venue',
                           hintText: 'Enter the venue',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -839,7 +843,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium,
                         maxLines: 10,
-                        minLines: 5,
+                        minLines: 2,
                         validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter the event venue';
@@ -855,7 +859,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                       decoration: InputDecoration(
                         labelText: 'Event Description',
                         hintText: 'Enter description',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -923,7 +927,7 @@ class _NewEventFormWidgetState extends State<NewEventFormWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 14.0,
+                                    fontSize: 18.0,
                                   ),
                           elevation: 2.0,
                           borderRadius: BorderRadius.circular(5.0),

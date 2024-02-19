@@ -109,7 +109,7 @@ class _TicketDetailWidgetState extends State<TicketDetailWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -169,7 +169,7 @@ class _TicketDetailWidgetState extends State<TicketDetailWidget> {
                                             fontFamily: 'Outfit',
                                             color: FlutterFlowTheme.of(context)
                                                 .customColor1,
-                                            fontSize: 16.0,
+                                            fontSize: 20.0,
                                             fontWeight: FontWeight.normal,
                                           ),
                                     ),
@@ -218,7 +218,7 @@ class _TicketDetailWidgetState extends State<TicketDetailWidget> {
                                             fontFamily: 'Outfit',
                                             color: FlutterFlowTheme.of(context)
                                                 .customColor1,
-                                            fontSize: 16.0,
+                                            fontSize: 20.0,
                                             fontWeight: FontWeight.normal,
                                           ),
                                     ),
@@ -267,7 +267,7 @@ class _TicketDetailWidgetState extends State<TicketDetailWidget> {
                                             fontFamily: 'Outfit',
                                             color: FlutterFlowTheme.of(context)
                                                 .customColor1,
-                                            fontSize: 16.0,
+                                            fontSize: 20.0,
                                             fontWeight: FontWeight.normal,
                                           ),
                                     ),
@@ -316,7 +316,7 @@ class _TicketDetailWidgetState extends State<TicketDetailWidget> {
                                             fontFamily: 'Outfit',
                                             color: FlutterFlowTheme.of(context)
                                                 .customColor1,
-                                            fontSize: 16.0,
+                                            fontSize: 20.0,
                                             fontWeight: FontWeight.normal,
                                           ),
                                     ),
@@ -365,7 +365,7 @@ class _TicketDetailWidgetState extends State<TicketDetailWidget> {
                                             fontFamily: 'Outfit',
                                             color: FlutterFlowTheme.of(context)
                                                 .customColor1,
-                                            fontSize: 16.0,
+                                            fontSize: 20.0,
                                             fontWeight: FontWeight.normal,
                                           ),
                                     ),

@@ -159,7 +159,7 @@ class _NotificationListScreenWidgetState
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -270,11 +270,12 @@ class _NotificationListScreenWidgetState
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 0.0, 8.0, 0.0),
-                                    child: Text(
-                                      'Notification List',
-                                      style: FlutterFlowTheme.of(context)
-                                          .headlineSmall,
+                                  child: Text(
+                                    'Notification List',
+                                    style: FlutterFlowTheme.of(context).headlineSmall.copyWith(
+                                      fontSize: 20,
                                     ),
+                                  ),
                                   ),
                                   buildSearch(),
                                   Padding(
@@ -293,7 +294,7 @@ class _NotificationListScreenWidgetState
                                                   fontFamily: 'Outfit',
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .customColor1,
+                                                      .primaryText,
                                                 ),
                                           ),
                                         ),
@@ -307,7 +308,7 @@ class _NotificationListScreenWidgetState
                                                   fontFamily: 'Outfit',
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .customColor1,
+                                                      .primaryText,
                                                 ),
                                           ),
                                         ),
@@ -416,7 +417,7 @@ class _NotificationListScreenWidgetState
                                 .override(
                                   fontFamily: 'Outfit',
                                   color: FlutterFlowTheme.of(context).customColor1,
-                                  fontSize: 18.0,
+                                  fontSize: 16.0,
                                 ),
                           ),
                           Padding(

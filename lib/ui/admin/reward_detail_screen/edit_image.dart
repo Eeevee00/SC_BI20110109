@@ -198,7 +198,7 @@ class EditProfileState extends State<EditProfile> {
   Future uploadFile(File image, Reward currentUser, isProfilePicture) async {
     Reference storageReference = FirebaseStorage.instance
         .ref()
-        .child('class/${currentUser.uid}/${image.hashCode}.jpg');
+        .child('rewards/${currentUser.name}/${image.hashCode}.jpg');
     UploadTask uploadTask = storageReference.putFile(image);
    
     if (await uploadTask != null) {

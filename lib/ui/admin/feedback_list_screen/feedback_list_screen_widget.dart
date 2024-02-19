@@ -57,50 +57,73 @@ class _FeedbackListScreenWidgetState
     super.dispose();
   }
 
+  // Function to fetch the list of feedback notifications from the 'feedback' collection
   getNotificationList() async {
     try {
+      // Fetch data from the 'feedback' collection
       var data = await db.collection('/feedback').get();
 
+      // Check if there are no notifications available
       if (data.docs.isEmpty) {
         print('No notifications available');
         return;
       }
 
+      // Clear the existing list of notifications
       notificationList.clear();
 
+      // Iterate through the documents and create Feedbacks objects
       for (var doc in data.docs) {
         Feedbacks? temp = Feedbacks.fromDocument(doc);
         notificationList.add(temp);
       }
 
+      // Update the UI if the widget is still mounted
       if (mounted) {
         setState(() {});
       }
     } catch (error) {
+      // Print error details if fetching notifications fails
       print('Error getting notifications: $error');
     }
   }
 
+  // Function to fetch the list of feedback notifications from the 'feedback' collection
   getNotificationList2() async {
+    // Clear the existing lists
     notificationList.clear();
     notifications.clear();
+
+    // Call the 'init' function (assuming it initializes some variables)
     init();
-    db.collection('/feedback').get().then((data) {
-    }).then((_) {
-      docNotification.get().then((data) async {
-        if (data.docs.length < 1) {
-          return;
-        }
-        notifications.clear();
-        notificationList.clear();
-        for (var doc in data.docs) {
-          Feedbacks? temp = Feedbacks.fromDocument(doc);
-          notificationList.add(temp);
-        }
-        if (mounted) setState(() {});
-          });
-        });
+
+    try {
+      // Fetch data from the 'feedback' collection
+      var data = await db.collection('/feedback').get();
+
+      // Check if there are no notifications available
+      if (data.docs.isEmpty) {
+        return;
+      }
+
+      // Clear the existing list of notifications
+      notifications.clear();
+
+      // Iterate through the documents and create Feedbacks objects
+      for (var doc in data.docs) {
+        Feedbacks? temp = Feedbacks.fromDocument(doc);
+        notificationList.add(temp);
+      }
+
+      // Update the UI if the widget is still mounted
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (error) {
+      // Print error details if fetching notifications fails
+      print('Error getting notifications: $error');
     }
+  }
     
   init(){
     final list = notificationList;
@@ -157,7 +180,7 @@ class _FeedbackListScreenWidgetState
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -209,25 +232,25 @@ class _FeedbackListScreenWidgetState
                               ],
                               borderRadius: BorderRadius.circular(16.0),
                               border: Border.all(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
+                                color: FlutterFlowTheme.of(context).secondaryBackground,
                                 width: 1.0,
                               ),
                             ),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 12.0),
+                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 12.0),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 0.0, 8.0, 0.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
                                     child: Text(
                                       'Feedback List',
-                                      style: FlutterFlowTheme.of(context)
-                                          .headlineSmall,
+                                      style: FlutterFlowTheme.of(context).headlineSmall.override(
+                                fontFamily: 'Outfit',
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                fontSize: 20.0,
+                              ),
                                     ),
                                   ),
                                   buildSearch(),
@@ -241,13 +264,9 @@ class _FeedbackListScreenWidgetState
                                           flex: 2,
                                           child: Text(
                                             'Name',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
+                                            style: FlutterFlowTheme.of(context).bodySmall.override(
                                                   fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
+                                                  color: FlutterFlowTheme.of(context).primaryText,
                                                 ),
                                           ),
                                         ),
@@ -255,13 +274,9 @@ class _FeedbackListScreenWidgetState
                                           child: Text(
                                             'Detail',
                                             textAlign: TextAlign.end,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
+                                            style: FlutterFlowTheme.of(context).bodySmall.override(
                                                   fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
+                                                  color: FlutterFlowTheme.of(context).primaryText,
                                                 ),
                                           ),
                                         ),
@@ -365,9 +380,7 @@ class _FeedbackListScreenWidgetState
                         children: [
                           AutoSizeText(
                             feedback.subject!,
-                            style: FlutterFlowTheme.of(context)
-                                .titleMedium
-                                .override(
+                            style: FlutterFlowTheme.of(context).titleMedium.override(
                                   fontFamily: 'Outfit',
                                   color: FlutterFlowTheme.of(context).customColor1,
                                   fontSize: 18.0,
@@ -377,9 +390,7 @@ class _FeedbackListScreenWidgetState
                             padding: EdgeInsetsDirectional.fromSTEB(0.0, 2.0, 0.0, 0.0),
                             child: Text(
                               formatTimestamp(feedback.timestamp),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodySmall
-                                  .override(
+                              style: FlutterFlowTheme.of(context).bodySmall.override(
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context).customColor1,
                                   ),

@@ -19,10 +19,11 @@ String placeToString(FFPlace place) => jsonEncode({
       'latLng': place.latLng.serialize(),
       'name': place.name,
       'address': place.address,
-      'city': place.city,
       'state': place.state,
-      'country': place.country,
+      'city': place.city,
       'zipCode': place.zipCode,
+      'country': place.country,
+
     });
 
 String uploadedFileToString(FFUploadedFile uploadedFile) =>
@@ -112,19 +113,20 @@ FFPlace placeFromString(String placeStr) {
         : const LatLng(0.0, 0.0),
     'name': serializedData['name'] ?? '',
     'address': serializedData['address'] ?? '',
-    'city': serializedData['city'] ?? '',
     'state': serializedData['state'] ?? '',
-    'country': serializedData['country'] ?? '',
+    'city': serializedData['city'] ?? '',
     'zipCode': serializedData['zipCode'] ?? '',
+    'country': serializedData['country'] ?? '',
   };
   return FFPlace(
     latLng: data['latLng'] as LatLng,
     name: data['name'] as String,
     address: data['address'] as String,
-    city: data['city'] as String,
     state: data['state'] as String,
-    country: data['country'] as String,
+    city: data['city'] as String,
     zipCode: data['zipCode'] as String,
+    country: data['country'] as String,
+
   );
 }
 

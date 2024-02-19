@@ -95,16 +95,14 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
             }
           }
           else if(documentData['user_type'] == "seeker"){
-            if (user != null) {
-                Navigator.of(context)
-                .pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) =>
-                      SeekerDashboardScreenWidget(user: user),
-                      //SeekerDashboardScreenWidget(user: user),
-                  ),
-                );
-            }
+              Navigator.of(context)
+              .pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) =>
+                    SeekerDashboardScreenWidget(user: user),
+                    //SeekerDashboardScreenWidget(user: user),
+                ),
+              );
           }
         }
     }
@@ -143,7 +141,7 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
               padding: const EdgeInsets.fromLTRB(20, 100, 20, 100),
               child: Column(children: <Widget>[
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 64.0, 0.0, 0.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 64.0, 0.0, 0.0),
                   child: Container(
                     width: double.infinity,
                     height: 180.0,
@@ -152,10 +150,10 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                       image: DecorationImage(
                         fit: BoxFit.contain,
                         image: Image.asset(
-                          'assets/images/asd.png',
+                        'assets/images/MuzikLokal_logo.png',
                         ).image,
                       ),
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(16.0),
                         bottomRight: Radius.circular(16.0),
                         topLeft: Radius.circular(0.0),
@@ -167,15 +165,13 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                 Text(
                   'Get Started',
                   style: FlutterFlowTheme.of(context)
-                    .bodyMedium
+                    .displaySmall
                     .override(
                       fontFamily: 'Outfit',
                       color: FlutterFlowTheme.of(context)
                       .customColor1,
-                      fontSize: 18.0,
                   ),
                 ),
-                const SizedBox(height: 20),
                 Text(
                   'Discover the music around you',
                   style: FlutterFlowTheme.of(context)
@@ -184,12 +180,12 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                       fontFamily: 'Outfit',
                       color: FlutterFlowTheme.of(context)
                         .customColor1,
-                      fontSize: 14.0,
+                      fontSize: 20.0,
                   ),
                 ),
                 const SizedBox(height: 150),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB( 0.0, 16.0, 0.0, 0.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB( 0.0, 16.0, 0.0, 0.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,8 +202,8 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                           options: FFButtonOptions(
                             width: 150.0,
                             height: 50.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB( 0.0, 0.0, 0.0, 0.0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                            iconPadding: const EdgeInsetsDirectional.fromSTEB( 0.0, 0.0, 0.0, 0.0),
                             color: FlutterFlowTheme.of(context)
                               .primaryText,
                             textStyle: FlutterFlowTheme.of(context)
@@ -215,7 +211,8 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                               .override(
                                 fontFamily: 'Outfit',
                                 color: FlutterFlowTheme.of(context).secondaryBackground,
-                                fontSize: 14.0,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w600,
                               ),
                             elevation: 3.0,
                             borderRadius: BorderRadius.circular(5.0),
@@ -229,7 +226,7 @@ class _InitialScreenWidgetState extends State<InitialScreenWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Already have an account? ",
+                    const Text("Already have an account? ",
                         style: TextStyle(color: Colors.white70, fontSize: 17)),
                     GestureDetector(
                       onTap: () {

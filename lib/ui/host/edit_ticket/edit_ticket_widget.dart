@@ -91,7 +91,7 @@ class _EditTicketWidgetState extends State<EditTicketWidget> {
         context: context,
         type: AlertType.success,
         title: "Update Ticket",
-        desc: "Successfully update ticket",
+        desc: "Successfully updated ticket",
         buttons: [
           DialogButton(
             child: Text(
@@ -145,7 +145,7 @@ class _EditTicketWidgetState extends State<EditTicketWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -172,6 +172,8 @@ class _EditTicketWidgetState extends State<EditTicketWidget> {
                           FlutterFlowTheme.of(context).headlineMedium.override(
                                 fontFamily: 'Outfit',
                                 color: FlutterFlowTheme.of(context).primaryText,
+                                fontSize: 20.0,
+
                               ),
                     ),
                   ),
@@ -184,7 +186,7 @@ class _EditTicketWidgetState extends State<EditTicketWidget> {
                       decoration: InputDecoration(
                         labelText: 'Title',
                         hintText: 'Enter ticket title',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -239,7 +241,7 @@ class _EditTicketWidgetState extends State<EditTicketWidget> {
                       decoration: InputDecoration(
                         labelText: 'Ticket Type',
                         hintText: 'Enter ticket type',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -298,7 +300,7 @@ class _EditTicketWidgetState extends State<EditTicketWidget> {
                       decoration: InputDecoration(
                         labelText: 'Price per ticket',
                         hintText: 'Enter price per ticket',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -357,7 +359,7 @@ class _EditTicketWidgetState extends State<EditTicketWidget> {
                       decoration: InputDecoration(
                         labelText: 'Available quantity',
                         hintText: 'Quantity of the ticket avaialble',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                        hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                         labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -410,7 +412,7 @@ class _EditTicketWidgetState extends State<EditTicketWidget> {
                     decoration: InputDecoration(
                       labelText: 'Ticket Description',
                       hintText: 'Enter ticket description',
-                      hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                      hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                       labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -475,7 +477,7 @@ class _EditTicketWidgetState extends State<EditTicketWidget> {
                                   fontFamily: 'Outfit',
                                   color: FlutterFlowTheme.of(context)
                                       .secondaryBackground,
-                                  fontSize: 14,
+                                  fontSize: 19,
                                 ),
                         elevation: 2,
                         borderRadius: BorderRadius.circular(5),

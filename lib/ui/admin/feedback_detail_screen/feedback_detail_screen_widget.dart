@@ -52,17 +52,21 @@ class _FeedbackDataDetailScreenWidgetState extends State<FeedbackDataDetailScree
     return formattedDate;
   }
 
+    // Function to delete a feedback document from the 'feedback' collection
     deleteFeedback() async {
         try {
+           // Delete the feedback document using its UID
             await FirebaseFirestore.instance
                 .collection('feedback') 
                 .doc(widget.feedback.uid)
                 .delete();
+
+           // Show a success message
             Alert(
             context: context,
             type: AlertType.success,
             title: "Delete Feedback",
-            desc: "Successfully delete feedback",
+            desc: "Successfully deleted feedback",
             buttons: [
                 DialogButton(
                 child: Text(
@@ -78,12 +82,12 @@ class _FeedbackDataDetailScreenWidgetState extends State<FeedbackDataDetailScree
             ],
             ).show();
         } catch (error) {
+            // Print error details if deletion fails
             print('Error deleting feedback: $error');
             // Handle error as needed
         }
     }
 
-  
   @override
   void dispose() {
     _model.dispose();
@@ -326,7 +330,7 @@ class _FeedbackDataDetailScreenWidgetState extends State<FeedbackDataDetailScree
                                 child: Padding(
                                     padding: EdgeInsets.all(4.0),
                                     child: Text(
-                                    'content',
+                                    'Content',
                                     style: FlutterFlowTheme.of(context).titleSmall.override(
                                         fontFamily: 'Outfit',
                                         color: FlutterFlowTheme.of(context).customColor1,

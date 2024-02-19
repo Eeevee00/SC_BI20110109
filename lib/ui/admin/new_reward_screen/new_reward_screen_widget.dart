@@ -67,7 +67,7 @@ class _NewRewardScreenWidgetState extends State<NewRewardScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -102,7 +102,7 @@ class _NewRewardScreenWidgetState extends State<NewRewardScreenWidget> {
                     decoration: InputDecoration(
                       labelText: 'Reward',
                       hintText: 'Enter reward',
-                      hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                      hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: FlutterFlowTheme.of(context).primaryBackground,
@@ -146,7 +146,7 @@ class _NewRewardScreenWidgetState extends State<NewRewardScreenWidget> {
                   decoration: InputDecoration(
                     labelText: 'Point to claim',
                     hintText: 'Enter point needed to claim',
-                    hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                    hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: FlutterFlowTheme.of(context).primaryBackground,

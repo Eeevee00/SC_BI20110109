@@ -68,7 +68,7 @@ class _SplashScreenWidgetState extends State<SplashScreenWidget> {
                       image: DecorationImage(
                         fit: BoxFit.contain,
                         image: Image.asset(
-                          'assets/images/asd.png',
+                        'assets/images/MuzikLokal_logo.png',
                         ).image,
                       ),
                       borderRadius: BorderRadius.only(
@@ -111,7 +111,8 @@ class _SplashScreenWidgetState extends State<SplashScreenWidget> {
                                       fontFamily: 'Outfit',
                                       color: FlutterFlowTheme.of(context)
                                           .customColor1,
-                                      fontSize: 18.0,
+                                      fontSize: 23.0,
+                                      fontWeight: FontWeight.w800,
                                     ),
                               ),
                             ],

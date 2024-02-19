@@ -1,37 +1,43 @@
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
+import 'dart:ui';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'host_dashboard_screen_model.dart';
-export 'host_dashboard_screen_model.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../screens/skeleton_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:async';
-import '../../setting/setting_screen/setting_screen_widget.dart';
+
+import '../../screens/skeleton_screen.dart';
 import '../../../data/models/event_model.dart';
-
-import '../job_list/job_list_widget.dart';
-import '../event_list/event_list_widget.dart';
-import '../profile/user_profile_widget.dart';
-import '../host_verification/verification.dart';
-import '../claim_list/claim_list_user_widget.dart';
-
+import '../../public/login_screen/login_screen_widget.dart';
+//////////
 import '../event_detail/event_detail_host_widget.dart';
 
+import '../profile/user_profile_widget.dart';
+import '../job_list/job_list_widget.dart';
+///////////
+import '../event_list/event_list_widget.dart';
+////////////
+import '../host_verification/verification.dart';
+import '../claim_list/claim_list_user_widget.dart';
+import '../reward_list/reward_list_screen_widget.dart';
+
+
 import '../notification_list/notification_list_screen_widget.dart';
+import '../../setting/setting_screen/setting_screen_widget.dart';
+import 'host_dashboard_screen_model.dart';
+export 'host_dashboard_screen_model.dart';
 
 class HostDashboardScreenWidget extends StatefulWidget {
-  final User user;
+  final User user; // Host
   const HostDashboardScreenWidget({required this.user});
 
   @override
@@ -43,41 +49,58 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
   late HostDashboardScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late FirebaseMessaging messaging;
-  Map editInfo = {};
+
+  //Backend : Listing all variable 
+  Map editInfo = {}; // Map to store user information for editing
+  late FirebaseMessaging messaging; // Initialize FirebaseMessaging for push notifications
+
+  // Collection references for different Firestore collections
   CollectionReference docRef = FirebaseFirestore.instance.collection('users');
   final CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
   final CollectionReference eventsCollection = FirebaseFirestore.instance.collection('event');
   final CollectionReference jobsCollection = FirebaseFirestore.instance.collection('job');
 
+  // Counters for different statistics
   int my_event = 0;
   int my_job = 0;
   int job_applicant = 0;
+
+  // User information variables
   var _name = "Empty";
   var _email = "Empty";
   var _image = "Empty";
   var uid = "";
 
+  // Host tier and point variables
   var host_tier;
   var host_point;
+
+  // List to store DocumentSnapshots for events
   List<DocumentSnapshot<Object?>> eventList = [];
 
+  // StreamController to handle the stream of events
   StreamController<List<DocumentSnapshot<Object?>>> eventController =
       StreamController<List<DocumentSnapshot<Object?>>>();
 
+  // Stream to provide a continuous flow of event data
   Stream<List<DocumentSnapshot<Object?>>> get eventStream => eventController.stream;
 
   @override
   void initState() {
     super.initState();
+
+      // Create the model for the HostDashboardScreen
     _model = createModel(context, () => HostDashboardScreenModel());
-    saveUserDetail();
-    configurePushNotification();
+
     messaging = FirebaseMessaging.instance;
     messaging.getToken().then((value){
-        print(value);
+        print("Token: $value");  //  // Get the device token for push notifications and print it
     });
+
+    // Force a re-render after the initial frame to ensure accurate widget state
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    saveUserDetail();
+    configurePushNotification();
     getMainMenuDetail();
     listenToEventChanges();
   }
@@ -95,7 +118,10 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
     eventList.clear();
     print("calling this again");
     try {
-      QuerySnapshot<Object?> snapshot = await eventsCollection.where('organizer_uid', isEqualTo: widget.user.uid).orderBy('timestamp', descending: true).get();
+      QuerySnapshot<Object?> snapshot = await eventsCollection
+      .where('organizer_uid', isEqualTo: widget.user.uid)
+      .orderBy('timestamp', descending: true)
+      .get();
 
       List<DocumentSnapshot<Object?>> eventList = snapshot.docs;
       setEventList(snapshot.docs);
@@ -142,7 +168,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
 
           QuerySnapshot<Object?> participantsSnapshot = await jobsCollection
               .doc(jobId)
-              .collection('participant')
+              .collection('applicants')
               .get();
 
           int participantsCount = participantsSnapshot.size;
@@ -290,7 +316,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 90.0, 0.0, 10.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 50.0, 0.0, 10.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -416,12 +442,12 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                 },
                                 child: ListTile(
                                   leading: Icon(
-                                    Icons.chat,
+                                    Icons.library_music,
                                     size: 24.0,
                                     color: FlutterFlowTheme.of(context).primaryText,
                                   ),
                                   title: Text(
-                                    'Event',
+                                    'My Event',
                                     style: FlutterFlowTheme.of(context)
                                         .headlineSmall
                                         .override(
@@ -456,7 +482,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                     color: FlutterFlowTheme.of(context).primaryText,
                                   ),
                                   title: Text(
-                                    'Job',
+                                    'My Job',
                                     style: FlutterFlowTheme.of(context)
                                         .headlineSmall
                                         .override(
@@ -513,7 +539,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ClaimListUserWidget(uid: widget.user.uid),
+                                      builder: (context) => RewardListScreenWidget(uid: widget.user.uid),
                                     ),
                                   );
                                 },
@@ -524,7 +550,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                     color: FlutterFlowTheme.of(context).primaryText,
                                   ),
                                   title: Text(
-                                    'Claim',
+                                    'Rewards & Claim',
                                     style: FlutterFlowTheme.of(context)
                                         .headlineSmall
                                         .override(
@@ -617,7 +643,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                   await FirebaseAuth.instance.signOut();
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                      builder: (context) => InitialScreenWidget(),
+                                      builder: (context) => LoginScreenWidget(),
                                     ),
                                   );
                                 },
@@ -655,7 +681,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                       Expanded(
                         child: SelectionArea(
                             child: Text(
-                          'Muzik Local v1.0',
+                          'MuzikLokal v1.0',
                           textAlign: TextAlign.center,
                           style: FlutterFlowTheme.of(context).bodyMedium,
                         )),
@@ -674,11 +700,11 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
               IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
           title: Text(
-            'Muzik Local',
+            'MuzikLokal',
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -689,45 +715,129 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
         body: SafeArea(
           top: true,
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 16.0),
+            padding: EdgeInsetsDirectional.fromSTEB(16.0, 10.0, 16.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Muzik Local',
-                  style: FlutterFlowTheme.of(context).headlineSmall,
-                ),
+                // Text(
+                //   'MuzikLokal',
+                //   style: FlutterFlowTheme.of(context).headlineSmall,
+                // ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 5.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 5.0),
                   child: Text(
                     'Welcome Back ' + _name.toString(),
                     style: FlutterFlowTheme.of(context).titleMedium.override(
                           fontFamily: 'Outfit',
-                          color: FlutterFlowTheme.of(context).customColor1,
-                          fontSize: 14.0,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 24.0,
                         ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 5.0),
-                  child: Text(
-                    'Balance Point:  ' + host_point.toString() + " (" + host_tier.toString() + " Tier)",
-                    style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily: 'Outfit',
-                          color: FlutterFlowTheme.of(context).customColor1,
-                          fontSize: 14.0,
-                        ),
-                  ),
-                ),
+
                 Divider(
                   thickness: 2.0,
                   color: FlutterFlowTheme.of(context).primaryText,
                 ),
+
+               Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 15.0),
+                  child: Text(
+                    'My Dashboard',
+                    style: FlutterFlowTheme.of(context).titleMedium.override(
+                          fontFamily: 'Outfit',
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 20.0,
+                        ),
+                  ),
+                ),
+                
+                Container(
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).primaryBackground,
+                      borderRadius: BorderRadius.circular(6), 
+                      // border: Border.all(
+                      //   color: FlutterFlowTheme.of(context).primary,
+                      // ),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Point Balance: ',
+                                      style: FlutterFlowTheme.of(context).titleSmall.override(
+                                        fontFamily: 'Outfit',
+                                        color: FlutterFlowTheme.of(context).primaryText,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: host_point.toString(),
+                                      style: FlutterFlowTheme.of(context).titleSmall.override(
+                                        fontFamily: 'Outfit',
+                                        color: FlutterFlowTheme.of(context).customColor1,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(4.0),
+                              child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Tier: ',
+                                      style: FlutterFlowTheme.of(context).titleSmall.override(
+                                        fontFamily: 'Outfit',
+                                        color: FlutterFlowTheme.of(context).primaryText,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: host_tier.toString(),
+                                      style: FlutterFlowTheme.of(context).titleSmall.override(
+                                        fontFamily: 'Outfit',
+                                        color: FlutterFlowTheme.of(context).customColor1,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                 SizedBox (height: 15), 
+
+                // Boxes of counter 
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    //My Event
                     Expanded(
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -741,7 +851,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                               borderRadius: BorderRadius.circular(6.0),
                             ),
                             child: Container(
-                              width: 100.0,
+                              width: 110.0,
                               height: 100.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
@@ -756,8 +866,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                 padding: EdgeInsets.all(6.0),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
@@ -768,6 +877,8 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                             fontFamily: 'Outfit',
                                             color: FlutterFlowTheme.of(context)
                                                 .primaryText,
+                                           fontSize: 16.0,
+   
                                           ),
                                     ),
                                     Text(
@@ -779,6 +890,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                             color: FlutterFlowTheme.of(context)
                                                 .customColor1,
                                             fontWeight: FontWeight.w300,
+
                                           ),
                                     ),
                                   ],
@@ -789,6 +901,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                         ],
                       ),
                     ),
+                    //My Job
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
@@ -803,7 +916,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                 borderRadius: BorderRadius.circular(6.0),
                               ),
                               child: Container(
-                                width: 100.0,
+                                width: 110.0,
                                 height: 100.0,
                                 decoration: BoxDecoration(
                                   color: FlutterFlowTheme.of(context)
@@ -825,30 +938,22 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                     children: [
                                       Text(
                                         'My Job',
-                                        style: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        style: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Outfit',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color:FlutterFlowTheme.of(context).primaryText,
+                                              fontSize: 16.0,
                                             ),
                                       ),
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        crossAxisAlignment:CrossAxisAlignment.center,
                                         children: [
                                           Text(
                                             my_job.toString(),
-                                            style: FlutterFlowTheme.of(context)
-                                                .displaySmall
-                                                .override(
+                                            style: FlutterFlowTheme.of(context).displaySmall.override(
                                                   fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
-                                                  fontWeight: FontWeight.w300,
+                                                  color: FlutterFlowTheme.of(context).customColor1,
+                                                  fontWeight: FontWeight.w300,                                                 
                                                 ),
                                           ),
                                         ],
@@ -862,6 +967,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                         ),
                       ),
                     ),
+                    // Job Applicant
                     Expanded(
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -875,48 +981,37 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                               borderRadius: BorderRadius.circular(6.0),
                             ),
                             child: Container(
-                              width: 100.0,
+                              width: 110.0,
                               height: 100.0,
                               decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
+                                color: FlutterFlowTheme.of(context).primaryBackground,
                                 borderRadius: BorderRadius.circular(6.0),
-                                border: Border.all(
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
+                                border: Border.all(color: FlutterFlowTheme.of(context).primaryBackground,
                                 ),
                               ),
                               child: Padding(
                                 padding: EdgeInsets.all(6.0),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Job Applicant',
-                                      style: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).labelMedium.override(
                                             fontFamily: 'Outfit',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
+                                            fontSize: 16.0,
                                           ),
                                     ),
                                     Row(
                                       mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Text(
                                           job_applicant.toString(),
-                                          style: FlutterFlowTheme.of(context)
-                                              .displaySmall
-                                              .override(
+                                          style: FlutterFlowTheme.of(context).displaySmall.override(
                                                 fontFamily: 'Outfit',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .customColor1,
+                                                color:FlutterFlowTheme.of(context).customColor1,
                                                 fontWeight: FontWeight.w300,
                                               ),
                                         ),
@@ -932,14 +1027,16 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                     ),
                   ],
                 ),
+
+                //Title : My Event
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 5.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 5.0),
                   child: Text(
                     'My Event',
                     style: FlutterFlowTheme.of(context).titleMedium.override(
                           fontFamily: 'Outfit',
-                          color: FlutterFlowTheme.of(context).customColor1,
-                          fontSize: 14.0,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 20.0,
                         ),
                   ),
                 ),
@@ -1027,7 +1124,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                                                   Container(
                                                                     decoration: BoxDecoration(),
                                                                     child: Padding(
-                                                                      padding: EdgeInsets.all(16.0),
+                                                                      padding: EdgeInsets.all(13.0),
                                                                       child: Column(
                                                                         mainAxisSize: MainAxisSize.max,
                                                                         crossAxisAlignment:
@@ -1080,7 +1177,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                                                                   EdgeInsetsDirectional
                                                                                       .fromSTEB(
                                                                                           0.0,
-                                                                                          8.0,
+                                                                                          5.0,
                                                                                           0.0,
                                                                                           0.0),
                                                                               child: Text(
@@ -1125,6 +1222,8 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                                                                         color: FlutterFlowTheme.of(
                                                                                                 context)
                                                                                             .customColor1,
+                                                                                        fontSize: 15.0,
+    
                                                                                       ),
                                                                                 ),
                                                                                 Padding(
@@ -1146,6 +1245,7 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                                                                           color: FlutterFlowTheme.of(
                                                                                                   context)
                                                                                               .customColor1,
+                                                                                              fontSize: 15.0,
                                                                                         ),
                                                                                   ),
                                                                                 ),
@@ -1207,74 +1307,74 @@ class _HostDashboardScreenWidgetState extends State<HostDashboardScreenWidget> {
                                                                               ],
                                                                             ),
                                                                           ),
-                                                                          Row(
-                                                                            mainAxisSize:
-                                                                                MainAxisSize.max,
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment
-                                                                                    .spaceBetween,
-                                                                            children: [
-                                                                              Padding(
-                                                                                padding:
-                                                                                    EdgeInsetsDirectional
-                                                                                        .fromSTEB(
-                                                                                            0.0,
-                                                                                            16.0,
-                                                                                            0.0,
-                                                                                            0.0),
-                                                                                child: FFButtonWidget(
-                                                                                  onPressed: () async {
-                                                                                    await Navigator.push(
-                                                                                      context,
-                                                                                      MaterialPageRoute(
-                                                                                        builder: (context) => EventDetailHostWidget(event: event),
-                                                                                      ),
-                                                                                    );
-                                                                                    getEvent();
-                                                                                  },
-                                                                                  text: 'Detail',
-                                                                                  options:
-                                                                                      FFButtonOptions(
-                                                                                    width: 150.0,
-                                                                                    height: 44.0,
-                                                                                    padding:
-                                                                                        EdgeInsetsDirectional
-                                                                                            .fromSTEB(
-                                                                                                0.0,
-                                                                                                0.0,
-                                                                                                0.0,
-                                                                                                0.0),
-                                                                                    iconPadding:
-                                                                                        EdgeInsetsDirectional
-                                                                                            .fromSTEB(
-                                                                                                0.0,
-                                                                                                0.0,
-                                                                                                0.0,
-                                                                                                0.0),
-                                                                                    color: FlutterFlowTheme
-                                                                                            .of(context)
-                                                                                        .primaryText,
-                                                                                    textStyle:
-                                                                                        FlutterFlowTheme.of(
-                                                                                                context)
-                                                                                            .titleSmall
-                                                                                            .override(
-                                                                                              fontFamily:
-                                                                                                  'Outfit',
-                                                                                              color: FlutterFlowTheme.of(
-                                                                                                      context)
-                                                                                                  .secondaryBackground,
-                                                                                            ),
-                                                                                    elevation: 3.0,
-                                                                                    borderRadius:
-                                                                                        BorderRadius
-                                                                                            .circular(
-                                                                                                12.0),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
+                                                                          // Row(
+                                                                          //   mainAxisSize:
+                                                                          //       MainAxisSize.max,
+                                                                          //   mainAxisAlignment:
+                                                                          //       MainAxisAlignment
+                                                                          //           .spaceBetween,
+                                                                          //   children: [
+                                                                          //     Padding(
+                                                                          //       padding:
+                                                                          //           EdgeInsetsDirectional
+                                                                          //               .fromSTEB(
+                                                                          //                   0.0,
+                                                                          //                   16.0,
+                                                                          //                   0.0,
+                                                                          //                   0.0),
+                                                                          //       child: FFButtonWidget(
+                                                                          //         onPressed: () async {
+                                                                          //           await Navigator.push(
+                                                                          //             context,
+                                                                          //             MaterialPageRoute(
+                                                                          //               builder: (context) => EventDetailHostWidget(event: event),
+                                                                          //             ),
+                                                                          //           );
+                                                                          //           getEvent();
+                                                                          //         },
+                                                                          //         text: 'Detail',
+                                                                          //         options:
+                                                                          //             FFButtonOptions(
+                                                                          //           width: 150.0,
+                                                                          //           height: 44.0,
+                                                                          //           padding:
+                                                                          //               EdgeInsetsDirectional
+                                                                          //                   .fromSTEB(
+                                                                          //                       0.0,
+                                                                          //                       0.0,
+                                                                          //                       0.0,
+                                                                          //                       0.0),
+                                                                          //           iconPadding:
+                                                                          //               EdgeInsetsDirectional
+                                                                          //                   .fromSTEB(
+                                                                          //                       0.0,
+                                                                          //                       0.0,
+                                                                          //                       0.0,
+                                                                          //                       0.0),
+                                                                          //           color: FlutterFlowTheme
+                                                                          //                   .of(context)
+                                                                          //               .primaryText,
+                                                                          //           textStyle:
+                                                                          //               FlutterFlowTheme.of(
+                                                                          //                       context)
+                                                                          //                   .titleSmall
+                                                                          //                   .override(
+                                                                          //                     fontFamily:
+                                                                          //                         'Outfit',
+                                                                          //                     color: FlutterFlowTheme.of(
+                                                                          //                             context)
+                                                                          //                         .secondaryBackground,
+                                                                          //                   ),
+                                                                          //           elevation: 3.0,
+                                                                          //           borderRadius:
+                                                                          //               BorderRadius
+                                                                          //                   .circular(
+                                                                          //                       12.0),
+                                                                          //         ),
+                                                                          //       ),
+                                                                          //     ),
+                                                                          //   ],
+                                                                          // ),
                                                                         ],
                                                                       ),
                                                                     ),

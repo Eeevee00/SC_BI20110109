@@ -47,24 +47,126 @@ class _SendNotificationScreenWidgetState
     super.dispose();
   }
 
-  send_notification() async {
-    setState(() {
-      _isProcessing = true;
-    });
+  // send_notification() async {
+  //   setState(() {
+  //     _isProcessing = true;
+  //   });
 
-    try {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //   try {
+  //     FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  //     // Add a document to the top-level "notifications" collection
+  //     DocumentReference notificationDocRef = await firestore
+  //         .collection('notification')
+  //         .add({
+  //           'title': _model.textController1.text,
+  //           'content': _model.textController2.text,
+  //           'timestamp': FieldValue.serverTimestamp(),
+  //           'created_by': "",
+  //         });
+
+  //     String notificationUid = notificationDocRef.id;
+  //     await firestore.collection('notification').doc(notificationUid).update({
+  //       'uid': notificationUid,
+  //     });
+
+  //     QuerySnapshot usersQuery = await firestore
+  //         .collection('users')
+  //         .where('user_type', whereIn: ['host', 'seeker'])
+  //         .where('status', isEqualTo: true)
+  //         .get();
+
+  //     for (QueryDocumentSnapshot userDoc in usersQuery.docs) {
+  //       String docId = userDoc.id;
+
+  //       if (userDoc['user_type'] == 'host') {
+  //         await firestore
+  //             .collection('users')
+  //             .doc(docId)
+  //             .collection('notification')
+  //             .doc(notificationUid)
+  //             .set({
+  //               'title': _model.textController1.text,
+  //               'content': _model.textController2.text,
+  //               'timestamp': FieldValue.serverTimestamp(),
+  //               'uid': notificationUid,
+  //               'created_by': "",
+  //               'read': false,
+  //             });
+  //       } else if (userDoc['user_type'] == 'seeker') {
+  //         await firestore
+  //             .collection('users')
+  //             .doc(docId)
+  //             .collection('notification')
+  //             .doc(notificationUid)
+  //             .set({
+  //               'title': _model.textController1.text,
+  //               'content': _model.textController2.text,
+  //               'timestamp': FieldValue.serverTimestamp(),
+  //               'uid': notificationUid,
+  //               'created_by': "",
+  //               'read': false,
+  //             });
+  //       }
+  //     }
+
+  //     Alert(
+  //       context: context,
+  //       type: AlertType.success,
+  //       title: "Sending Notification",
+  //       desc: "Notification successfully sent to all user",
+  //       buttons: [
+  //         DialogButton(
+  //           child: Text(
+  //             "Close",
+  //             style: TextStyle(color: Colors.white, fontSize: 20),
+  //           ),
+  //           color: const Color(0xFFEE8B60),
+  //           onPressed: () {
+  //             Navigator.pop(context);
+  //             Navigator.pop(context);
+  //           },
+  //           width: 120,
+  //         )
+  //       ],
+  //     ).show();
+  //   } catch (error) {
+  //     print('Error sending notification: $error');
+  //   } finally {
+  //     setState(() {
+  //       _isProcessing = false;
+  //     });
+  //   }
+  // }
+send_notification() async {
+  setState(() {
+    _isProcessing = true;
+  });
+
+  try {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Get the current user
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      // Fetch the user's data from Firestore
+      DocumentSnapshot userSnapshot = await firestore
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+
+      String userName = userSnapshot['name']; // Replace 'name' with the field where the user's name is stored
 
       // Add a document to the top-level "notifications" collection
       DocumentReference notificationDocRef = await firestore
           .collection('notification')
           .add({
-            'title': _model.textController1.text,
-            'content': _model.textController2.text,
-            'timestamp': FieldValue.serverTimestamp(),
-            'send_to': "user",
-            'created_by': "",
-          });
+        'title': _model.textController1.text,
+        'content': _model.textController2.text,
+        'timestamp': FieldValue.serverTimestamp(),
+        'created_by': userName,
+      });
 
       String notificationUid = notificationDocRef.id;
       await firestore.collection('notification').doc(notificationUid).update({
@@ -87,14 +189,13 @@ class _SendNotificationScreenWidgetState
               .collection('notification')
               .doc(notificationUid)
               .set({
-                'title': _model.textController1.text,
-                'content': _model.textController2.text,
-                'timestamp': FieldValue.serverTimestamp(),
-                'uid': notificationUid,
-                'send_to': "user",
-                'created_by': "",
-                'read': false,
-              });
+            'title': _model.textController1.text,
+            'content': _model.textController2.text,
+            'timestamp': FieldValue.serverTimestamp(),
+            'uid': notificationUid,
+            'created_by': userName,
+            //'read': false,
+          });
         } else if (userDoc['user_type'] == 'seeker') {
           await firestore
               .collection('users')
@@ -102,14 +203,13 @@ class _SendNotificationScreenWidgetState
               .collection('notification')
               .doc(notificationUid)
               .set({
-                'title': _model.textController1.text,
-                'content': _model.textController2.text,
-                'timestamp': FieldValue.serverTimestamp(),
-                'uid': notificationUid,
-                'send_to': "user",
-                'created_by': "",
-                'read': false,
-              });
+            'title': _model.textController1.text,
+            'content': _model.textController2.text,
+            'timestamp': FieldValue.serverTimestamp(),
+            'uid': notificationUid,
+            'created_by': userName,
+            //'read': false,
+          });
         }
       }
 
@@ -117,7 +217,7 @@ class _SendNotificationScreenWidgetState
         context: context,
         type: AlertType.success,
         title: "Sending Notification",
-        desc: "Notification successfully send to all user",
+        desc: "Notification successfully sent to all users",
         buttons: [
           DialogButton(
             child: Text(
@@ -133,15 +233,18 @@ class _SendNotificationScreenWidgetState
           )
         ],
       ).show();
-    } catch (error) {
-      print('Error sending notification: $error');
-    } finally {
-      setState(() {
-        _isProcessing = false;
-      });
+    } else {
+      // Handle the case where the current user is null
+      print('Error: Current user is null');
     }
+  } catch (error) {
+    print('Error sending notification: $error');
+  } finally {
+    setState(() {
+      _isProcessing = false;
+    });
   }
-
+}
   @override
   Widget build(BuildContext context) {
     if (isiOS) {
@@ -170,7 +273,7 @@ class _SendNotificationScreenWidgetState
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -196,6 +299,7 @@ class _SendNotificationScreenWidgetState
                           style: FlutterFlowTheme.of(context).headlineMedium.override(
                                 fontFamily: 'Outfit',
                                 color: FlutterFlowTheme.of(context).primaryText,
+                                fontSize: 20.0,
                               ),
                         ),
                       ),
@@ -206,9 +310,9 @@ class _SendNotificationScreenWidgetState
                           focusNode: _model.textFieldFocusNode1,
                           obscureText: false,
                           decoration: InputDecoration(
-                            labelText: 'Subject',
-                            hintText: 'Enter subject',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            labelText: 'Title',
+                            hintText: 'Enter title',
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -246,7 +350,7 @@ class _SendNotificationScreenWidgetState
                           style: FlutterFlowTheme.of(context).bodyMedium,
                           validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Subject';
+                            return 'Please enter title';
                           }
                           return null; // Return null if validation succeeds
                         },
@@ -259,7 +363,7 @@ class _SendNotificationScreenWidgetState
                         decoration: InputDecoration(
                           labelText: 'Content',
                           hintText: 'Enter the content',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -316,17 +420,14 @@ class _SendNotificationScreenWidgetState
                           options: FFButtonOptions(
                             width: double.infinity,
                             height: 55.0,
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                            iconPadding:
-                                EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                             color: FlutterFlowTheme.of(context).primaryText,
                             textStyle:
                                 FlutterFlowTheme.of(context).titleMedium.override(
                                       fontFamily: 'Outfit',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      fontSize: 14.0,
+                                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                                      fontSize: 19.0,
                                     ),
                             elevation: 2.0,
                             borderRadius: BorderRadius.circular(5.0),

@@ -64,46 +64,46 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
   }
 
   Future<Map<String, dynamic>> getUserDetails(String uid) async {
-        try {
-            FirebaseFirestore firestore = FirebaseFirestore.instance;
-            DocumentSnapshot userDoc =
-                await firestore.collection('users').doc(uid).get();
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      DocumentSnapshot userDoc = await firestore.collection('users').doc(uid).get();
 
-            if (userDoc.exists) {
-            Map<String, dynamic> userDetails = {
-                'name': userDoc['name'],
-                'email': userDoc['email'],
-                'phone': userDoc['phone'],
-                'address': userDoc['location']['address'],
-                'latitude': userDoc['location']['latitude'],
-                'longitude': userDoc['location']['longitude'],
-                'bio': userDoc['bio'],
-            };
-            return userDetails;
-            } else {
-            return {};
-            }
-        } catch (error) {
-            print('Error getting notification details: $error');
-            return {};
-        }
+      if (userDoc.exists) {
+      Map<String, dynamic> userDetails = {
+        'name': userDoc['name'],
+        'email': userDoc['email'],
+        'phone': userDoc['phone'],
+        'address': userDoc['location']['address'],
+        'latitude': userDoc['location']['latitude'],
+        'longitude': userDoc['location']['longitude'],
+        'bio': userDoc['bio'],
+      };
+      return userDetails;
+      } 
+      else {
+        return {};
+      }
+    } 
+    catch (error) {
+      print('Error getting notification details: $error');
+      return {};
     }
-
+  }
 
   Future<void> loadUserDetails() async {
     Map<String, dynamic>? details = await getUserDetails(widget.uid);
-        setState(() {
-            userDetails = details;
-            print(userDetails);
-            _model.textController1.text = userDetails!['name']!;
-            _model.textController2.text = userDetails!['phone']!;
-            _model.textController5.text = userDetails!['address']!;
-            _model.textController4.text = userDetails!['bio']!;
-            userLocation = userDetails!['address']!;
-            latitude = userDetails!['latitude']!;
-            longitude = userDetails!['longitude']!;
-        });
-    }
+      setState(() {
+        userDetails = details;
+        print(userDetails);
+        _model.textController1.text = userDetails!['name']!;
+        _model.textController2.text = userDetails!['phone']!;
+        _model.textController5.text = userDetails!['address']!;
+        _model.textController4.text = userDetails!['bio']!;
+        userLocation = userDetails!['address']!;
+        latitude = userDetails!['latitude']!;
+        longitude = userDetails!['longitude']!;
+      });
+  }
 
   @override
   void dispose() {
@@ -122,21 +122,21 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
 
       if (userDoc.exists) {
         await firestore.collection('users').doc(uid).update({
-            'name': _model.textController1.text,
-            'phone': _model.textController2.text,
-            'bio': _model.textController4.text,
-            'location': {
-              'address': _model.textController5.text,
-              'latitude': latitude,
-              'longitude': longitude,
-            },
+          'name': _model.textController1.text,
+          'phone': _model.textController2.text,
+          'bio': _model.textController4.text,
+          'location': {
+          'address': _model.textController5.text,
+          'latitude': latitude,
+          'longitude': longitude,
+          },
           });
 
         Alert(
           context: context,
           type: AlertType.success,
           title: "Update User",
-          desc: "Successfully update user detail",
+          desc: "User details successfully updated",
           buttons: [
             DialogButton(
               child: Text(
@@ -183,19 +183,18 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-          iconTheme:
-              IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
+          iconTheme: IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
           title: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Profile',
+                'Update Profile',
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Outfit',
                       color: FlutterFlowTheme.of(context).primaryText,
-                      fontSize: 16.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -205,6 +204,7 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
           centerTitle: false,
           elevation: 0.0,
         ),
+
         body: SafeArea(
           top: true,
           child: Padding(
@@ -216,8 +216,7 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -227,14 +226,11 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                               child: Text(
                                 'Update Profile',
                                 textAlign: TextAlign.start,
-                                style: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: 'Outfit',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w500,
+                                style: FlutterFlowTheme.of(context).titleSmall.override(
+                                  fontFamily: 'Outfit',
+                                  color: FlutterFlowTheme.of(context).primaryText,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w500,
                                     ),
                               ),
                             ),
@@ -243,8 +239,7 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                      padding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                       child: TextFormField(
                         controller: _model.textController1,
                         focusNode: _model.textFieldFocusNode1,
@@ -252,14 +247,11 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                         decoration: InputDecoration(
                           labelText: 'Full Name',
                           hintText: 'Enter full name',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
-                          labelStyle: TextStyle( // Add this block for label text style
-                                color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
-                              ),
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
+                          labelStyle: TextStyle(color: FlutterFlowTheme.of(context).primaryText, ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color:
-                                  FlutterFlowTheme.of(context).primaryBackground,
+                              color:FlutterFlowTheme.of(context).primaryBackground,
                               width: 2.0,
                             ),
                             borderRadius: BorderRadius.circular(5.0),
@@ -286,34 +278,35 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           filled: true,
-                          fillColor:
-                              FlutterFlowTheme.of(context).primaryBackground,
-                          contentPadding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 24.0, 20.0, 24.0),
+                          fillColor:FlutterFlowTheme.of(context).primaryBackground,
+                          contentPadding: EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 0.0, 24.0),
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium,
-                        validator:
-                            _model.textController1Validator.asValidator(context),
+                        // validator:_model.textController1Validator.asValidator(context),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null; // Return null if validation succeeds
+                        },
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                       child: TextFormField(
                         controller: _model.textController2,
                         focusNode: _model.textFieldFocusNode2,
                         obscureText: false,
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         decoration: InputDecoration(
                           labelText: 'Phone Number',
                           hintText: 'Enter phone number',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
-                          labelStyle: TextStyle( // Add this block for label text style
-                                color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
-                              ),
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
+                          labelStyle: TextStyle(color: FlutterFlowTheme.of(context).primaryText,),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color:
-                                  FlutterFlowTheme.of(context).primaryBackground,
+                              color:FlutterFlowTheme.of(context).primaryBackground,
                               width: 2.0,
                             ),
                             borderRadius: BorderRadius.circular(5.0),
@@ -340,14 +333,20 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           filled: true,
-                          fillColor:
-                              FlutterFlowTheme.of(context).primaryBackground,
-                          contentPadding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 24.0, 20.0, 24.0),
+                          fillColor:FlutterFlowTheme.of(context).primaryBackground,
+                          contentPadding: EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 0.0, 24.0), 
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium,
-                        validator:
-                            _model.textController2Validator.asValidator(context),
+                        //validator: _model.textController2Validator.asValidator(context),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter phone number';
+                            }
+                            else if (!(value.length == 10 || value.length == 11)) {
+                              return 'Please enter full phone number';
+                            }
+                            return null; // Return null if validation succeeds
+                          },
                       ),
                     ),
                     // Column(
@@ -368,7 +367,7 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                     //                 labelText: 'Interest',
                     //                 hintText: 'Enter your interest',
                     //                 hintStyle:
-                    //                     FlutterFlowTheme.of(context).bodyLarge,
+                    //                     FlutterFlowTheme.of(context).bodyMedium,
                     //                 labelStyle: TextStyle( // Add this block for label text style
                     //                   color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                     //                 ),
@@ -468,19 +467,15 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                     //   ],
                     // ),
                     Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                        padding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                         child: TextFormField(
                           controller: _model.textController5,
                           readOnly: true,
                           focusNode: _model.textFieldFocusNode5,
                           obscureText: false,
                           onTap: () async {
-                            address = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Test(userLocation),
-                              ),
+                            address = await Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Test(userLocation),),
                             );
 
                             if (address != null) {
@@ -499,7 +494,7 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                           decoration: InputDecoration(
                             labelText: 'Address',
                             hintText: 'Enter your address',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -533,74 +528,77 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             filled: true,
-                            fillColor:
-                                FlutterFlowTheme.of(context).primaryBackground,
+                            fillColor:FlutterFlowTheme.of(context).primaryBackground,
+                            contentPadding: EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 0.0, 24.0),),
+                            style: FlutterFlowTheme.of(context).bodyMedium,
+                            maxLines: 10,
+                            minLines: 5,
+                            validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter address';
+                            }
+                            return null; // Return null if validation succeeds
+                          },
+                        ),
+                      ),
+
+                    Padding(
+                        padding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                        child: TextFormField(
+                          controller: _model.textController4,
+                          focusNode: _model.textFieldFocusNode4,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            labelText: 'Bio',
+                            hintText: 'Enter bio',
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
+                            labelStyle: TextStyle(color: FlutterFlowTheme.of(context).primaryText,),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: FlutterFlowTheme.of(context).primaryBackground,
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0x00000000),
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0x00000000),
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            filled: true,
+                            fillColor: FlutterFlowTheme.of(context).primaryBackground,
+                            contentPadding: EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 0.0, 24.0),
                           ),
                           style: FlutterFlowTheme.of(context).bodyMedium,
                           maxLines: 10,
                           minLines: 5,
+                          //validator: _model.textController4Validator.asValidator(context),
                           validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter the event venue';
+                                return 'Please enter bio';
                               }
-                              return null;
+                              return null; // Return null if validation succeeds
                             },
                         ),
                       ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    TextFormField(
-                      controller: _model.textController4,
-                      focusNode: _model.textFieldFocusNode4,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        labelText: 'Bio',
-                        hintText: 'Enter bio',
-                        hintStyle: FlutterFlowTheme.of(context).bodyLarge,
-                        labelStyle: TextStyle( // Add this block for label text style
-                                color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
-                              ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).primaryBackground,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        filled: true,
-                        fillColor: FlutterFlowTheme.of(context).primaryBackground,
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyMedium,
-                      maxLines: 10,
-                      minLines: 5,
-                      validator:
-                          _model.textController4Validator.asValidator(context),
-                    ),
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 40.0),
+                      padding:EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 40.0),
                       child: FFButtonWidget(
                         onPressed: () async {
                           if (_registerFormKey.currentState?.validate() ?? false) {
@@ -611,17 +609,13 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
                         options: FFButtonOptions(
                           width: double.infinity,
                           height: 50.0,
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                          iconPadding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                          padding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                          iconPadding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                           color: FlutterFlowTheme.of(context).primaryText,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
+                          textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                                     fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    fontSize: 16.0,
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    fontSize: 20.0,
                                   ),
                           elevation: 3.0,
                           borderSide: BorderSide(
@@ -684,5 +678,6 @@ class _UpdateProfileUserWidgetState extends State<UpdateProfileUserWidget> {
         ),
       ),
     );
+
   }
 }

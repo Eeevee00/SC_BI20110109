@@ -61,7 +61,7 @@ class _HelpScreenWidgetState extends State<HelpScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -83,19 +83,21 @@ class _HelpScreenWidgetState extends State<HelpScreenWidget> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.asset(
-                        'assets/images/asd.png',
+                        'assets/images/MuzikLokal_logo.png',
                         width: double.infinity,
                         height: 150.0,
                         fit: BoxFit.contain,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(16.0, 20.0, 0.0, 10.0),
-                    child: Text(
-                      'Need Help?',
-                      style: FlutterFlowTheme.of(context).headlineMedium,
+                 Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(16.0, 20.0, 0.0, 10.0),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Need Help?',
+                        style: FlutterFlowTheme.of(context).headlineMedium,
+                      ),
                     ),
                   ),
                   Padding(
@@ -105,7 +107,7 @@ class _HelpScreenWidgetState extends State<HelpScreenWidget> {
                       'For any assistance or inquiries, please contact our support team.',
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Outfit',
-                            color: FlutterFlowTheme.of(context).customColor1,
+                            color: FlutterFlowTheme.of(context).primaryText,
                           ),
                     ),
                   ),
@@ -116,7 +118,8 @@ class _HelpScreenWidgetState extends State<HelpScreenWidget> {
                       'Contact Information:',
                       style: FlutterFlowTheme.of(context).labelMedium.override(
                             fontFamily: 'Outfit',
-                            color: FlutterFlowTheme.of(context).customColor1,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            fontSize: 16.0,
                           ),
                     ),
                   ),
@@ -153,20 +156,20 @@ class _HelpScreenWidgetState extends State<HelpScreenWidget> {
                               Icon(
                                 Icons.phone_rounded,
                                 color:
-                                    FlutterFlowTheme.of(context).customColor1,
+                                    FlutterFlowTheme.of(context).primaryText,
                                 size: 24.0,
                               ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     12.0, 0.0, 0.0, 0.0),
                                 child: Text(
-                                  '+1 123-456-7890',
+                                  '+60-1234567890',
                                   style: FlutterFlowTheme.of(context)
                                       .labelMedium
                                       .override(
                                         fontFamily: 'Outfit',
                                         color: FlutterFlowTheme.of(context)
-                                            .customColor1,
+                                            .primaryText,
                                       ),
                                 ),
                               ),
@@ -209,20 +212,19 @@ class _HelpScreenWidgetState extends State<HelpScreenWidget> {
                               Icon(
                                 Icons.email_rounded,
                                 color:
-                                    FlutterFlowTheme.of(context).customColor1,
+                                    FlutterFlowTheme.of(context).primaryText,
                                 size: 24.0,
                               ),
                               Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12.0, 0.0, 0.0, 0.0),
+                                padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
                                 child: Text(
-                                  'support@muzik.local',
+                                  'support@muzik.lokal',
                                   style: FlutterFlowTheme.of(context)
                                       .labelMedium
                                       .override(
                                         fontFamily: 'Outfit',
                                         color: FlutterFlowTheme.of(context)
-                                            .customColor1,
+                                            .primaryText,
                                       ),
                                 ),
                               ),
@@ -243,7 +245,7 @@ class _HelpScreenWidgetState extends State<HelpScreenWidget> {
                       ),
                       child: Container(
                         width: double.infinity,
-                        height: 80.0,
+                        height: 60.0,
                         decoration: BoxDecoration(
                           color:
                               FlutterFlowTheme.of(context).secondaryBackground,
@@ -265,7 +267,7 @@ class _HelpScreenWidgetState extends State<HelpScreenWidget> {
                               Icon(
                                 Icons.location_on_rounded,
                                 color:
-                                    FlutterFlowTheme.of(context).customColor1,
+                                    FlutterFlowTheme.of(context).primaryText,
                                 size: 24.0,
                               ),
                               Expanded(
@@ -273,14 +275,14 @@ class _HelpScreenWidgetState extends State<HelpScreenWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       12.0, 0.0, 0.0, 0.0),
                                   child: Text(
-                                    'B-02-03, Tamarind Square, Persiaran Multimedia, Cyber 10, 63000 Cyberjaya, Selangor',
+                                    'FKI UMS, Kota Kinabalu, Sabah',
                                     maxLines: 3,
                                     style: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
                                           fontFamily: 'Outfit',
                                           color: FlutterFlowTheme.of(context)
-                                              .customColor1,
+                                              .primaryText,
                                         ),
                                   ),
                                 ),

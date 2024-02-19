@@ -61,7 +61,7 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -113,13 +113,10 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                                 child: Text(
                                   'Verified User',
                                   textAlign: TextAlign.center,
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
+                                  style: FlutterFlowTheme.of(context).titleSmall.override(
                                         fontFamily: 'Outfit',
-                                        color: FlutterFlowTheme.of(context)
-                                            .customColor1,
-                                        fontSize: 16.0,
+                                        color: FlutterFlowTheme.of(context).customColor1,
+                                        fontSize: 20.0,
                                         fontWeight: FontWeight.normal,
                                       ),
                                 ),
@@ -150,18 +147,11 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                                             padding: EdgeInsets.all(4.0),
                                             child: Text(
                                               'Name',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleSmall
-                                                      .override(
+                                              style:FlutterFlowTheme.of(context).titleSmall.override(
                                                         fontFamily: 'Outfit',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .customColor1,
-                                                        fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
+                                                        color:FlutterFlowTheme.of(context).customColor1,
+                                                        fontSize: 20.0,
+                                                        fontWeight:FontWeight.normal,
                                                       ),
                                             ),
                                           ),
@@ -196,7 +186,7 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .customColor1,
-                                                        fontSize: 16.0,
+                                                        fontSize: 20.0,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                       ),
@@ -233,7 +223,7 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .customColor1,
-                                                        fontSize: 16.0,
+                                                        fontSize: 20.0,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                       ),
@@ -270,7 +260,7 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .customColor1,
-                                                        fontSize: 16.0,
+                                                        fontSize: 20.0,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                       ),
@@ -307,7 +297,7 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .customColor1,
-                                                        fontSize: 16.0,
+                                                        fontSize: 20.0,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                       ),
@@ -343,25 +333,13 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                                               options: FFButtonOptions(
                                                 width: double.infinity,
                                                 height: 50.0,
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 0.0, 0.0),
-                                                iconPadding:
-                                                    EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                            0.0, 0.0, 0.0, 0.0),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                textStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleSmall
-                                                        .override(
+                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                iconPadding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                color:FlutterFlowTheme.of(context).primaryText,
+                                                textStyle:FlutterFlowTheme.of(context).titleSmall.override(
                                                           fontFamily: 'Outfit',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                          fontSize: 16.0,
+                                                          color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                          fontSize: 20.0,
                                                         ),
                                                 elevation: 3.0,
                                                 borderSide: BorderSide(
@@ -408,7 +386,7 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                                                           color: FlutterFlowTheme
                                                                   .of(context)
                                                               .customColor1,
-                                                          fontSize: 16.0,
+                                                          fontSize: 20.0,
                                                         ),
                                                 elevation: 3.0,
                                                 borderSide: BorderSide(

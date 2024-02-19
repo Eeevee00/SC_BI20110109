@@ -47,7 +47,7 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
 
         var eventDoc = await db.collection('event').doc(eventUid).get();
         if (eventDoc.exists) {
-            var participantsCollection = eventDoc.reference.collection('participant');
+            var participantsCollection = eventDoc.reference.collection('applicants');
 
             var participantsSnapshot = await participantsCollection.get();
 
@@ -137,7 +137,7 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -232,25 +232,17 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
-                                                                .customColor1,
+                                                                .primaryText,
                                                       ),
                                             ),
                                           ),
                                         ),
                                         if (responsiveVisibility(
                                           context: context,
-                                          phone: false,
+                                          //phone: false,
                                           tablet: false,
                                         ))
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              'Email',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall,
-                                            ),
-                                          ),
+                                          
                                         Expanded(
                                           child: Text(
                                             'Detail',
@@ -261,7 +253,7 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
                                                   fontFamily: 'Outfit',
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .customColor1,
+                                                      .primaryText,
                                                 ),
                                           ),
                                         ),

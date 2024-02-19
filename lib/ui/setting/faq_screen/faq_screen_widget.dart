@@ -61,7 +61,7 @@ class _FaqScreenWidgetState extends State<FaqScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -73,22 +73,23 @@ class _FaqScreenWidgetState extends State<FaqScreenWidget> {
           top: true,
           child: Padding(
             padding: EdgeInsetsDirectional.fromSTEB(16.0, 20.0, 16.0, 0.0),
+            child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'What is Muzik Local?',
+                  'What is MuzikLokal?',
                   style: FlutterFlowTheme.of(context).labelMedium.override(
                         fontFamily: 'Outfit',
                         color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 14.0,
+                        fontSize: 18.0,
                       ),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 16.0),
                   child: Text(
-                    'Muzik Local is a music discovery app that connects you with local artists and events in your area. Discover new music, find local gigs, and connect with fellow music enthusiasts.',
+                    'MuzikLokal is a centralized app where music discovery and music talent scouting are made possible. Whether you\'re a seeker that is looking for local events or performing gigs, or host that creates event and job opportunities, we are here to bridge the gaps! Join us in this music gamification journey.' ,
                     style: FlutterFlowTheme.of(context).bodySmall.override(
                           fontFamily: 'Outfit',
                           color: FlutterFlowTheme.of(context).customColor1,
@@ -96,37 +97,19 @@ class _FaqScreenWidgetState extends State<FaqScreenWidget> {
                         ),
                   ),
                 ),
-                Text(
-                  'How do I download and install Muzik Local?',
-                  style: FlutterFlowTheme.of(context).labelMedium.override(
-                        fontFamily: 'Outfit',
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 14.0,
-                      ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 16.0),
-                  child: Text(
-                    'To download Muzik Local, visit the App Store (iOS) or Google Play Store (Android) on your device. Search for \"Muzik Local\" and follow the on-screen instructions to install the app.',
-                    style: FlutterFlowTheme.of(context).bodySmall.override(
-                          fontFamily: 'Outfit',
-                          color: FlutterFlowTheme.of(context).customColor1,
-                          fontSize: 14.0,
-                        ),
-                  ),
-                ),
+
                 Text(
                   'How can I discover local music events?',
                   style: FlutterFlowTheme.of(context).labelMedium.override(
                         fontFamily: 'Outfit',
                         color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 14.0,
+                        fontSize: 18.0,
                       ),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 16.0),
                   child: Text(
-                    'Navigate to the \"Events\" tab to explore a curated list of local music events, concerts, and gigs. You can filter events by genre, date, and location to find exactly what you\'re looking for.',
+                    'Navigate to the \"Event List\" tab to explore a curated list of local music events and gigs. You can use the search bar to find exactly what you\'re looking for. After buying your ticket, event will be added into \"My Event\". Seeker will gain points for every succesful ticket buying.',
                     style: FlutterFlowTheme.of(context).bodySmall.override(
                           fontFamily: 'Outfit',
                           color: FlutterFlowTheme.of(context).customColor1,
@@ -134,18 +117,79 @@ class _FaqScreenWidgetState extends State<FaqScreenWidget> {
                         ),
                   ),
                 ),
+
                 Text(
-                  'How can I report issues or provide feedback?',
+                  'How can I discover local job opportunities?',
                   style: FlutterFlowTheme.of(context).labelMedium.override(
                         fontFamily: 'Outfit',
                         color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 14.0,
+                        fontSize: 18.0,
                       ),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 16.0),
                   child: Text(
-                    'If you encounter any issues or have feedback to share, please use the \"Help\" option in the app settings. Our support team is here to assist you.',
+                    'Navigate to the \"Job List\" tab to explore a curated list of local job openings and performing slots. You can use the search bar to find exactly what you\'re looking for. After submitting your application, job will be added into \"My Job\". Seeker will gain points for every applicantion being approved.',
+                    style: FlutterFlowTheme.of(context).bodySmall.override(
+                          fontFamily: 'Outfit',
+                          color: FlutterFlowTheme.of(context).customColor1,
+                          fontSize: 14.0,
+                        ),
+                  ),
+                ),
+
+                 Text(
+                  'How can I create local music events?',
+                  style: FlutterFlowTheme.of(context).labelMedium.override(
+                        fontFamily: 'Outfit',
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 18.0,
+                      ),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 16.0),
+                  child: Text(
+                    'Navigate to the \"Event\" tab to create a music event or gigs. After creating an event post, event can be seen under \"Event List\". Then ticket creation can be made accordingly. Make sure to update picture and and activate event status once details are fill properly. Host gain points for every ticket sold succesfully.',
+                    style: FlutterFlowTheme.of(context).bodySmall.override(
+                          fontFamily: 'Outfit',
+                          color: FlutterFlowTheme.of(context).customColor1,
+                          fontSize: 14.0,
+                        ),
+                  ),
+                ),
+
+                Text(
+                  'How can I create local job opportunities?',
+                  style: FlutterFlowTheme.of(context).labelMedium.override(
+                        fontFamily: 'Outfit',
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 18.0,
+                      ),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 16.0),
+                  child: Text(
+                    'Navigate to the \"Job\" tab to create a job opening or performing slot. After creating a job post, job can be seen under \"Job List\".  Make sure to update picture and and activate job status once details are fill properly. Host can then view a list of applicant and approve/reject applicants. Host gain points for every approval.',
+                    style: FlutterFlowTheme.of(context).bodySmall.override(
+                          fontFamily: 'Outfit',
+                          color: FlutterFlowTheme.of(context).customColor1,
+                          fontSize: 14.0,
+                        ),
+                  ),
+                ),
+
+                Text(
+                  'How can I report issues or provide feedback?',
+                  style: FlutterFlowTheme.of(context).labelMedium.override(
+                        fontFamily: 'Outfit',
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 18.0,
+                      ),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 16.0),
+                  child: Text(
+                    'If you encounter any issues or have feedback to share, please use the \"Help\" option in the app settings. Our support team will review and get back to you as soon as possible.',
                     style: FlutterFlowTheme.of(context).bodySmall.override(
                           fontFamily: 'Outfit',
                           color: FlutterFlowTheme.of(context).customColor1,
@@ -154,6 +198,7 @@ class _FaqScreenWidgetState extends State<FaqScreenWidget> {
                   ),
                 ),
               ],
+            ),
             ),
           ),
         ),

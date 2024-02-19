@@ -17,10 +17,11 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../../service/auth.dart';
 import '../../../service/validator.dart';
 
-import '../forgot_password_screen/forgot_password_screen_widget.dart';
 import '../../admin/admin_dashboard_screen/admin_dashboard_screen_widget.dart';
 import '../../host/host_dashboard_screen/host_dashboard_screen_widget.dart';
 import '../../seeker/seeker_dashboard_screen/seeker_dashboard_screen_widget.dart';
+import '../forgot_password_screen/forgot_password_screen_widget.dart';
+import '../register_screen/register_screen_widget.dart';
 
 class LoginScreenWidget extends StatefulWidget {
   const LoginScreenWidget({Key? key}) : super(key: key);
@@ -31,13 +32,22 @@ class LoginScreenWidget extends StatefulWidget {
 
 class _LoginScreenWidgetState extends State<LoginScreenWidget> {
   late LoginScreenModel _model;
+
+// To validate, reset, or interact with a form widget 
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+// This key helps Flutter uniquely identify and manage the state of a Scaffold widget.:
+// It allows things like showing snackbars or opening drawers programmatically.
   final scaffoldKey = GlobalKey<ScaffoldState>();
-   bool _isProcessing = false;
+
+// This variable is like a switch, telling whether a certain process is happening or not.:
+// true = particular process (like submitting a form) is currently in progress. 
+// false= the process is not happening.
+  bool _isProcessing = false;
 
   @override
   void initState() {
-    _initializeFirebase();
+    _initializeFirebase(); // setting up Firebase-related functionality early in the widget's lifecycle
     super.initState();
     _model = createModel(context, () => LoginScreenModel());
     _model.textController1 ??= TextEditingController();
@@ -52,13 +62,20 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
     super.dispose();
   }
 
+//Initializes Firebase using Firebase.initializeApp() and retrieves the FirebaseApp instance.
+//It checks if a user is signed in using Firebase Authentication.
   Future<FirebaseApp> _initializeFirebase() async {
     var documentData;
     var userExist = false;
     FirebaseApp firebaseApp = await Firebase.initializeApp();
     User? user = FirebaseAuth.instance.currentUser;
+
+    //It checks if a user is signed in using Firebase Authentication.
+    //If the user is found, it sets the userExist variable to true and 
+    //captures the data of the first matching document in the documentData variable.
     if (user != null) {
-        await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: user.email).get().then((value) {
+        await FirebaseFirestore.instance.collection('users')
+        .where('email', isEqualTo: user.email).get().then((value) {
               value.docs.forEach((element) async {
                 setState(() {
                   userExist = true;
@@ -67,38 +84,40 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
               });
         });
 
+        //Based on the user's existence and 'user_type', 
+        //it navigates to the appropriate dashboard screen.
+        //Uses the Navigator to navigate to different screens based on user type
         if(userExist == true){
-          if(documentData['user_type'] == "admin"){
+          if(documentData['user_type'] == "superadmin"){
             if (user != null) {
               Navigator.of(context)
                 .pushReplacement(
                   MaterialPageRoute(
                     builder: (context) =>
-                      //ContractorHomePageScreenWidget(user: user),
                       AdminDashboardScreenWidget(user: user),
                   ),
                 );
             }
           }
-          else if(documentData['user_type'] == "superadmin"){
+          
+          else if(documentData['user_type'] == "admin"){
             if (user != null) {
               Navigator.of(context)
                 .pushReplacement(
                   MaterialPageRoute(
                     builder: (context) =>
-                      //ManagerHomePageScreenWidget(user: user),
                       AdminDashboardScreenWidget(user: user),
                   ),
                 );
             }
           }
+          
           else if(documentData['user_type'] == "host"){
             if (user != null) {
               Navigator.of(context)
                 .pushReplacement(
                   MaterialPageRoute(
                     builder: (context) =>
-                      //ManagerHomePageScreenWidget(user: user),
                       HostDashboardScreenWidget(user: user),
                   ),
                 );
@@ -111,14 +130,14 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                   MaterialPageRoute(
                     builder: (context) =>
                       SeekerDashboardScreenWidget(user: user),
-                      //SeekerDashboardScreenWidget(user: user),
                   ),
                 );
             }
           }
         }
     }
-    return firebaseApp;
+    return firebaseApp; //Finally, it returns the FirebaseApp instance.
+
   }
 
   @override
@@ -139,24 +158,28 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        
+        //TopBar with back button
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-          iconTheme:
-              IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
+          iconTheme:IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
-          title: Text(
-            'Sign In',
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  fontFamily: 'Outfit',
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
+          // title: Text(
+          //   'Log In',
+          //   style: FlutterFlowTheme.of(context).bodyMedium.override(
+          //         fontFamily: 'Outfit',
+          //         color: FlutterFlowTheme.of(context).primaryText,
+          //         fontSize: 20.0,
+          //         fontWeight: FontWeight.w500,
+          //       ),
+          // ),
+          
           actions: [],
           centerTitle: false,
           elevation: 0.0,
         ),
+
+        //Body
         body: SafeArea(
           top: true,
           child: SingleChildScrollView(
@@ -164,7 +187,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 25),
                 Container(
                   height: 180.0,
                   decoration: BoxDecoration(
@@ -172,117 +195,78 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                     image: DecorationImage(
                       fit: BoxFit.contain,
                       image: Image.asset(
-                        'assets/images/asd.png',
+                        'assets/images/MuzikLokal_logo.png',
                       ).image,
                     ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(16.0),
-                      bottomRight: Radius.circular(16.0),
-                      topLeft: Radius.circular(0.0),
-                      topRight: Radius.circular(0.0),
-                    ),
                   ),
                 ),
-                Container(
-                  height: 0,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).secondaryBackground,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(16.0),
-                                bottomRight: Radius.circular(16.0),
-                                topLeft: Radius.circular(0.0),
-                                topRight: Radius.circular(0.0),
-                              ),
-                            ),
-                            alignment: AlignmentDirectional(-1.0, 0.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Muzik Local',
-                                      textAlign: TextAlign.center,
-                                      style:
-                                          FlutterFlowTheme.of(context).displaySmall,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Discover the music around you',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Outfit',
-                                            color: FlutterFlowTheme.of(context)
-                                                .customColor1,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Log In',
+                      textAlign: TextAlign.center,
+                      style: FlutterFlowTheme.of(context)
+                          .displaySmall
+                          .override(
+                            fontFamily: 'Outfit',
+                            color: FlutterFlowTheme.of(context)
+                                .customColor1,
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Welcome Back',
+                      style: FlutterFlowTheme.of(context)
+                          .bodyMedium
+                          .override(
+                            fontFamily: 'Outfit',
+                            color: FlutterFlowTheme.of(context)
+                                .customColor1,
+                                fontSize: 20.0,
+                          ),
+                    ),
+                  ],
+                ),
+
+                //Wrap in Form Widget
                 Form(
                   key: _formKey,
                   child: Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
+                    alignment: AlignmentDirectional(0.0, 0.0), // The values (0.0, 0.0) represent the center point of the parent widget.
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(32.0, 12.0, 32.0, 32.0),
+                          EdgeInsetsDirectional.fromSTEB(32.0, 0.0, 32.0, 0.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Email textfield
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 12.0, 0.0, 24.0),
-                            child: Text(
-                              'Log in to your account',
-                              style: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
-                                    fontFamily: 'Outfit',
-                                    color:
-                                        FlutterFlowTheme.of(context).customColor1,
-                                  ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 16.0),
+                                0.0, 26.0, 0.0, 16.0),
                             child: TextFormField(
                               controller: _model.textController1,
                               focusNode: _model.textFieldFocusNode1,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Email Address',
+                                labelText: 'Email',
                                 hintText: 'Enter your email',
-                                hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                                hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                                 labelStyle: TextStyle( // Add this block for label text style
-                                  color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
+                                  color: FlutterFlowTheme.of(context).primaryText, fontSize: 16.0, // Set the color 
                                 ),
+                                prefixIcon: Icon(
+                                        Icons.email_outlined,
+                                        color: FlutterFlowTheme.of(context).primaryText,
+                                        size: 20,
+                                        ),                                
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: FlutterFlowTheme.of(context)
@@ -318,15 +302,32 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                     .primaryBackground,
                                 contentPadding: EdgeInsetsDirectional.fromSTEB(
                                     20.0, 24.0, 20.0, 24.0),
+
                               ),
                               style: FlutterFlowTheme.of(context).bodyMedium,
-                              validator: _model.textController1Validator
-                                  .asValidator(context),
+                              // validator: _model.textController1Validator
+                              //     .asValidator(context),
+                              validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter an email address';
+                                  }
+                                  // Use a regex pattern for email validation
+                                  String emailRegex =
+                                      //r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                                      r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$';
+                                  RegExp regex = RegExp(emailRegex);
+                                  if (!regex.hasMatch(value)) {
+                                    return 'Please enter a valid email address';
+                                  }
+                                  return null; // Return null if validation succeeds
+                                },
+
                             ),
                           ),
+                          // Password textfield
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 16.0),
+                                0.0, 0.0, 0.0, 6.0),
                             child: TextFormField(
                               controller: _model.textController2,
                               focusNode: _model.textFieldFocusNode2,
@@ -334,10 +335,15 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                               decoration: InputDecoration(
                                 labelText: 'Password',
                                 hintText: 'Enter your password',
-                                hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                                hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                                 labelStyle: TextStyle( // Add this block for label text style
-                                  color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
+                                  color: FlutterFlowTheme.of(context).primaryText, fontSize :16.0, // Set the color
                                 ),
+                                 prefixIcon: Icon(
+                                        Icons.lock_outline,
+                                        color: FlutterFlowTheme.of(context).primaryText,
+                                        size: 20,
+                                      ),                               
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: FlutterFlowTheme.of(context)
@@ -373,6 +379,8 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                     .primaryBackground,
                                 contentPadding: EdgeInsetsDirectional.fromSTEB(
                                     20.0, 24.0, 20.0, 24.0),
+
+                                // Suffix button to show password visibility
                                 suffixIcon: InkWell(
                                   onTap: () => setState(
                                     () => _model.passwordVisibility =
@@ -389,18 +397,20 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                 ),
                               ),
                               style: FlutterFlowTheme.of(context).bodyMedium,
-                              validator: _model.textController2Validator
-                                  .asValidator(context),
+                              // validator: _model.textController2Validator
+                              //     .asValidator(context),
+                              validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter password';
+                              }
+                              return null; // Return null if validation succeeds
+                            },
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 16.0, 0.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                FFButtonWidget(
+
+                          //Text of "Forgot Password", upon press will navigate to FPW Page
+                          Align(alignment: AlignmentDirectional(1, 0),
+                            child:FFButtonWidget(
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -425,88 +435,117 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                           fontFamily: 'Outfit',
                                           color: FlutterFlowTheme.of(context)
                                               .customColor1,
-                                          fontSize: 14.0,
+                                          fontSize: 16.0,
                                           fontWeight: FontWeight.w500,
                                         ),
                                     elevation: 0.0,
                                   ),
                                 ),
-                                _isProcessing ? 
-                                CircularProgressIndicator()
-                                : 
-                                FFButtonWidget(
-                                  onPressed:() async {
-                                    if (_formKey.currentState!.validate()) {
-                                      setState(() {
-                                        _isProcessing = true;
-                                      });
+                          ),
 
-                                      var documentData;
-                                      var userExist = false;
+                          // If _isProcessing = true , display CircularProgressIndicator
+                          _isProcessing ? 
+                          CircularProgressIndicator()
+                          : 
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [FFButtonWidget(
+                                    //Login Button
+                                    onPressed:() async {
+                                      if (_formKey.currentState!.validate()) {
+                                        setState(() {
+                                          _isProcessing = true;
+                                        });
 
-                                      await FirebaseFirestore.instance
-                                          .collection('users')
-                                          .where('email', isEqualTo: _model.textController1.text)
-                                          .get()
-                                          .then((value) {
-                                        value.docs.forEach((element) async {
-                                          setState(() {
-                                            userExist = true;
-                                            documentData = element;
+                                        var documentData;
+                                        var userExist = false;
+
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .where('email', isEqualTo: _model.textController1.text)
+                                            .get()
+                                            .then((value) {
+                                          value.docs.forEach((element) async {
+                                            setState(() {
+                                              userExist = true;
+                                              documentData = element;
+                                            });
                                           });
                                         });
-                                      });
 
-                                      if (userExist && documentData['status'] == true) {
-                                        try {
-                                          User? user = await FireAuth.signInUsingEmailPassword(
-                                            email: _model.textController1.text,
-                                            password: _model.textController2.text,
-                                            context: context,
-                                          );
-                                          print(user);
+                                        if (userExist && documentData['status'] == true) {
+                                          try {
+                                            User? user = await FireAuth.signInUsingEmailPassword(
+                                              email: _model.textController1.text,
+                                              password: _model.textController2.text,
+                                              context: context,
+                                            );
+                                            print(user);
 
-                                          if (user != null) {
-                                            // Check user type and navigate accordingly
-                                            switch (documentData['user_type']) {
-                                              case "admin":
-                                                Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(
-                                                    builder: (context) => AdminDashboardScreenWidget(user: user),
-                                                  ),
-                                                );
-                                                break;
-                                              case "superadmin":
-                                                Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(
-                                                    builder: (context) => AdminDashboardScreenWidget(user: user),
-                                                  ),
-                                                );
-                                                break;
-                                              case "host":
-                                                Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(
-                                                    builder: (context) => HostDashboardScreenWidget(user: user),
-                                                  ),
-                                                );
-                                                break;
-                                              case "seeker":
-                                                Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(
-                                                    builder: (context) => SeekerDashboardScreenWidget(user: user),
-                                                  ),
-                                                );
-                                                break;
-                                              default:
-                                                // Handle unknown user type
-                                                print("Unknown user type: ${documentData['user_type']}");
+                                            if (user != null) {
+                                              // Check user type and navigate accordingly
+                                              switch (documentData['user_type']) {
+                                                case "superadmin":
+                                                  Navigator.of(context).pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) => AdminDashboardScreenWidget(user: user),
+                                                    ),
+                                                  );                                            
+                                                  break;
+                                                case "admin":
+                                                  Navigator.of(context).pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) => AdminDashboardScreenWidget(user: user),
+                                                    ),
+                                                  );
+                                                  break;
+                                                case "host":
+                                                  Navigator.of(context).pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) => HostDashboardScreenWidget(user: user),
+                                                    ),
+                                                  );
+                                                  break;
+                                                case "seeker":
+                                                  Navigator.of(context).pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) => SeekerDashboardScreenWidget(user: user),
+                                                    ),
+                                                  );
+                                                  break;
+                                                default:
+                                                  // Handle unknown user type
+                                                  print("Unknown user type: ${documentData['user_type']}");
+                                              }
+                                            }else{
+                                              // If key in credential is wrong , pop alert box
+                                              Alert(
+                                                context: context,
+                                                type: AlertType.error,
+                                                title: "Login error",
+                                                desc: "Wrong email or password.",
+                                                buttons: [
+                                                  DialogButton(
+                                                    child: Text(
+                                                      "Close",
+                                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                                    ),
+                                                    onPressed: () => Navigator.pop(context),
+                                                    width: 120,
+                                                  )
+                                                ],
+                                              ).show();
                                             }
-                                          }else{
+                                          } catch (e) {
+                                            print("Error logging in: $e");
                                             Alert(
                                               context: context,
                                               type: AlertType.error,
                                               title: "Login error",
-                                              desc: "Wrong email or password.",
+                                              desc: "Invalid email or password.",
                                               buttons: [
                                                 DialogButton(
                                                   child: Text(
@@ -519,13 +558,12 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                               ],
                                             ).show();
                                           }
-                                        } catch (e) {
-                                          print("Error logging in: $e");
+                                        } else {
                                           Alert(
                                             context: context,
                                             type: AlertType.error,
                                             title: "Login error",
-                                            desc: "Invalid email or password.",
+                                            desc: "Invalid email or user not found.",
                                             buttons: [
                                               DialogButton(
                                                 child: Text(
@@ -538,109 +576,80 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                             ],
                                           ).show();
                                         }
-                                      } else {
-                                        Alert(
-                                          context: context,
-                                          type: AlertType.error,
-                                          title: "Login error",
-                                          desc: "Invalid email or user not found.",
-                                          buttons: [
-                                            DialogButton(
-                                              child: Text(
-                                                "Close",
-                                                style: TextStyle(color: Colors.white, fontSize: 20),
-                                              ),
-                                              onPressed: () => Navigator.pop(context),
-                                              width: 120,
-                                            )
-                                          ],
-                                        ).show();
-                                      }
 
-                                      setState(() {
-                                        _isProcessing = false;
-                                      });
-                                    }
-                                  },
-                                  text: 'Login',
-                                  options: FFButtonOptions(
-                                    width: 150.0,
-                                    height: 50.0,
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 0.0),
-                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 0.0),
-                                    color:
-                                        FlutterFlowTheme.of(context).primaryText,
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .override(
-                                          fontFamily: 'Outfit',
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          fontSize: 14.0,
-                                        ),
-                                    elevation: 3.0,
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
+                                        setState(() {
+                                          _isProcessing = false;
+                                        });
+                                      }
+                                    },
+
+                                    text: 'Log In',
+                                    options: FFButtonOptions(
+                                      width: 325.0,
+                                      height: 50.0,
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 0.0),
+                                      iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 0.0),
+                                      color:
+                                          FlutterFlowTheme.of(context).primaryText,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .titleMedium
+                                          .override(
+                                            fontFamily: 'Outfit',
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                      elevation: 3.0,
+                                      borderRadius: BorderRadius.circular(5.0),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          // Padding(
-                          //   padding: EdgeInsetsDirectional.fromSTEB(
-                          //       0.0, 20.0, 0.0, 0.0),
-                          //   child: Row(
-                          //     mainAxisSize: MainAxisSize.max,
-                          //     mainAxisAlignment: MainAxisAlignment.center,
-                          //     children: [
-                          //       // You will have to add an action on this rich text to go to your login page.
-                          //       Padding(
-                          //         padding: EdgeInsetsDirectional.fromSTEB(
-                          //             0.0, 12.0, 0.0, 12.0),
-                          //         child: RichText(
-                          //           textScaleFactor:
-                          //               MediaQuery.of(context).textScaleFactor,
-                          //           text: TextSpan(
-                          //             children: [
-                          //               TextSpan(
-                          //                 text: 'Dont have account? ',
-                          //                 style: TextStyle(
-                          //                   color: FlutterFlowTheme.of(context)
-                          //                       .customColor1,
-                          //                 ),
-                          //               ),
-                          //               TextSpan(
-                          //                 text: 'Sign Up here',
-                          //                 style: FlutterFlowTheme.of(context)
-                          //                     .bodyMedium
-                          //                     .override(
-                          //                       fontFamily: 'Outfit',
-                          //                       color:
-                          //                           FlutterFlowTheme.of(context)
-                          //                               .primaryText,
-                          //                       fontSize: 16.0,
-                          //                       fontWeight: FontWeight.w600,
-                          //                     ),
-                          //               )
-                          //             ],
-                          //             style:
-                          //                 FlutterFlowTheme.of(context).labelLarge,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
+                        ),
+
                         ],
                       ),
                     ),
                   ),
+                ), // Form
+
+
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(
+                      0.0, 20.0, 0.0, 0.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                    const Text("Don't have an account? ",
+                        style: TextStyle(color: Colors.white70, fontSize: 17)),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterScreenWidget()));
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
+
+              ],// children: [
+            ),// child: Column
+          ), // SingleChildScrollView
+        ),//Safe Area
       ),
     );
   }

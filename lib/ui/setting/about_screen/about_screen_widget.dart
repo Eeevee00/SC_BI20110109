@@ -61,7 +61,7 @@ class _AboutScreenWidgetState extends State<AboutScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -83,7 +83,7 @@ class _AboutScreenWidgetState extends State<AboutScreenWidget> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.asset(
-                        'assets/images/asd.png',
+                        'assets/images/MuzikLokal_logo.png',
                         width: double.infinity,
                         height: 150.0,
                         fit: BoxFit.contain,
@@ -91,37 +91,48 @@ class _AboutScreenWidgetState extends State<AboutScreenWidget> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                    child: Text(
-                      'Welcome to Muzik Local: Your Gateway to Local Music Discoveries!',
-                      style:
-                          FlutterFlowTheme.of(context).headlineMedium.override(
-                                fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                fontSize: 18.0,
-                              ),
+                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                    child: Center(
+                      child: Text(
+                        'Welcome to MuzikLokal:\nYour Gateway to Local Music Discoveries!',
+                        textAlign: TextAlign.center,
+                        style: FlutterFlowTheme.of(context).headlineMedium.override(
+                          fontFamily: 'Outfit',
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 18.0,
+                        ),
+                      ),
                     ),
-                  ),
+                  ),               
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 8.0),
+                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 15.0),
                     child: Text(
-                      'Explore your local music scene with Muzik Local! 🌍 Discover nearby artists, find live events, and connect with a community of music lovers. 🤝 Personalize your journey, get event updates, and enjoy a vibrant world of local sounds. 🚀 Free to download - let the local music adventure begin! 🎸🔍',
+                      'Explore your local music scene with MuzikLokal! \n🌍 Discover nearby events, and connect with a community of music lovers. \n🤝 Get performing opportunities with our job finding features. \n🎁Gain points throughout the engagement with MuzikLokal and claim for rewards.',
                       textAlign: TextAlign.justify,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Outfit',
                             color: FlutterFlowTheme.of(context).customColor1,
+                            fontSize: 15.0,
+
                           ),
                     ),
                   ),
-                  Text(
-                    '📲 Download Muzik Local now and let the music discovery begin!',
-                    textAlign: TextAlign.center,
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                
+                                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                    child: Center(
+                      child: Text(
+                    '📲 Download MuzikLokal now \n and let the music discovery begin!',
+                        textAlign: TextAlign.center,
+                        style: FlutterFlowTheme.of(context).headlineMedium.override(
                           fontFamily: 'Outfit',
                           color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 18.0,
                         ),
+                      ),
+                    ),
                   ),
+
                 ],
               ),
             ),

@@ -52,9 +52,9 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
     _model.textFieldFocusNode4 ??= FocusNode();
     _model.textController5 ??= TextEditingController();
     _model.textFieldFocusNode5 ??= FocusNode();
-
     _model.textController6 ??= TextEditingController();
     _model.textFieldFocusNode6 ??= FocusNode();
+
   }
 
   @override
@@ -64,12 +64,13 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
   }
 
   add_user() async {
-    if(_model.textController4.text != _model.textController5.text){
+    //Check both password match
+    if(_model.textController5.text != _model.textController6.text){
       Alert(
         context: context,
         type: AlertType.error,
-        title: "Register error",
-        desc: "Both password not match",
+        title: "Registration error",
+        desc: "Both password do not match",
         buttons: [
           DialogButton(
             child: Text(
@@ -83,11 +84,13 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
         ],
       ).show();
     }
+
+    //Check if user type is chosen
     else if(_model.dropDownValue == null){
       Alert(
         context: context,
         type: AlertType.error,
-        title: "Register error",
+        title: "Registration error",
         desc: "Please select user type",
         buttons: [
           DialogButton(
@@ -102,16 +105,18 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
         ],
       ).show();
     }
+
     else{
       setState(() {
         _isProcessing = true;
       });
 
+      //Validate register
       if (_registerFormKey.currentState!.validate()) {
         User? user = await FireAuth.registerUsingEmailPassword(
           name: _model.textController1.text,
           email: _model.textController2.text,
-          password: _model.textController4.text,
+          password: _model.textController5.text,
           context: context,
         );
 
@@ -121,7 +126,13 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
 
         if (user != null) {
           await _setDataUser(
-              user, _model.textController1.text, _model.textController2.text, _model.textController3.text, _model.dropDownValue, _model.textController6.text, latitude, longitude);
+               user, 
+              _model.dropDownValue, 
+              _model.textController1.text, //name
+              _model.textController2.text, //email
+              _model.textController3.text, //phone
+              _model.textController4.text, //location
+              latitude, longitude);
           Alert(
             context: context,
             type: AlertType.success,
@@ -182,8 +193,8 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
               Alert(
                 context: context,
                 type: AlertType.error,
-                title: "Register error",
-                desc: "The account already exists for that email.",
+                title: "Registration error",
+                desc: "The account already exist for that email.",
                 buttons: [
                   DialogButton(
                     child: Text(
@@ -222,9 +233,12 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
       onTap: () => _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
           : FocusScope.of(context).unfocus(),
+      
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+
+        //TopBar with back button
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
           iconTheme:
@@ -235,7 +249,7 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -243,6 +257,7 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
           centerTitle: false,
           elevation: 0.0,
         ),
+
         body: SafeArea(
           top: true,
           child: SingleChildScrollView(
@@ -253,19 +268,58 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
+
+                    //Instruction
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 16.0),
-                      child: Text(
-                        'Please fill in all the field to register your account',
+                      padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 16.0),
+                      child: Text('Fill in ALL field to register an account',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'Outfit',
+                              fontSize: 20.0,
                               color: FlutterFlowTheme.of(context).customColor1,
                             ),
                       ),
                     ),
+
+                    //Drop down selection of user type 
+                    SizedBox(
+                      height: 75, // Adjust the height as needed
+                      child:Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                        child: FlutterFlowDropDown<String>(
+                          controller: _model.dropDownValueController ??=
+                              FormFieldController<String>(null),
+                          options: ['Seeker', 'Host'],
+                          onChanged: (val) =>
+                              setState(() => _model.dropDownValue = val),
+                          width: double.infinity,
+                          height: 50.0,
+                          textStyle: FlutterFlowTheme.of(context).bodyMedium,                         
+                          hintText: 'Please select user type',
+                          
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            size: 24.0,
+                          ),
+                          fillColor: FlutterFlowTheme.of(context).primaryBackground,
+                          elevation: 2.0,
+                          borderColor:
+                              FlutterFlowTheme.of(context).primaryBackground,
+                          borderWidth: 2.0,
+                          borderRadius: 4.0,
+                          margin:
+                              EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 4.0),
+                          hidesUnderline: true,
+                          isSearchable: false,
+                          isMultiSelect: false,
+                        ),
+                      ),
+                    ),
+
+                    //User name
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                       child: TextFormField(
                         controller: _model.textController1,
                         focusNode: _model.textFieldFocusNode1,
@@ -273,10 +327,15 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                         decoration: InputDecoration(
                           labelText: 'Name',
                           hintText: 'Enter user name',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
+                          prefixIcon: Icon(
+                                  Icons.person,
+                                  color: FlutterFlowTheme.of(context).primaryText,
+                                  size: 20,
+                                ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).primaryBackground,
@@ -317,6 +376,8 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                             },
                       ),
                     ),
+
+                    // Email
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                       child: TextFormField(
@@ -325,11 +386,16 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                         obscureText: false,
                         decoration: InputDecoration(
                           labelText: 'Email Address',
-                          hintText: 'Enter user  email address',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintText: 'Enter your emai',
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
+                          prefixIcon: Icon(
+                                  Icons.email,
+                                  color: FlutterFlowTheme.of(context).primaryText,
+                                  size: 20,
+                                ),                                          
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).primaryBackground,
@@ -368,7 +434,8 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                             }
                             // Use a regex pattern for email validation
                             String emailRegex =
-                                r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                                //r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                                r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$';
                             RegExp regex = RegExp(emailRegex);
                             if (!regex.hasMatch(value)) {
                               return 'Please enter a valid email address';
@@ -377,19 +444,28 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                           },
                       ),
                     ),
+
+                    //Phone number
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                       child: TextFormField(
                         controller: _model.textController3,
                         focusNode: _model.textFieldFocusNode3,
                         obscureText: false,
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         decoration: InputDecoration(
                           labelText: 'Phone Number',
                           hintText: 'Enter user phone number',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
+                          prefixIcon: Icon(
+                                  Icons.call,
+                                  color: FlutterFlowTheme.of(context).primaryText,
+                                  size: 20,
+                                ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).primaryBackground,
@@ -426,16 +502,20 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter phone number';
                             }
+                            else if (!(value.length == 10 || value.length == 11)) {
+                              return 'Please enter full phone number';
+                            }
                             return null; // Return null if validation succeeds
                           },
                       ),
                     ),
 
+                    //Location
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                       child: TextFormField(
-                        controller: _model.textController6,
-                        focusNode: _model.textFieldFocusNode6,
+                        controller: _model.textController4,
+                        focusNode: _model.textFieldFocusNode4,
                         obscureText: false,
                         onTap: () async {
                           address = await Navigator.push(
@@ -455,16 +535,21 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                               longitude = address['longitude'];
                               //userLocation = address['PlaceName'];
                             });
-                            _model.textController6.text = address['PlaceName'];
+                            _model.textController4.text = address['PlaceName'];
                           }
                         },
                         decoration: InputDecoration(
                           labelText: 'Your Address',
                           hintText: 'Enter your address',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
+                          prefixIcon: Icon(
+                                  Icons.location_pin,
+                                  color: FlutterFlowTheme.of(context).primaryText,
+                                  size: 20,
+                                ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).primaryBackground,
@@ -499,189 +584,169 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                         style: FlutterFlowTheme.of(context).bodyMedium,
                         validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter phone number';
+                              return 'Please enter address';
                             }
                             return null; // Return null if validation succeeds
                           },
                       ),
                     ),
-                    SizedBox(
-                      height: 80, // Adjust the height as needed
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                        child: FlutterFlowDropDown<String>(
-                          controller: _model.dropDownValueController ??=
-                              FormFieldController<String>(null),
-                          options: ['Seeker', 'Host'],
-                          onChanged: (val) =>
-                              setState(() => _model.dropDownValue = val),
-                          width: double.infinity,
-                          height: 50.0,
-                          textStyle: FlutterFlowTheme.of(context).bodyMedium,
-                          hintText: 'Please select user type',
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 24.0,
+
+                    //Password
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                      child: TextFormField(
+                        controller: _model.textController5,
+                        focusNode: _model.textFieldFocusNode5,
+                        obscureText: !_model.passwordVisibility1,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Enter password',
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
+                          labelStyle: TextStyle( // Add this block for label text style
+                            color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
-                          fillColor: FlutterFlowTheme.of(context).primaryBackground,
-                          elevation: 2.0,
-                          borderColor:
+                          prefixIcon: Icon(
+                            Icons.lock,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            size: 20,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  FlutterFlowTheme.of(context).primaryBackground,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).error,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).error,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          filled: true,
+                          fillColor:
                               FlutterFlowTheme.of(context).primaryBackground,
-                          borderWidth: 2.0,
-                          borderRadius: 8.0,
-                          margin:
-                              EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 4.0),
-                          hidesUnderline: true,
-                          isSearchable: false,
-                          isMultiSelect: false,
+                          //contentPadding: EdgeInsetsDirectional.fromSTEB(15.0, 24.0, 20.0, 24.0),
+                          suffixIcon: InkWell(
+                            onTap: () => setState(
+                              () => _model.passwordVisibility1 =
+                                  !_model.passwordVisibility1,
+                            ),
+                            focusNode: FocusNode(skipTraversal: true),
+                            child: Icon(
+                              _model.passwordVisibility1
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              size: 22.0,
+                            ),
+                          ),
                         ),
+                        style: FlutterFlowTheme.of(context).bodyMedium,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter password';
+                          }
+                          return null; // Return null if validation succeeds
+                        },
                       ),
                     ),
+
+                    //Comfirmed Password
                     Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                          child: TextFormField(
-                            controller: _model.textController4,
-                            focusNode: _model.textFieldFocusNode4,
-                            obscureText: !_model.passwordVisibility1,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              hintText: 'Enter password',
-                              hintStyle: FlutterFlowTheme.of(context).bodyLarge,
-                              labelStyle: TextStyle( // Add this block for label text style
-                                color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryBackground,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primaryText,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              filled: true,
-                              fillColor:
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                      child: TextFormField(
+                        controller: _model.textController6,
+                        focusNode: _model.textFieldFocusNode6,
+                        obscureText: !_model.passwordVisibility2,
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          hintText: 'Enter password',
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
+                          labelStyle: TextStyle( // Add this block for label text style
+                            color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
+                          ),
+                                                        prefixIcon: Icon(
+                            Icons.lock,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            size: 20,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
                                   FlutterFlowTheme.of(context).primaryBackground,
-                              contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                  20.0, 24.0, 20.0, 24.0),
-                              suffixIcon: InkWell(
-                                onTap: () => setState(
-                                  () => _model.passwordVisibility1 =
-                                      !_model.passwordVisibility1,
-                                ),
-                                focusNode: FocusNode(skipTraversal: true),
-                                child: Icon(
-                                  _model.passwordVisibility1
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  color: FlutterFlowTheme.of(context).primaryText,
-                                  size: 22.0,
-                                ),
-                              ),
+                              width: 2.0,
                             ),
-                            style: FlutterFlowTheme.of(context).bodyMedium,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter password';
-                              }
-                              return null; // Return null if validation succeeds
-                            },
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).error,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).error,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          filled: true,
+                          fillColor:FlutterFlowTheme.of(context).primaryBackground,
+                          // contentPadding: EdgeInsetsDirectional.fromSTEB(15.0, 24.0, 20.0, 24.0),
+                          suffixIcon: InkWell(
+                            onTap: () => setState(
+                              () => _model.passwordVisibility2 =
+                                  !_model.passwordVisibility2,
+                            ),
+                            focusNode: FocusNode(skipTraversal: true),
+                            child: Icon(
+                              _model.passwordVisibility2
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              size: 22.0,
+                            ),
                           ),
                         ),
-                    Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                          child: TextFormField(
-                            controller: _model.textController5,
-                            focusNode: _model.textFieldFocusNode5,
-                            obscureText: !_model.passwordVisibility2,
-                            decoration: InputDecoration(
-                              labelText: 'Confirm Password',
-                              hintText: 'Enter password',
-                              hintStyle: FlutterFlowTheme.of(context).bodyLarge,
-                              labelStyle: TextStyle( // Add this block for label text style
-                                color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryBackground,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primaryText,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              filled: true,
-                              fillColor:
-                                  FlutterFlowTheme.of(context).primaryBackground,
-                              contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                  20.0, 24.0, 20.0, 24.0),
-                              suffixIcon: InkWell(
-                                onTap: () => setState(
-                                  () => _model.passwordVisibility2 =
-                                      !_model.passwordVisibility2,
-                                ),
-                                focusNode: FocusNode(skipTraversal: true),
-                                child: Icon(
-                                  _model.passwordVisibility2
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  color: FlutterFlowTheme.of(context).primaryText,
-                                  size: 22.0,
-                                ),
-                              ),
-                            ),
-                            style: FlutterFlowTheme.of(context).bodyMedium,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter password';
-                              }
-                              return null; // Return null if validation succeeds
-                            },
-                          ),
-                        ),
+                        style: FlutterFlowTheme.of(context).bodyMedium,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter confirmed password';
+                          }
+                          return null; // Return null if validation succeeds
+                        },
+                      ),
+                    ),
+
+                    //Register button
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 16.0),
                       child: FFButtonWidget(
@@ -704,27 +769,33 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 14.0,
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.w600,
                                   ),
                           elevation: 2.0,
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),
+
                   ],
                 ),
               ),
             ),
           ),
         ),
+
       ),
+    
     );
+
   }
 }
 
-
-Future _setDataUser(User? user, name, email, phone, user_type, address, latitude, longitude) async {
-  await FirebaseFirestore.instance.collection("users").doc(user?.uid).set(
+Future _setDataUser(User? user, user_type, name, email,
+ phone, address, latitude, longitude) async {
+  await FirebaseFirestore.instance
+  .collection("users").doc(user?.uid).set(
     {
       'email': email,
       'image': ['Empty'], 
@@ -741,12 +812,13 @@ Future _setDataUser(User? user, name, email, phone, user_type, address, latitude
       },
       'verification': false,
       'request_to_verify': false,
+      'is_approved': false,
+      'is_rejected': false,
       'proof_for_verification_1': ['Empty'], 
       'proof_for_verification_2': ['Empty'], 
       'points': 1000,
       'total_point': 1000,
-      'bio': "",
-      'hashtag': [],
+      'bio': "Hi",
       'tier': "Bronze",
     },
     SetOptions(merge: true)

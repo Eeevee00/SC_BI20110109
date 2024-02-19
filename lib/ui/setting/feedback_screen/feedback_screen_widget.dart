@@ -46,16 +46,18 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
 
   submitFeedback()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    CollectionReference<Map<String, dynamic>> feedbackCollection = FirebaseFirestore.instance.collection('feedback');
+    CollectionReference<Map<String, dynamic>> feedbackCollection = 
+      FirebaseFirestore.instance.collection('feedback');
 
-    DocumentReference<Map<String, dynamic>> feedbackDocument = await feedbackCollection.add({
-      'subject': _model.textController1.text,
-      'content': _model.textController1.text,
-      'sender_uid': prefs.getString("current_user_uid"),
-      'sender_name': prefs.getString("current_user_name"),
-      'sender_email': prefs.getString("current_user_email"),
-      'timestamp': FieldValue.serverTimestamp(),
-      'uid': "",
+    DocumentReference<Map<String, dynamic>> feedbackDocument = 
+      await feedbackCollection.add({
+        'subject': _model.textController1.text,
+        'content': _model.textController2.text,
+        'sender_uid': prefs.getString("current_user_uid"),
+        'sender_name': prefs.getString("current_user_name"),
+        'sender_email': prefs.getString("current_user_email"),
+        'timestamp': FieldValue.serverTimestamp(),
+        'uid': "",
     });
 
     await feedbackDocument.update({
@@ -66,7 +68,7 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
       context: context,
       type: AlertType.success,
       title: "Feedback",
-      desc: "Successfully submit your feedback",
+      desc: "Successfully submitted your feedback",
       buttons: [
         DialogButton(
           child: Text(
@@ -108,11 +110,11 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
               IconThemeData(color: FlutterFlowTheme.of(context).primaryText),
           automaticallyImplyLeading: true,
           title: Text(
-            'Feed Back',
+            'Send Feedback',
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -123,7 +125,7 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
         body: SafeArea(
           top: true,
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 20.0, 16.0, 16.0),
+            padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 16.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,6 +137,8 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
                     style: FlutterFlowTheme.of(context).headlineMedium.override(
                           fontFamily: 'Outfit',
                           color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 20.0,
+
                         ),
                   ),
                 ),
@@ -147,7 +151,7 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
                     decoration: InputDecoration(
                       labelText: 'Subject',
                       hintText: 'Enter subject...',
-                      hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                      hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                       labelStyle: TextStyle( // Add this block for label text style
                         color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                       ),
@@ -183,8 +187,7 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
                       fillColor: FlutterFlowTheme.of(context).primaryBackground,
                     ),
                     style: FlutterFlowTheme.of(context).bodyMedium,
-                    validator:
-                        _model.textController1Validator.asValidator(context),
+                    validator: _model.textController1Validator.asValidator(context),
                   ),
                 ),
                 TextFormField(
@@ -194,7 +197,7 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
                   decoration: InputDecoration(
                     labelText: 'Content',
                     hintText: 'Enter your feedback...',
-                    hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                    hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                     labelStyle: TextStyle( // Add this block for label text style
                       color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                     ),
@@ -232,8 +235,7 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
                   style: FlutterFlowTheme.of(context).bodyMedium,
                   maxLines: 10,
                   minLines: 5,
-                  validator:
-                      _model.textController2Validator.asValidator(context),
+                  validator: _model.textController2Validator.asValidator(context),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
@@ -291,9 +293,8 @@ class _FeedbackScreenWidgetState extends State<FeedbackScreenWidget> {
                       textStyle:
                           FlutterFlowTheme.of(context).titleMedium.override(
                                 fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                fontSize: 14.0,
+                                color: FlutterFlowTheme.of(context).secondaryBackground,
+                                fontSize: 16.0,
                               ),
                       elevation: 2.0,
                       borderRadius: BorderRadius.circular(5.0),

@@ -13,6 +13,7 @@ import 'package:getwidget/getwidget.dart';
 import 'reviewList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'writeReview.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class ReviewPage extends StatefulWidget {
   final String? eventID;
@@ -26,6 +27,7 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
 
     var user_type;
+    var userId;
 
     @override
     void initState() {
@@ -37,8 +39,33 @@ class _ReviewPageState extends State<ReviewPage> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         setState(() {
             user_type = prefs.getString("user_type");
-            print(user_type);
+            //print(user_type);
+            userId = prefs.getString('current_user_uid');
         });
+    }
+
+    Future<bool> checkReviewDone() async {
+      try {
+        // Assuming you have a reference to your Firestore instance
+        var firestore = FirebaseFirestore.instance;
+
+        // Replace 'job' with the actual name of your events collection
+        var jobRef = firestore.collection('job').doc(widget.eventID);
+
+        // Replace 'participant' with the actual name of your participants collection
+        var participantRef = jobRef.collection('reviews');
+
+        // Get the document snapshot for the user in the participants collection
+        var participantDoc = await participantRef.where('userID', isEqualTo: userId).get();
+
+        // Check if the document exists (i.e., the user is a participant)
+        var isParticipant = participantDoc.docs.isNotEmpty;
+
+        return isParticipant;
+      } catch (e) {
+        print('Error checking participant status: $e');
+        return false; // Handle the error according to your needs
+      }
     }
 
     @override
@@ -55,7 +82,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'Outfit',
                         color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 16.0,
+                        fontSize: 20.0,
                         fontWeight: FontWeight.w500,
                         ),
                 ),
@@ -96,7 +123,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     decoration: BoxDecoration(
                     color: FlutterFlowTheme.of(context).secondaryBackground,
                     ),
-                    child: (user_type != "admin" && user_type != "superadmin") ?
+                    child: (user_type != "admin" && user_type != "superadmin" && user_type != "host") ?
                     Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -107,14 +134,37 @@ class _ReviewPageState extends State<ReviewPage> {
                             padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 16.0),
                             child: FFButtonWidget(
                                 onPressed: () async {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                    builder: (context) => WriteReview(eventID: widget.eventID),
-                                    ),
-                                ).then((value) {
-                                    setState(() {});
-                                });
+                                    var check = await checkReviewDone();
+
+                                    if(check == true){
+                                        Alert(
+                                            context: context,
+                                            type: AlertType.warning,
+                                            title: "Write Review",
+                                            desc: "Only one review allowed to write per job",
+                                            buttons: [
+                                                DialogButton(
+                                                child: Text(
+                                                    "Close",
+                                                    style: TextStyle(color: Colors.white, fontSize: 20),
+                                                ),
+                                                onPressed: () {
+                                                    Navigator.pop(context);
+                                                },
+                                                ),
+                                            ],
+                                            ).show();
+                                    }else{
+                                        await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                            builder: (context) => WriteReview(eventID: widget.eventID),
+                                            ),
+                                        ).then((value) {
+                                            setState(() {});
+                                        });
+                                        checkReviewDone();
+                                    }
                                 },
                                 text: 'Write Review',
                                 options: FFButtonOptions(
@@ -139,7 +189,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     :
                     Row(),
                 ),
-                ),
+            ),
         );
     }
 

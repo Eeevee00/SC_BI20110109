@@ -80,70 +80,149 @@ class _NotificationDetailScreenWidgetState
         });
     }
 
-    delete_notification() async {
-        await Alert(
-            context: context,
-            type: AlertType.warning,
-            title: "Delete Notification",
-            desc: "Deleting this notification will not delete notification at user side.",
-            buttons: [
-                DialogButton(
-                child: Text(
-                    "Confirm",
-                    style: TextStyle(
-                    color: Colors.white, fontSize: 20),
-                    ),
-                    onPressed: () async {
-                        try {
-                            FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //   delete_notification() async {
+  //       await Alert(
+  //           context: context,
+  //           type: AlertType.warning,
+  //           title: "Delete Notification",
+  //           desc: "Deleting this notification will not delete notification at user side.",
+  //           buttons: [
+  //               DialogButton(
+  //               child: Text(
+  //                   "Confirm",
+  //                   style: TextStyle(
+  //                   color: Colors.white, fontSize: 20),
+  //                   ),
+  //                   onPressed: () async {
+  //                       try {
+  //                           FirebaseFirestore firestore = FirebaseFirestore.instance;
                             
-                            await firestore.collection('notification').doc(widget.uid).delete();
+  //                           await firestore.collection('notification').doc(widget.uid).delete();
                             
-                            Alert(
-                                context: context,
-                                type: AlertType.success,
-                                title: "Delete Notification",
-                                desc: "Successfully delete notification",
-                                buttons: [
-                                    DialogButton(
-                                    child: Text(
-                                        "Close",
-                                        style: TextStyle(color: Colors.white, fontSize: 20),
-                                    ),
-                                    onPressed: () {
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                    },
-                                    width: 120,
-                                    )
-                                ],
-                            ).show();
-                        } catch (error) {
-                            // Handle errors
-                            print('Error deleting notification: $error');
-                        }
-                    },
-                    gradient: LinearGradient(colors: const [
-                    Color.fromRGBO(116, 116, 191, 1.0),
-                    Color.fromRGBO(52, 138, 199, 1.0)
-                    ]
-                ),
-                ),
-                DialogButton(
-                child: Text(
-                    "Cancel",
-                    style: TextStyle(
-                    color: Colors.white, fontSize: 20),
+  //                           Alert(
+  //                               context: context,
+  //                               type: AlertType.success,
+  //                               title: "Delete Notification",
+  //                               desc: "Successfully deleted notification",
+  //                               buttons: [
+  //                                   DialogButton(
+  //                                   child: Text(
+  //                                       "Close",
+  //                                       style: TextStyle(color: Colors.white, fontSize: 20),
+  //                                   ),
+  //                                   onPressed: () {
+  //                                       Navigator.pop(context);
+  //                                       Navigator.pop(context);
+  //                                       Navigator.pop(context);
+  //                                   },
+  //                                   width: 120,
+  //                                   )
+  //                               ],
+  //                           ).show();
+  //                       } catch (error) {
+  //                           // Handle errors
+  //                           print('Error deleting notification: $error');
+  //                       }
+  //                   },
+  //                   gradient: LinearGradient(colors: const [
+  //                   Color.fromRGBO(116, 116, 191, 1.0),
+  //                   Color.fromRGBO(52, 138, 199, 1.0)
+  //                   ]
+  //               ),
+  //               ),
+  //               DialogButton(
+  //               child: Text(
+  //                   "Cancel",
+  //                   style: TextStyle(
+  //                   color: Colors.white, fontSize: 20),
+  //               ),
+  //               onPressed: () => Navigator.pop(context),
+  //               gradient: LinearGradient(colors: const [
+  //                   Colors.redAccent,
+  //                   Colors.red
+  //               ]),
+  //               )
+  //           ],
+  //           ).show();
+  // }
+  delete_notification() async {
+    await Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Delete Notification",
+      desc: "Do you want to delete this notification?",
+      buttons: [
+            DialogButton(
+              child: Text(
+                "Confirm",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () async {
+                try {
+                  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+                  // Delete the notification from the top-level "notification" collection
+                  await firestore.collection('notification').doc(widget.uid).delete();
+
+                  // Query all users
+                  QuerySnapshot usersQuery = await firestore
+                      .collection('users')
+                      .where('status', isEqualTo: true)
+                      .get();
+
+                  // Iterate through users and delete the notification from their collection
+                  for (QueryDocumentSnapshot userDoc in usersQuery.docs) {
+                    String docId = userDoc.id;
+                      if (userDoc['user_type'] == 'host' || userDoc['user_type'] == 'seeker') {
+                        await firestore
+                            .collection('users')
+                            .doc(docId)
+                            .collection('notification')
+                            .doc(widget.uid)
+                            .delete();
+                      }
+                  }
+
+                  Alert(
+                    context: context,
+                    type: AlertType.success,
+                    title: "Delete Notification",
+                    desc: "Successfully deleted notification",
+                    buttons: [
+                      DialogButton(
+                        child: Text(
+                          "Close",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        width: 120,
+                      )
+                    ],
+                  ).show();
+                } catch (error) {
+                  // Handle errors
+                  print('Error deleting notification: $error');
+                }
+              },
+              gradient: LinearGradient(colors: const [
+                Color.fromRGBO(116, 116, 191, 1.0),
+                Color.fromRGBO(52, 138, 199, 1.0)
+              ]),
+            ),
+
+            DialogButton(
+                child: Text("Cancel",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 onPressed: () => Navigator.pop(context),
-                gradient: LinearGradient(colors: const [
-                    Colors.redAccent,
-                    Colors.red
-                ]),
-                )
-            ],
-            ).show();
+                gradient: LinearGradient(colors: const [Colors.redAccent, Colors.red]),
+            )
+      ],
+    ).show();
   }
 
   @override
@@ -174,7 +253,7 @@ class _NotificationDetailScreenWidgetState
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -200,6 +279,7 @@ class _NotificationDetailScreenWidgetState
                           style: FlutterFlowTheme.of(context).headlineMedium.override(
                                 fontFamily: 'Outfit',
                                 color: FlutterFlowTheme.of(context).primaryText,
+                                fontSize:20,
                               ),
                         ),
                       ),
@@ -211,9 +291,9 @@ class _NotificationDetailScreenWidgetState
                           focusNode: _model.textFieldFocusNode1,
                           obscureText: false,
                           decoration: InputDecoration(
-                            labelText: 'Subject',
-                            hintText: 'Enter subject',
-                            hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                            labelText: 'Title',
+                            hintText: 'Enter title',
+                            hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                             labelStyle: TextStyle( // Add this block for label text style
                               color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                             ),
@@ -251,7 +331,7 @@ class _NotificationDetailScreenWidgetState
                           style: FlutterFlowTheme.of(context).bodyMedium,
                           validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Subject';
+                            return 'Please enter title';
                           }
                           return null; // Return null if validation succeeds
                         },
@@ -265,7 +345,7 @@ class _NotificationDetailScreenWidgetState
                         decoration: InputDecoration(
                           labelText: 'Content',
                           hintText: 'Enter the content',
-                          hintStyle: FlutterFlowTheme.of(context).bodyLarge,
+                          hintStyle: FlutterFlowTheme.of(context).bodyMedium,
                           labelStyle: TextStyle( // Add this block for label text style
                             color: FlutterFlowTheme.of(context).primaryText, // Set the color you want
                           ),
@@ -322,17 +402,14 @@ class _NotificationDetailScreenWidgetState
                           options: FFButtonOptions(
                             width: double.infinity,
                             height: 55.0,
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                            iconPadding:
-                                EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                            padding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                            iconPadding:EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                             color: FlutterFlowTheme.of(context).primaryText,
                             textStyle:
                                 FlutterFlowTheme.of(context).titleMedium.override(
                                       fontFamily: 'Outfit',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      fontSize: 14.0,
+                                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                                      fontSize: 19.0,
                                     ),
                             elevation: 2.0,
                             borderRadius: BorderRadius.circular(5.0),

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:muzik_local/config/theme.dart';
+import 'package:muzik_lokal/config/theme.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 part 'theme_state.dart';
