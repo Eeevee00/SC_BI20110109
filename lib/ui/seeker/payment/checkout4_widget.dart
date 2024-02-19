@@ -393,8 +393,7 @@ Future<int?> getUserPoint(var userUid) async {
                                     .labelMedium
                                     .override(
                                       fontFamily: 'Outfit',
-                                      color: FlutterFlowTheme.of(context)
-                                          .customColor1,
+                                      color: FlutterFlowTheme.of(context).customColor1,
                                     ),
                               ),
                             ),
@@ -403,148 +402,87 @@ Future<int?> getUserPoint(var userUid) async {
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 12.0),
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 1.0,
+                              Container(
+                                    padding: EdgeInsets.symmetric(vertical: 12.0),
                                     decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 0.0,
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                          offset: Offset(0.0, 1.0),
-                                        )
-                                      ],
+                                      color: FlutterFlowTheme.of(context).secondaryBackground,
                                       borderRadius: BorderRadius.circular(0.0),
                                     ),
                                     child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 4.0, 0.0, 12.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Expanded(
-                                                flex: 3,
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          8.0, 0.0, 4.0, 0.0),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        widget.ticket.title!,
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleLarge,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    4.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        child: RichText(
-                                                          textScaleFactor:
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .textScaleFactor,
-                                                          text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text:
-                                                                    'Total Ticket: ',
-                                                                style:
-                                                                    TextStyle(),
-                                                              ),
-                                                              TextSpan(
-                                                                text: widget.number_of_ticket.toString(),
-                                                                style:
-                                                                    TextStyle(),
-                                                              )
-                                                            ],
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .labelSmall
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Outfit',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .customColor1,
-                                                                ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 3,
+                                              child: Padding(
+                                                padding: EdgeInsets.fromLTRB(8.0, 0.0, 4.0, 0.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      widget.ticket.title!,
+                                                      style: FlutterFlowTheme.of(context).titleLarge,
+                                                    ),
+                                                    SizedBox(height: 4.0),
+                                                    RichText(
+                                                      text: TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                            text: 'Total Ticket: ',
+                                                            style: TextStyle(color: Colors.white, fontSize: 14),
+
                                                           ),
-                                                        ),
+                                                          TextSpan(
+                                                            text: widget.number_of_ticket.toString(),
+                                                            style: TextStyle(color: Colors.white, fontSize: 14),
+                                                          )
+                                                        ],
+                                                        style: FlutterFlowTheme.of(context).labelSmall.override(
+                                                          fontFamily: 'Outfit',
+                                                          color: FlutterFlowTheme.of(context).customColor1,
+                                                          fontSize: 13,
+                                                       ),
                                                       ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        8.0, 0.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'RM ' + widget.ticket.value!,
-                                                  textAlign: TextAlign.end,
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .titleLarge,
-                                                ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                                              child: Text(
+                                                'RM ' + widget.ticket.value!,
+                                                textAlign: TextAlign.end,
+                                                style: FlutterFlowTheme.of(context).titleLarge,
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                         Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 4.0, 8.0, 12.0),
-                                          child: AutoSizeText(
+                                                padding: EdgeInsets.fromLTRB(8.0, 0.0, 4.0, 0.0),
+                                          child: Text(
                                             widget.ticket.description!,
                                             textAlign: TextAlign.start,
-                                            style: FlutterFlowTheme.of(context)
-                                                .labelMedium
-                                                .override(
-                                                  fontFamily: 'Outfit',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .customColor1,
-                                                ),
+                                            style: FlutterFlowTheme.of(context).labelMedium.override(
+                                              fontFamily: 'Outfit',
+                                              color: FlutterFlowTheme.of(context).customColor1,
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width * 1.0,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                ),
+                                  )
+
+
+                                // Container(
+                                //   width: MediaQuery.of(context).size.width * 1.0,
+                                //   decoration: BoxDecoration(
+                                //     color: FlutterFlowTheme.of(context)
+                                //         .secondaryBackground,
+                                //     borderRadius: BorderRadius.circular(12.0),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],
@@ -568,8 +506,7 @@ Future<int?> getUserPoint(var userUid) async {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 16.0, 16.0, 24.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 24.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -579,16 +516,14 @@ Future<int?> getUserPoint(var userUid) async {
                               style: FlutterFlowTheme.of(context).titleLarge,
                             ),
                             Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 4.0, 0.0, 12.0),
+                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 4.0),
                               child: Text(
                                 'Below is a list of your items.',
                                 style: FlutterFlowTheme.of(context)
                                     .labelMedium
                                     .override(
                                       fontFamily: 'Outfit',
-                                      color: FlutterFlowTheme.of(context)
-                                          .customColor1,
+                                      color: FlutterFlowTheme.of(context).customColor1,
                                     ),
                               ),
                             ),
@@ -598,29 +533,25 @@ Future<int?> getUserPoint(var userUid) async {
                               color: FlutterFlowTheme.of(context).alternate,
                             ),
                             Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 24.0),
+                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  // Padding(
+                                  //   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+                                  //   child: Text(
+                                  //     'Price Breakdown',
+                                  //     style: FlutterFlowTheme.of(context)
+                                  //         .labelMedium
+                                  //         .override(
+                                  //           fontFamily: 'Outfit',
+                                  //           color: FlutterFlowTheme.of(context).customColor1,
+                                  //         ),
+                                  //   ),
+                                  // ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 12.0),
-                                    child: Text(
-                                      'Price Breakdown',
-                                      style: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily: 'Outfit',
-                                            color: FlutterFlowTheme.of(context)
-                                                .customColor1,
-                                          ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 8.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 8.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
@@ -632,25 +563,26 @@ Future<int?> getUserPoint(var userUid) async {
                                               .bodySmall
                                               .override(
                                                 fontFamily: 'Outfit',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .customColor1,
+                                                color:FlutterFlowTheme.of(context).customColor1,
                                                 fontSize: 14.0,
                                                 fontWeight: FontWeight.normal,
                                               ),
                                         ),
                                         Text(
-                                          "RM " + widget.ticket.value! + " x" + widget.number_of_ticket.toString(),
+                                          "RM " + widget.ticket.value! + " x " + widget.number_of_ticket.toString(),
                                           textAlign: TextAlign.end,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyLarge,
+                                          style: FlutterFlowTheme.of(context).bodyLarge..override(
+                                                fontFamily: 'Outfit',
+                                                color:FlutterFlowTheme.of(context).customColor1,
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.normal,
+                                              ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 8.0, 0.0, 8.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 8.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
@@ -661,14 +593,11 @@ Future<int?> getUserPoint(var userUid) async {
                                           children: [
                                             Text(
                                               'Total',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
+                                              style: FlutterFlowTheme.of(context)
                                                   .titleMedium
                                                   .override(
                                                     fontFamily: 'Outfit',
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .customColor1,
+                                                    color: FlutterFlowTheme.of(context).customColor1,
                                                     fontSize: 20.0,
                                                     fontWeight: FontWeight.w500,
                                                   ),
@@ -677,8 +606,7 @@ Future<int?> getUserPoint(var userUid) async {
                                         ),
                                         Text(
                                           "RM " + getTotal(),
-                                          style: FlutterFlowTheme.of(context)
-                                              .displaySmall,
+                                          style: FlutterFlowTheme.of(context).displaySmall,
                                         ),
                                       ],
                                     ),
@@ -691,8 +619,7 @@ Future<int?> getUserPoint(var userUid) async {
                               children: [
                                 Expanded(
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 24.0, 0.0, 0.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
                                         await buyTicket();
@@ -701,17 +628,14 @@ Future<int?> getUserPoint(var userUid) async {
                                       options: FFButtonOptions(
                                         width: double.infinity,
                                         height: 55.0,
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 0.0, 0.0),
-                                        iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 0.0, 0.0),
+                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                                         color: FlutterFlowTheme.of(context).primaryText,
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
                                               fontFamily: 'Outfit',
-                                              color: FlutterFlowTheme.of(context)
-                                                  .secondaryBackground,
+                                              color: FlutterFlowTheme.of(context).secondaryBackground,
                                               fontSize: 14.0,
                                             ),
                                         elevation: 2.0,

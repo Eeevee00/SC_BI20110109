@@ -47,7 +47,7 @@ class _ApplicantListScreenWidgetState extends State<ApplicantListScreenWidget> {
 
         var eventDoc = await db.collection('event').doc(eventUid).get();
         if (eventDoc.exists) {
-            var participantsCollection = eventDoc.reference.collection('applicants');
+            var participantsCollection = eventDoc.reference.collection('participant');
 
             var participantsSnapshot = await participantsCollection.get();
 

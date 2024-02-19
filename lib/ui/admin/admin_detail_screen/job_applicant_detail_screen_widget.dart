@@ -156,7 +156,7 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
       }
     }
 
-  Future<void> updateParticipantStatus() async {
+  Future<void> updateApplicantStatus() async {
     try {
       // Assuming you have a reference to your Firestore instance
       var firestore = FirebaseFirestore.instance;
@@ -164,17 +164,17 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
       // Replace 'job' with the actual name of your job collection
       var jobRef = firestore.collection('job').doc(widget.event_uid);
 
-      // Replace 'participant' with the actual name of your participants subcollection
-      var participantRef = jobRef.collection('applicants');
+      // Replace 'applicant' with the actual name of your applicants subcollection
+      var applicantRef = jobRef.collection('applicants');
 
-      // Query for the participant document where 'uid' is equal to widget.user.uid
-      var participantDocs = await participantRef.where('uid', isEqualTo: widget.user.uid).get();
+      // Query for the applicant document where 'uid' is equal to widget.user.uid
+      var applicantDocs = await applicantRef.where('uid', isEqualTo: widget.user.uid).get();
 
-      if (participantDocs.docs.isNotEmpty) {
-        var participantDocRef = participantDocs.docs.first.reference;
+      if (applicantDocs.docs.isNotEmpty) {
+        var applicantDocRef = applicantDocs.docs.first.reference;
 
-        // Update participant status to true
-        await participantDocRef.update({
+        // Update applicant status to true
+        await applicantDocRef.update({
           'status': true,
           'applicationStatus': true,
         });
@@ -183,11 +183,11 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
         });
         await updateUserPoint();
       } else {
-        // Handle the case where the participant document is not found
-        print('Participant document not found for uid: ${widget.user.uid}');
+        // Handle the case where the applicant document is not found
+        print('applicant document not found for uid: ${widget.user.uid}');
       }
     } catch (e) {
-      print('Error updating participant status: $e');
+      print('Error updating applicant status: $e');
       // Handle the error according to your needs
     }
   }
@@ -200,17 +200,17 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
       // Replace 'job' with the actual name of your job collection
       var jobRef = firestore.collection('job').doc(widget.event_uid);
 
-      // Replace 'participant' with the actual name of your participants subcollection
-      var participantRef = jobRef.collection('applicants');
+      // Replace 'applicant' with the actual name of your applicant subcollection
+      var applicantRef = jobRef.collection('applicants');
 
-      // Query for the participant document where 'uid' is equal to widget.user.uid
-      var participantDocs = await participantRef.where('uid', isEqualTo: widget.user.uid).get();
+      // Query for the applicant document where 'uid' is equal to widget.user.uid
+      var applicantDocs = await applicantRef.where('uid', isEqualTo: widget.user.uid).get();
 
-      if (participantDocs.docs.isNotEmpty) {
-        var participantDocRef = participantDocs.docs.first.reference;
+      if (applicantDocs.docs.isNotEmpty) {
+        var applicantDocRef = applicantDocs.docs.first.reference;
 
-        // Update participant status to true
-        await participantDocRef.update({
+        // Update applicant status to true
+        await applicantDocRef.update({
           'status': true,
           'applicationStatus': false,
         });
@@ -219,11 +219,11 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
         });
         await rejectNotification();
       } else {
-        // Handle the case where the participant document is not found
-        print('Participant document not found for uid: ${widget.user.uid}');
+        // Handle the case where the applicant document is not found
+        print('Applicant document not found for uid: ${widget.user.uid}');
       }
     } catch (e) {
-      print('Error updating participant status: $e');
+      print('Error updating applicant status: $e');
       // Handle the error according to your needs
     }
   }
@@ -331,16 +331,16 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
       // Replace 'job' with the actual name of your job collection
       var jobRef = firestore.collection('job').doc(widget.event_uid);
 
-      // Replace 'participant' with the actual name of your participants subcollection
-      var participantRef = jobRef.collection('applicants');
+      // Replace 'applicant' with the actual name of your applicants subcollection
+      var applicantRef = jobRef.collection('applicants');
 
       // Get the document snapshot for the specified userUID
-      var participantDoc = await participantRef.where('uid', isEqualTo: widget.user.uid).get();
+      var applicantDoc = await applicantRef.where('uid', isEqualTo: widget.user.uid).get();
 
       // Check if any document exists
-      if (participantDoc.docs.isNotEmpty) {
+      if (applicantDoc.docs.isNotEmpty) {
         // Get the first document
-        var firstDoc = participantDoc.docs.first;
+        var firstDoc = applicantDoc.docs.first;
 
         // Check if the 'status' field exists in the document data
         var data = firstDoc.data() as Map<String, dynamic>;
@@ -356,13 +356,13 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
           });
         }
       } else {
-        // Document doesn't exist, participant not found
+        // Document doesn't exist, applicant not found
         setState(() {
           applicant_status = false;
         });
       }
     } catch (e) {
-      print('Error getting participant status: $e');
+      print('Error getting applicant status: $e');
       // Handle the error according to your needs
     }
   }
@@ -505,32 +505,50 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                         ),
                         SizedBox(height: 20),
                         Center(
-                          child: widget.user.verification == true
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'Approve',
-                                      style: FlutterFlowTheme.of(context).titleSmall.override(
-                                        fontFamily: 'Outfit',
-                                        color: FlutterFlowTheme.of(context).customColor1,
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.normal,
-                                      ),
+                        child: widget.user.verification == true
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Approve',
+                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                      fontFamily: 'Outfit',
+                                      color: FlutterFlowTheme.of(context).customColor1,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.normal,
                                     ),
-                                    SizedBox(width: 10),
-                                    CircleAvatar(
-                                      radius: 16.0,
-                                      backgroundColor: FlutterFlowTheme.of(context).success,
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  CircleAvatar(
+                                    radius: 16.0,
+                                    backgroundColor: FlutterFlowTheme.of(context).success,
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
                                     ),
-                                  ],
-                                )
-                              : SizedBox(), // Empty SizedBox when verification is false
-                        ),
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Rejected ',
+                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                      fontFamily: 'Outfit',
+                                      color: FlutterFlowTheme.of(context).error,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.close,
+                                    color: FlutterFlowTheme.of(context).error,
+                                  ),
+                                ],
+                              ),
+                      ),
+
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 20.0, 0.0, 0.0),
@@ -695,7 +713,7 @@ class _UserDetailScreenWidgetState extends State<UserDetailScreenWidget> {
                                           0.0, 30.0, 0.0, 16.0),
                                       child: FFButtonWidget(
                                         onPressed: () async {
-                                          updateParticipantStatus();
+                                          updateApplicantStatus();
                                         },
                                         text: 'Approve',
                                         options: FFButtonOptions(

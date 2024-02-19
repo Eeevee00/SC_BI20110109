@@ -268,72 +268,70 @@ class _RewardDetailScreenWidgetState extends State<RewardDetailScreenWidget> {
                           child: Stack(
                             children: [
                               Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CircleAvatar(
-                                    radius: 120,
-                                    backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-                                    child: Material(
-                                      color: FlutterFlowTheme.of(context).secondaryBackground,
-                                      child: Stack(
-                                        children: <Widget>[
-                                          _image == "Empty" ? 
-                                          Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Image.network(
-                                                'https://user-images.githubusercontent.com/43302778/106805462-7a908400-6645-11eb-958f-cd72b74a17b3.jpg',
-                                                width: double.infinity,
-                                                height: 160.0,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ],
-                                          )
-                                          :
-                                          Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Image.network(
-                                                _image,
-                                                width: double.infinity,
-                                                height: 200.0,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ],
-                                          ),
-                                          Positioned(
-                                                bottom: 16, // Adjust the bottom value as needed
-                                                right: -4, 
-                                            child: Card(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(30)),
-                                              color: Theme.of(context).primaryColor,
-                                              child: IconButton(
-                                                  alignment: Alignment.center,
-                                                  icon: Icon(
-                                                    Icons.photo_camera,
-                                                    size: 25,
-                                                    color: Colors.white,
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircleAvatar(
+                                  radius: 120,
+                                  backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+                                  child: Material(
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        _image == null || _image == "Empty" // Check if _image is null or "Empty"
+                                            ? Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Image.network(
+                                                    'https://user-images.githubusercontent.com/43302778/106805462-7a908400-6645-11eb-958f-cd72b74a17b3.jpg',
+                                                    width: double.infinity,
+                                                    height: 160.0,
+                                                    fit: BoxFit.cover,
                                                   ),
-                                                  onPressed: () async {
-                                                    var a = await _editProfileState.source(
-                                                        context, currentReward, true);
-                                                    _initializeFirebase();
-                                                  }),
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Image.network(
+                                                    _image,
+                                                    width: double.infinity,
+                                                    height: 200.0,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ],
+                                              ),
+                                        Positioned(
+                                          bottom: 16, // Adjust the bottom value as needed
+                                          right: -4,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(30)),
+                                            color: Theme.of(context).primaryColor,
+                                            child: IconButton(
+                                              alignment: Alignment.center,
+                                              icon: Icon(
+                                                Icons.photo_camera,
+                                                size: 25,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () async {
+                                                var a = await _editProfileState.source(
+                                                    context, currentReward, true);
+                                                _initializeFirebase();
+                                              },
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
-
-
-
+                    
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 20.0),
                       child: TextFormField(

@@ -419,9 +419,9 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                                         border: Border.all(
-                          color: Colors.yellow, // Set your desired border color
-                          width: 2.0, // Set your desired border width
-                          ),
+                                            color: Colors.yellow, // Set your desired border color
+                                            width: 2.0, // Set your desired border width
+                                            ),
                                           ),
                                           child: Image.network(
                                             widget.event.organizer_image!,
@@ -666,7 +666,7 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 18.0,
+                                    fontSize: 14.0,
                                   ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
@@ -702,7 +702,7 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 18.0,
+                                    fontSize: 14.0,
                                   ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
@@ -738,7 +738,7 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
-                                    fontSize: 18.0,
+                                    fontSize: 14.0,
                                   ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
@@ -771,7 +771,7 @@ class _EventDetailHostWidgetState extends State<EventDetailHostWidget> {
                                     fontFamily: 'Outfit',
                                     color: FlutterFlowTheme.of(context)
                                         .customColor1,
-                                    fontSize: 18.0,
+                                    fontSize: 14.0,
                                   ),
                               elevation: 2.0,
                               borderRadius: BorderRadius.circular(5.0),
